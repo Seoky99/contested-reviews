@@ -1,0 +1,55 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  width: 80%; 
+}
+
+.card {
+  padding: 2em;
+}
+
+ul {
+  display: flex;
+  gap: 2rem;
+}
+
+li {
+  list-style-type: none;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.setWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.setButton {
+  padding: 2.4rem 4.8rem;
+  font-size: 5rem;
+  text-shadow: 2px 2px 2px black;
+  background-size: cover;
+}
+
+.setReview {
+  padding: 1.2rem 2.4rem;
+  font-size: 2rem;
+  text-shadow: 2px 2px 2px black;
+  background-size: cover;
+}
+
+.panel-button {
+  padding: 5px 10px;
+  font-size: 0.8rem;
+}

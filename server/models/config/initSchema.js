@@ -14,7 +14,8 @@ async function initSchema() {
         CREATE TABLE sets (
             set_id UUID PRIMARY KEY, 
             set_code TEXT NOT NULL,
-            name TEXT NOT NULL 
+            name TEXT NOT NULL,
+            set_img TEXT NOT NULL 
         );
 
         CREATE TABLE cards (
@@ -36,6 +37,7 @@ async function initSchema() {
             user_id INTEGER, 
             set_id UUID,
             name TEXT NOT NULL,
+            user_set_img TEXT,
             FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
             FOREIGN KEY (set_id) REFERENCES sets(set_id)
         );

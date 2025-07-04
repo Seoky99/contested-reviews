@@ -6,8 +6,7 @@ async function getSetReviews(req, res) {
     const userid = 1; 
 
     const rows = await db.getAllSetReviews(userid);
-    const result = JSON.stringify(rows);
-    res.json(result); 
+    res.json(rows); 
 }
 
 async function createSetReview(req, res) {
