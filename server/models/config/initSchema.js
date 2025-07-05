@@ -2,6 +2,7 @@ import client from '../client.js';
 
 /**
  * Initializes the tables in the database 
+ * Bonus / List are in Sets, joined by table bonus_link
  */
 async function initSchema() {
   const query = `CREATE TABLE IF NOT EXISTS users (
@@ -15,7 +16,16 @@ async function initSchema() {
             set_id UUID PRIMARY KEY, 
             set_code TEXT NOT NULL,
             name TEXT NOT NULL,
+            is_bonus BOOLEAN DEFAULT FALSE, 
             set_img TEXT NOT NULL 
+        );
+
+        CREATE TABLE bonus_links (
+            link_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
+            main_set_id UUID, 
+            bonus_set_id UUID, 
+            FOREIGN KEY (main_set_id) REFERENCES sets(set_id), 
+            FOREIGN KEY (bonus_set_id) REFERENCES sets(set_id)
         );
 
         CREATE TABLE cards (
@@ -38,6 +48,7 @@ async function initSchema() {
             set_id UUID,
             name TEXT NOT NULL,
             user_set_img TEXT,
+            includes_bonus BOOLEAN DEFAULT FALSE,
             FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
             FOREIGN KEY (set_id) REFERENCES sets(set_id)
         );

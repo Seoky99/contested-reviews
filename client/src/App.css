@@ -53,3 +53,34 @@ li {
   padding: 5px 10px;
   font-size: 0.8rem;
 }
+
+.addSetButton {
+  text-align: center;
+  padding: 0px 50px;
+  font-size: 5rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  & button {
+    width: 200px;
+  }
+}
+
+.form-separator {
+  display: flex;
+  gap: 2rem;
+}
+
+.add-panel {
+  display: flex;
+  gap: 2rem;
+}
+
+img {
+  width: 400px; 
+  height: 200px;
+}

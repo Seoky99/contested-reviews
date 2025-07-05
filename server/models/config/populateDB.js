@@ -44,13 +44,33 @@ async function fetchScryfall(url, isSet=false) {
 
 /**
  * Adds the set information to the sets table in the database  
+ * Note: if you add a bonus set, call addBonusLink
+ * TODO: set_img
  * @param {string} url - Scryfall API URL 
+ * @param {boolean} isBonus - Whether you are inserting a bonus set 
  */
-async function addSet(url) {
+async function addSet(url, isBonus=false) {
  
-  const query = `INSERT INTO sets(set_id, set_code, name) VALUES ($1, $2, $3) ON CONFLICT (set_id) DO NOTHING`;
+  const query = `INSERT INTO sets(set_id, set_code, name, is_bonus) VALUES ($1, $2, $3, $4) ON CONFLICT (set_id) DO NOTHING`;
 
-  const [dataArray] = await fetchScryfall(url, true);
+  const [dataArray] = await fetchScryfall(url, true); 
+  dataArray.push(isBonus);
+
+  pushToClient(query, dataArray);
+}
+
+/**
+ * Adds the connection of the bonus set to the main set (have to manually do this unluck)
+ * @param {string} setCode 
+ * @param {string} bonusCode 
+ */
+async function addBonusLink(setCode, bonusCode) {
+
+  const query = `INSERT INTO bonus_links(main_set_id, bonus_set_id) VALUES ( 
+    (SELECT set_id FROM sets WHERE set_code = $1), 
+    (SELECT set_id FROM sets WHERE set_code = $2))`;
+  
+  const dataArray = [setCode.toLowerCase(), bonusCode.toLowerCase()]; 
   pushToClient(query, dataArray);
 }
 
@@ -124,11 +144,16 @@ async function pushToClient(query, dataArray) {
 }
 
 //set:SETNAME+in:booster
-//const URL = 'https://api.scryfall.com/cards/search?q=set%3Afin%2Bin%3Abooster';
-//const URLTWO = 'https://api.scryfall.com/sets/fin';
 
-const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Aeoe%2Bin%3Abooster';
-//let URL = 'https://api.scryfall.com/sets/eoe';
+//const URL = 'https://api.scryfall.com/sets/fin';
+//const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Afin%2Bin%3Abooster';
 
-//addSet(URL);
-addCards(URLTWO);
+//const URL = 'https://api.scryfall.com/sets/eoe';
+//const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Aeoe%2Bin%3Abooster';
+
+//const URL = 'https://api.scryfall.com/sets/fca';
+const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Afca%2Bin%3Abooster';
+
+//addSet(URL, true);
+//addCards(URLTWO);
+addBonusLink('FIN', 'FCA');
