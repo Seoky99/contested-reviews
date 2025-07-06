@@ -143,17 +143,20 @@ async function pushToClient(query, dataArray) {
   }
 }
 
-//set:SETNAME+in:booster
+/*set:SETNAME+in:booster
+  Examples: 
+    const URL = 'https://api.scryfall.com/sets/fin';
+    const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Afin%2Bin%3Abooster';
 
-//const URL = 'https://api.scryfall.com/sets/fin';
-//const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Afin%2Bin%3Abooster';
+    const URL = 'https://api.scryfall.com/sets/eoe';
+    const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Aeoe%2Bin%3Abooster';
 
-//const URL = 'https://api.scryfall.com/sets/eoe';
-//const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Aeoe%2Bin%3Abooster';
-
-//const URL = 'https://api.scryfall.com/sets/fca';
-const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Afca%2Bin%3Abooster';
+    const URL = 'https://api.scryfall.com/sets/fca';
+    const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Afca%2Bin%3Abooster';
+*/
 
 //addSet(URL, true);
 //addCards(URLTWO);
-addBonusLink('FIN', 'FCA');
+
+//call if set has a link
+//addBonusLink('FIN', 'FCA');

@@ -11,11 +11,9 @@ app.use(cors());
 app.use(express.json()); 
 app.use(express.urlencoded({extended: true}));
 
-
-
 app.use('/api/setreviews', setReviewRouter);
 app.use('/api/sets', setsRouter);
-app.get('/', (req, res) => res.send('hallo'));
+app.get('/', (req, res) => res.send('TODO: Implement landing page'));
 
 app.listen('8080', () => {
   console.log('Server running!');

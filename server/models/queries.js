@@ -1,22 +1,35 @@
 import pool from "./pool.js"; 
 import rarityMap from "./defaultRatings.js";
 
+/**
+ * Returns all a user's set reviews and associated set information 
+ * @param {int} userid 
+ * @returns An array of objects containing set_review_name, set_code, set_name, user_set_id, user_set_img
+ */
 async function getAllSetReviews(userid) {
 
     const query = `SELECT user_sets.name AS set_review_name, set_code, sets.name AS set_name, user_set_id, user_set_img 
-                    FROM user_sets JOIN sets ON user_sets.set_id = sets.set_id 
+                    FROM user_sets 
+                    JOIN sets ON user_sets.set_id = sets.set_id 
                     WHERE user_id = $1`;
 
     try {
-
         const { rows } = await pool.query(query, [userid]);
         return rows; 
-
     } catch (err) {
         console.log(err);
     }
 }
 
+/**
+ * Creates a set review with the specified name and parameters.
+ * Then, creates ratings for all the cards in the set - if default, a specified Rank, otherwise null. 
+ * @param {Integer} userid 
+ * @param {String} setid 
+ * @param {String} name 
+ * @param {Boolean} defaultApplied - Ranking specified by defaultRatings object 
+ * @param {Boolean} bonusAdded - Bonus draft legal cards also make it into the set, populates bonus_links
+ */
 async function createSetReview(userid, setid, name, defaultApplied, bonusAdded) {
 
     const query = `INSERT INTO user_sets(user_id, set_id, name, includes_bonus) VALUES ($1, $2, $3, $4)`;
@@ -57,15 +70,18 @@ async function createSetReview(userid, setid, name, defaultApplied, bonusAdded) 
 
         await pool.query(reviewQuery, dataArray);
 
-
     } catch (err) {
         console.log(err);
     }
 }
 
-async function getSets() {
+/**
+ * By default, returns all available non-bonus sets and associated information.
+ * @returns 
+ */
+async function getSets(isBonus=false) {
 
-    const query = `SELECT * FROM sets WHERE is_bonus = false`;
+    const query = `SELECT * FROM sets${isBonus ? `` : ` WHERE is_bonus = false`}`;
 
     try {
 
@@ -75,7 +91,25 @@ async function getSets() {
     } catch (err) {
         console.log(err);
     }
-
 }
 
-export default { getAllSetReviews, createSetReview, getSets };
+/**
+ * Gets a user's reviews and associated card information for the cards composing the userSetId's set 
+ * @param {int} userSetId - Id for the set review 
+ * @returns 
+ */
+async function getReviewsWithCards(userSetId) {
+
+    const query = `SELECT * FROM reviews JOIN cards ON cards.card_id = reviews.card_id WHERE user_set_id = $1;`;
+
+    try {
+        const { rows } = await pool.query(query, [userSetId]);
+        console.log(rows);
+        return rows; 
+
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export default { getAllSetReviews, createSetReview, getSets, getReviewsWithCards };

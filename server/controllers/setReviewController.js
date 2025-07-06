@@ -13,7 +13,7 @@ async function getSetReviews(req, res) {
  * Creates a set review instance for a user, taking in a POST body of: 
  *  setid - id of set 
  *  name - user's choice to name the set instance 
- *  defaultApplied - Applies 'C' to commons, 'B' to uncommons, 'A' to rares, and 'S' to mythics 
+ *  defaultApplied - Applies default ratings according to defaultRatings object (ex. C for commons)
  *  bonusAdded - Add the bonus sheets / other draft legal variations to the set review
  */
 async function createSetReview(req, res) {
@@ -30,4 +30,15 @@ async function createSetReview(req, res) {
 
 }
 
-export { getSetReviews, createSetReview } ; 
+async function getSetReviewCards(req, res) {
+
+    //implement authentication 
+    const userid = 1; 
+
+    const { setid } = req.params;
+
+    const rows = await db.getReviewsWithCards(setid);
+    res.json(rows);
+}
+
+export { getSetReviews, createSetReview, getSetReviewCards } ; 

@@ -1,7 +1,7 @@
-function Panel() {
+function Panel({tempPageNav}) {
     return (
         <div>
-            <button className="panel-button">EDIT</button>
+            <button onClick={tempPageNav} className="panel-button">EDIT</button>
             <button className="panel-button">DELETE</button>
         </div>
     );

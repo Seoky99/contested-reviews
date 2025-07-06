@@ -1,20 +1,22 @@
 import './App.css'
-import SetPage from './components/SetPage'
-import HomePage from './components/HomePage'
+import SetPage from './components/pages/SetPage'
+import CardsPage from './components/pages/CardsPage';
 import { useState } from 'react';
 
 function App() {
 
-  const [shownPage, setShownPage] = useState('sets');
-  function handleClick() {
-    setShownPage('sets');
+  const [pageData, setPageData] = useState({'shownPage': 'sets'});
+
+  function tempPageNav(id) {
+    setPageData({...pageData, 'shownPage': 'setreview', 'data': id});
   }
 
+  //TODO: replace with dataloading router + tanstack, especially the ugly state page rendering 
   return (
     <>
-      {/*{shownPage === 'home' && <HomePage handleClick={handleClick}>Hello</HomePage>} */}
-      {shownPage === 'sets' && <SetPage></SetPage>}
-      {shownPage === 'setreview' && <h1>Hello</h1>}
+      {pageData.shownPage === 'sets' && <SetPage tempPageNav={tempPageNav}></SetPage>}
+      {pageData.shownPage === 'setreview' && <CardsPage userSetID={pageData.data}></CardsPage>}
+      {/*<CardsPage userSetID={9}></CardsPage>*/}
     </>
   )
 }
