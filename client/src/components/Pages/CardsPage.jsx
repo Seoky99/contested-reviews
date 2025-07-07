@@ -1,7 +1,8 @@
 import { useState } from "react";
-import Card from "../Card";
+import Card from "../Card/Card";
 import useFetchCardInformation from "../../customHooks/useFetchCardInformation";
 import sortUtils from "../../utils/sortingUtils";
+import styles from "./CardsPage.module.css";
 
 function CardsPage({userSetID}) {
   
@@ -37,7 +38,7 @@ function CardsPage({userSetID}) {
 
     return (
         <>
-            <div className="mechanisms">
+            <div className={styles.mechanisms}>
                 <div>
                     <label htmlFor="sorting">Sort: </label>
                     <select name="sorting" id="sorting" value={selectedSort} onChange={(e) => {
@@ -57,7 +58,7 @@ function CardsPage({userSetID}) {
                 </div>
             </div>
 
-            <div className="card-container">{displayReviews}</div>
+            <div className={styles.cardContainer}>{displayReviews}</div>
         </>
     );
 }

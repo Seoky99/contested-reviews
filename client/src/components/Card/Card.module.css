@@ -1,0 +1,25 @@
+.card {
+  display: inline-block; 
+
+  padding: 0;
+  gap: 0.5rem;
+  position: relative;
+
+
+  & .cardButton {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 10rem;
+    width: 7rem;
+    display: block;
+  }
+
+  & h1 {
+    position: absolute;
+    top: 1.2rem;
+    left: 1rem;
+    text-shadow: 2px 2px 2px black;
+    font-size: 3rem;
+  }
+}

@@ -1,0 +1,36 @@
+form {
+    padding: 0.5rem;
+    font-size: 0.7rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10%;
+    border: 2px solid white;
+    border-radius: 5px;
+}
+
+.formSeparator {
+  display: flex;
+  gap: 2rem;
+
+  & label {
+    width: 50%;
+  }
+
+  & input {
+    width: 50%;
+  }
+}
+
+.addPanel {
+  display: flex;
+  gap: 2rem;
+}
+
+input {
+    height: 2rem;
+    padding: 0.2rem;
+}
+
+.submitButton {
+    background-color: skyblue;
+}

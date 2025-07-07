@@ -5,121 +5,17 @@
 }
 
 #root {
-  max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  width: 80%; 
-}
-
-.card {
-  padding: 2em;
-}
-
-ul {
-  display: flex;
-  gap: 2rem;
+  width: 90%; 
 }
 
 li {
   list-style-type: none;
 }
 
-.read-the-docs {
-  color: #888;
-}
-
-.setWrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.setButton {
-  padding: 2.4rem 4.8rem;
-  font-size: 5rem;
-  text-shadow: 2px 2px 2px black;
-  background-size: cover;
-}
-
-.setReview {
-  padding: 1.2rem 2.4rem;
-  font-size: 2rem;
-  text-shadow: 2px 2px 2px black;
-  background-size: cover;
-}
-
-.panel-button {
-  padding: 5px 10px;
-  font-size: 0.8rem;
-}
-
-.addSetButton {
-  text-align: center;
-  padding: 0px 50px;
-  font-size: 5rem;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-
-  & button {
-    width: 200px;
-  }
-}
-
-.form-separator {
-  display: flex;
-  gap: 2rem;
-}
-
-.add-panel {
-  display: flex;
-  gap: 2rem;
-}
-
 img {
-  width: 400px; 
+  width: 300px; 
   height: 200px;
-}
-
-.card-container {
-  display: grid; 
-  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
-  gap: 0.2rem;
-}
-
-.card {
-  display: inline-block; 
-
-  padding: 0;
-  gap: 0.5rem;
-  position: relative;
-
-
-  & .card-button {
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    height: 10rem;
-    width: 7rem;
-    display: block;
-  }
-
-  & h1 {
-    position: absolute;
-    top: 1.2rem;
-    left: 1rem;
-    text-shadow: 2px 2px 2px black;
-    font-size: 3rem;
-  }
-}
-
-.mechanisms {
-  display: flex;
-  gap: 2rem;
-  justify-content: flex-end;
-  margin-bottom: 2rem;
 }

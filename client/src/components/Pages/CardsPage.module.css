@@ -1,0 +1,12 @@
+.mechanisms {
+  display: flex;
+  gap: 2rem;
+  justify-content: flex-end;
+  margin-bottom: 2rem;
+}
+
+.cardContainer {
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.2rem;
+}

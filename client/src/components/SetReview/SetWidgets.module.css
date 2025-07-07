@@ -1,0 +1,12 @@
+.widgetWrapper {
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.panelButton {
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
+  background-color: white;
+}

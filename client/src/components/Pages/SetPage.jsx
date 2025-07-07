@@ -1,8 +1,9 @@
 import { useState } from 'react'; 
 import useFetchSetInformation from '../../customHooks/useFetchSetInformation';
-import SetReview from '../SetReview';
-import Set from "../Set";
-import AddPanel from '../AddPanel';
+import SetReview from '../SetReview/SetReview';
+import Set from "../Set/Set";
+import AddPanel from '../AddPanel/AddPanel';
+import styles from "./SetPage.module.css";
 
 function SetPage({tempPageNav}) {
 
@@ -16,7 +17,7 @@ function SetPage({tempPageNav}) {
     }
 
     function handleSetReviewClick(id) {
-        setSelectedSetReviewID(id);
+        selectedSetReviewID === id ? setSelectedSetReviewID(0) : setSelectedSetReviewID(id);
     }
 
     function findCorrespondingImg(setID) {
@@ -47,24 +48,26 @@ function SetPage({tempPageNav}) {
     //TODO: Replace addView with routing 
     return (
         
-        <div className="setWrapper">
+        <div className={styles.pageWrapper}>
 
             <p>Available sets:</p>
-            <ul>{displaySets}</ul>
+            <ul className={styles.setWrapper}>{displaySets}</ul>
 
             {!addView && 
                 <>
                     <p>My current sets:</p>
-                    <ul>
-                        <li><button onClick={() => setAddView(true)} className="addSetButton">+</button></li>
+                    <ul className={styles.setReviewWrapper}>
+                        <li>
+                            <button onClick={() => setAddView(true)} className={styles.addSetButton}>
+                                +
+                            </button>
+                        </li>
                         {displaySetReviews}
                     </ul>
                 </>
             }
 
             {addView && <AddPanel currentImg={currentImg} selectedSetID={selectedSetID}></AddPanel>}
-
-            <p>Selected set: {selectedSetID}</p>
         </div>
     );
 }; 
