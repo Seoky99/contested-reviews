@@ -29,7 +29,7 @@ function useFetchSetInformation() {
         fetchPageInformation(); 
     }, []); 
 
-    return {sets, setReviews, loading, error}; 
+    return {sets, setReviews, setSetReviews, loading, error}; 
 }
 
 export default useFetchSetInformation;

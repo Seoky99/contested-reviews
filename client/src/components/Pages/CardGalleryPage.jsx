@@ -1,12 +1,13 @@
 import { useState } from "react";
+import { useParams } from "react-router";
 import Card from "../Card/Card";
-import useFetchCardInformation from "../../customHooks/useFetchCardInformation";
+import useFetchGallery from "../../customHooks/useFetchGallery";
 import sortUtils from "../../utils/sortingUtils";
-import styles from "./CardsPage.module.css";
+import styles from "./CardGalleryPage.module.css";
 
-function CardsPage({userSetID}) {
-  
-    const { reviews, setReviews, loading, error } = useFetchCardInformation(userSetID);
+function CardGalleryPage() {
+    const { userSetId } = useParams();
+    const { reviews, setReviews, loading, error } = useFetchGallery(userSetId);
     const [selectedSort, setSelectedSort] = useState('None'); 
 
     if (error) {return <h1>error!</h1>}
@@ -16,7 +17,7 @@ function CardsPage({userSetID}) {
     console.log(bugFinding); */
 
     const displayReviews = reviews.map(review => {
-        return <Card key={review.review_id} cardData={review}></Card>;
+        return <Card key={review.review_id} cardData={review} userSetId={userSetId}></Card>;
     })
 
     function sortCards(method) {
@@ -63,4 +64,4 @@ function CardsPage({userSetID}) {
     );
 }
 
-export default CardsPage;
+export default CardGalleryPage;

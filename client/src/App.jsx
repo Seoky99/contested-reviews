@@ -1,6 +1,6 @@
 import './App.css'
 import SetPage from './components/Pages/SetPage'
-import CardsPage from './components/Pages/CardsPage';
+import CardsPage from './components/Pages/CardGalleryPage';
 import { useState } from 'react';
 
 function App() {

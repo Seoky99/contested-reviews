@@ -1,6 +1,9 @@
 import styles from "./AddPanel.module.css";
+import { useOutletContext } from "react-router";
 
-function AddPanel({currentImg, selectedSetID}) {
+function AddPanel() {
+
+    const {currentImg, selectedSetID} = useOutletContext();
 
     return (
     <div className={styles.addPanel}>

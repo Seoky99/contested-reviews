@@ -1,22 +1,20 @@
 import { useState } from 'react'; 
 import useFetchSetInformation from '../../customHooks/useFetchSetInformation';
-import SetReview from '../SetReview/SetReview';
+import { Outlet } from "react-router";
 import Set from "../Set/Set";
-import AddPanel from '../AddPanel/AddPanel';
 import styles from "./SetPage.module.css";
 
-function SetPage({tempPageNav}) {
+function SetPage() {
 
-    const { sets, setReviews, loading, error } = useFetchSetInformation();
+    const { sets, setSetReviews, setReviews, loading, error } = useFetchSetInformation();
     const [selectedSetID, setSelectedSetID] = useState('d7beb4b7-e1ff-4d35-ab07-5700f17ea1ea');
     const [selectedSetReviewID, setSelectedSetReviewID] = useState(0);
-    const [addView, setAddView] = useState(false);
 
     function handleSetClick(setID) {
         setSelectedSetID(setID);
     }
 
-    function handleSetReviewClick(id) {
+    function handleSetReviewClick(id) { 
         selectedSetReviewID === id ? setSelectedSetReviewID(0) : setSelectedSetReviewID(id);
     }
 
@@ -37,15 +35,6 @@ function SetPage({tempPageNav}) {
             </li>);
     });
 
-    const displaySetReviews = setReviews.map(setReview => {
-        return(
-            <li key={setReview.user_set_id}>
-                <SetReview handleSetReviewClick={handleSetReviewClick} setReviewData = {setReview} 
-                selectedSetReviewID={selectedSetReviewID} tempPageNav={tempPageNav}></SetReview>
-            </li>)
-    }) 
-
-    //TODO: Replace addView with routing 
     return (
         
         <div className={styles.pageWrapper}>
@@ -53,21 +42,7 @@ function SetPage({tempPageNav}) {
             <p>Available sets:</p>
             <ul className={styles.setWrapper}>{displaySets}</ul>
 
-            {!addView && 
-                <>
-                    <p>My current sets:</p>
-                    <ul className={styles.setReviewWrapper}>
-                        <li>
-                            <button onClick={() => setAddView(true)} className={styles.addSetButton}>
-                                +
-                            </button>
-                        </li>
-                        {displaySetReviews}
-                    </ul>
-                </>
-            }
-
-            {addView && <AddPanel currentImg={currentImg} selectedSetID={selectedSetID}></AddPanel>}
+            <Outlet context={{setReviews, setSetReviews, handleSetReviewClick, selectedSetReviewID, currentImg, selectedSetID}}/>
         </div>
     );
 }; 

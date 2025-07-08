@@ -11,10 +11,10 @@ async function getSetReviews(req, res) {
 
 /**
  * Creates a set review instance for a user, taking in a POST body of: 
- *  setid - id of set 
- *  name - user's choice to name the set instance 
- *  defaultApplied - Applies default ratings according to defaultRatings object (ex. C for commons)
- *  bonusAdded - Add the bonus sheets / other draft legal variations to the set review
+ *  setid {number} - id of set 
+ *  name {string} - user's choice to name the set instance 
+ *  defaultApplied {boolean} - Applies default ratings according to defaultRatings object (ex. C for commons)
+ *  bonusAdded {boolean} - Add the bonus sheets / other draft legal variations to the set review
  */
 async function createSetReview(req, res) {
 
@@ -22,14 +22,30 @@ async function createSetReview(req, res) {
     const userid = 1; 
 
     const { setid, name } = req.body; 
+    
+    //sent via checkbox in the form 
     const defaultApplied = 'defaultApplied' in req.body; 
     const bonusAdded = 'bonusAdded' in req.body; 
 
     await db.createSetReview(userid, setid, name, defaultApplied, bonusAdded);
     res.json({setid, name});
+}
+
+async function deleteSetReview(req, res) {
+    
+    //implement authentication - check if user id matches 
+    const userid = 1; 
+
+    const { setid } = req.params; 
+
+    await db.deleteSetReview(setid); 
+    res.status(204).send(); 
 
 }
 
+/**
+ * Takes in the user's set id from the url and returns the appropiate user set 
+ */
 async function getSetReviewCards(req, res) {
 
     //implement authentication 
@@ -41,4 +57,41 @@ async function getSetReviewCards(req, res) {
     res.json(rows);
 }
 
-export { getSetReviews, createSetReview, getSetReviewCards } ; 
+/**
+ * Takes in the user's set id and card id from the url and returns the appropiate card 
+ */
+async function getCardFromSetReview(req, res) {
+
+    //implement authentication 
+    const userid = 1; 
+
+    const { setid, cardid } = req.params; 
+
+    const row = await db.getCardFromSetReview(setid, cardid);
+
+    //there should be only one row ideally 
+
+    res.json(row[0]);
+}
+
+/**
+ * Takes in the appropiate set id, card id from the url and updates the card based on the
+ * PATCH body of: rank {string}, notes {string} 
+ */
+async function patchCardFromSetReview(req, res) {
+
+    //implement authentication 
+    const userid = 1; 
+
+    const { setid, cardid } = req.params;
+    
+    console.log(req.body);
+    const { rank, notes } = req.body; 
+
+    await db.patchCardFromSetReview(setid, cardid, rank, notes);
+
+    //there should be only one row ideally 
+    res.json(JSON.stringify({rank, notes}));
+}
+
+export { getSetReviews, createSetReview, deleteSetReview, getSetReviewCards, getCardFromSetReview, patchCardFromSetReview } ; 

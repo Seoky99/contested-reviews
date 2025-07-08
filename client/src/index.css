@@ -1,3 +1,9 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -10,6 +16,11 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  width: 90%; 
 }
 
 button {
@@ -29,4 +40,13 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+li {
+  list-style-type: none;
+}
+
+img {
+  width: 300px; 
+  height: 200px;
 }

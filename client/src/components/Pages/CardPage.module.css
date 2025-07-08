@@ -1,0 +1,37 @@
+.cardWrapper {
+    display: flex; 
+    justify-content: space-between;
+    padding: 1.2rem;
+}
+
+.cardInformation {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.cardRank {
+    font-size: 3rem;
+
+    & h1 {
+        position: absolute;
+        text-shadow: 2px 2px black;
+        top: 100px;
+        left: 120px;
+    }
+}
+
+.cardImage {
+    width: 250px; 
+    height: auto;
+}
+
+textarea {
+    padding: 5px;
+}
+
+.saveButton {
+    background-color: green;
+    width: 5rem;
+    margin-left: auto;
+}

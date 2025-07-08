@@ -1,10 +1,12 @@
 import styles from "./SetWidgets.module.css"
+import { Link } from "react-router";
 
-function SetWidgets({tempPageNav}) {
+function SetWidgets({userSetId, deleteSetReview}) {
+
     return (
         <div className={styles.widgetWrapper}>
-            <button onClick={tempPageNav} className={styles.panelButton}>EDIT</button>
-            <button className={styles.panelButton}>DELETE</button>
+            <Link to={`/setreviews/${userSetId}/cards`} className={styles.panelButton}>EDIT</Link>
+            <button className={styles.panelButton} onClick={deleteSetReview}>DELETE</button>
         </div>
     );
 }

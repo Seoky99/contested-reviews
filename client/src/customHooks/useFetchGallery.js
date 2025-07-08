@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react"; 
 
-function useFetchSetInformation(userSetID) {
+function useFetchGallery(userSetID) {
 
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
-    console.log(userSetID);
 
     useEffect( () => {
         async function fetchReviews() {
@@ -29,4 +27,4 @@ function useFetchSetInformation(userSetID) {
     return {reviews, setReviews, loading, error};
 }
 
-export default useFetchSetInformation;
+export default useFetchGallery;
