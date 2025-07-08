@@ -12,7 +12,7 @@ async function initSchema() {
             password TEXT NOT NULL 
         );
 
-        CREATE TABLE sets (
+        CREATE TABLE IF NOT EXISTS sets (
             set_id UUID PRIMARY KEY, 
             set_code TEXT NOT NULL,
             name TEXT NOT NULL,
@@ -20,7 +20,7 @@ async function initSchema() {
             set_img TEXT NOT NULL 
         );
 
-        CREATE TABLE bonus_links (
+        CREATE TABLE IF NOT EXISTS bonus_links (
             link_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
             main_set_id UUID, 
             bonus_set_id UUID, 
@@ -28,7 +28,7 @@ async function initSchema() {
             FOREIGN KEY (bonus_set_id) REFERENCES sets(set_id)
         );
 
-        CREATE TABLE cards (
+        CREATE TABLE IF NOT EXISTS cards (
             card_id UUID PRIMARY KEY, 
             set_id UUID,
             cmc INTEGER, 
@@ -42,18 +42,19 @@ async function initSchema() {
             FOREIGN KEY (set_id) REFERENCES sets(set_id)
         );
 
-        CREATE TABLE user_sets(
+        CREATE TABLE IF NOT EXISTS user_sets(
             user_set_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
             user_id INTEGER, 
             set_id UUID,
             name TEXT NOT NULL,
             user_set_img TEXT,
+            default_applied BOOLEAN DEFAULT FALSE,
             includes_bonus BOOLEAN DEFAULT FALSE,
             FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
             FOREIGN KEY (set_id) REFERENCES sets(set_id)
         );
 
-        CREATE TABLE reviews(
+        CREATE TABLE IF NOT EXISTS reviews(
             review_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
             user_set_id INTEGER,
             card_id UUID,
@@ -63,7 +64,7 @@ async function initSchema() {
             FOREIGN KEY (card_id) REFERENCES cards(card_id)
         );
         
-        CREATE TABLE tags(
+        CREATE TABLE IF NOT EXISTS tags(
             tag_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
             user_id INTEGER,
             set_id UUID,
@@ -72,7 +73,7 @@ async function initSchema() {
             FOREIGN KEY (set_id) REFERENCES sets(set_id)
         );
 
-        CREATE TABLE review_tags(
+        CREATE TABLE IF NOT EXISTS review_tags(
             review_id INTEGER,
             tag_id INTEGER,
             FOREIGN KEY (review_id) REFERENCES reviews(review_id) ON DELETE CASCADE,

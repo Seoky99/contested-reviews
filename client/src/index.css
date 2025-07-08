@@ -15,12 +15,9 @@
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-  width: 90%; 
+  -moz-osx-font-smoothing: grayscale;   
+
+  min-height: 100vh;
 }
 
 button {
@@ -44,9 +41,4 @@ button:focus-visible {
 
 li {
   list-style-type: none;
-}
-
-img {
-  width: 300px; 
-  height: 200px;
 }

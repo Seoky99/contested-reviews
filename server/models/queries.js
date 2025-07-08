@@ -32,11 +32,11 @@ async function getAllSetReviews(userid) {
  */
 async function createSetReview(userid, setid, name, defaultApplied, bonusAdded) {
 
-    const query = `INSERT INTO user_sets(user_id, set_id, name, includes_bonus) VALUES ($1, $2, $3, $4)`;
+    const query = `INSERT INTO user_sets(user_id, set_id, name, default_applied, includes_bonus) VALUES ($1, $2, $3, $4, $5)`;
 
     try {
 
-        await pool.query(query, [userid, setid, name, bonusAdded]);
+        await pool.query(query, [userid, setid, name, defaultApplied, bonusAdded]);
 
         //TODO: add constraint on name 
         const {rows:[{ user_set_id }]} = await pool.query(`SELECT user_set_id FROM user_sets WHERE user_id = $1 AND name = $2;`, [userid, name]);
@@ -46,11 +46,11 @@ async function createSetReview(userid, setid, name, defaultApplied, bonusAdded) 
         const { rows: cards } = await pool.query(`SELECT * FROM cards WHERE set_id = $1${bonusAdded ? ` OR set_id IN
          (SELECT bonus_set_id FROM bonus_links WHERE main_set_id = $1)`: ``}`, [setid]);
   
-        let reviewQuery = `INSERT INTO reviews(user_set_id, card_id${defaultApplied ? `, rank` : ``}) VALUES `;
+        let reviewQuery = `INSERT INTO reviews(user_set_id, card_id, rank) VALUES `;
         
         const dataArray = []; 
         let count = 0; 
-        const numColsInserted = defaultApplied ? 3 : 2;
+        const numColsInserted = 3;
         
         cards.forEach( (card, i) => {
             let querySegment = `(`; 
@@ -65,7 +65,7 @@ async function createSetReview(userid, setid, name, defaultApplied, bonusAdded) 
 
 
             dataArray.push(user_set_id, card.card_id);
-            if (defaultApplied) { dataArray.push(rarityMap[card.rarity]) }
+            defaultApplied ? dataArray.push(rarityMap[card.rarity]) : dataArray.push("NR");
         });
 
         await pool.query(reviewQuery, dataArray);

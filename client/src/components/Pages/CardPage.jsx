@@ -3,11 +3,8 @@ import useFetchCard from "../../customHooks/useFetchCard";
 import styles from "./CardPage.module.css";
 
 function CardPage() {
-
     const { userSetId, cardId } = useParams(); 
     const { cardDetails, setCardDetails, loading, error } = useFetchCard(userSetId, cardId); 
-
-    console.log(cardDetails); 
 
     if (loading) { return <h1>Hiya 2</h1> }
     if (error) { return <h1>Hiya</h1>} 
@@ -40,8 +37,6 @@ function CardPage() {
         const copyDetails = {...cardDetails, notes: e.target.value}; 
         setCardDetails(copyDetails); 
     }
-
-    console.log(cardDetails);
 
     return (
         <>

@@ -8,13 +8,10 @@ import styles from "./CardGalleryPage.module.css";
 function CardGalleryPage() {
     const { userSetId } = useParams();
     const { reviews, setReviews, loading, error } = useFetchGallery(userSetId);
-    const [selectedSort, setSelectedSort] = useState('None'); 
+    const [ selectedSort, setSelectedSort ] = useState('None'); 
 
     if (error) {return <h1>error!</h1>}
     if (loading) { return <h1>Loading!</h1>}
-
-    /*const bugFinding = reviews.filter(review => review.colors === null);
-    console.log(bugFinding); */
 
     const displayReviews = reviews.map(review => {
         return <Card key={review.review_id} cardData={review} userSetId={userSetId}></Card>;

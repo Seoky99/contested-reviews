@@ -1,10 +1,16 @@
 import { Outlet } from "react-router"; 
+import Navigation from "./components/Navigation/Navigation";
+import styles from "./Root.module.css"; 
 
 function Root() {
     return (
         <>
-            <h1>Hello world</h1>
-            <Outlet/>
+            <div className={styles.pageWrapper}>
+                <Navigation></Navigation>
+                <div className={styles.contentWrapper}>
+                    <Outlet/>
+                </div>
+            </div>
         </>
     );
 }

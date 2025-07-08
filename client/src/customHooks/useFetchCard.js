@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 
 function useFetchCard(userSetId, cardId) {
 
-    const [cardDetails, setCardDetails] = useState({});
+    const [cardDetails, setCardDetails] = useState();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -14,6 +14,9 @@ function useFetchCard(userSetId, cardId) {
             try {
                 const response = await fetch(url);
                 const cardData = await response.json();
+
+                //map each textarea: if null, ' '.
+
                 setCardDetails(cardData);
             } catch (err) {
                 console.log(err);

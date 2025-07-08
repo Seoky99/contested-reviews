@@ -1,4 +1,5 @@
 import client from '../client.js';
+import defaultRatings from '../defaultRatings.js';
 
 //Update the cards as they get spoiled by running addCards(url);
 
@@ -100,6 +101,9 @@ async function addCards(url) {
 
     //handling of multi-face cards >:( i hate them 
     //Note: in-booster query makes it so that no-face cards should be removed
+
+    //Some cards have card_faces component but have image_uris in "main" card - 
+
     let images = [];
     if (card.image_uris) {
       images.push(card.image_uris.normal);
@@ -143,6 +147,86 @@ async function pushToClient(query, dataArray) {
   }
 }
 
+async function updateSetReviews(set_id) {
+
+  await client.connect(); 
+  const matchingQuery = `
+    INSERT INTO reviews (user_set_id, card_id)
+    SELECT
+      us.user_set_id,
+      c.card_id
+    FROM
+      user_sets us
+    JOIN cards c
+      ON us.set_id = c.set_id
+    LEFT JOIN reviews r
+      ON r.user_set_id = us.user_set_id
+      AND r.card_id = c.card_id
+    WHERE
+      us.set_id = $1
+      AND r.review_id IS NULL;
+    `; 
+
+    const matchingBonusQuery = `
+    INSERT INTO reviews (user_set_id, card_id)
+    SELECT
+      us.user_set_id,
+      c.card_id
+    FROM
+      user_sets us
+    JOIN bonus_links bl
+      ON bl.main_set_id = us.set_id
+    JOIN cards c
+      ON c.set_id = bl.bonus_set_id
+    LEFT JOIN reviews r
+      ON r.user_set_id = us.user_set_id
+      AND r.card_id = c.card_id
+    WHERE
+      us.set_id = $1
+      AND us.includes_bonus = TRUE
+      AND r.review_id IS NULL;
+    `; 
+
+    //update only defaultApplied sets 
+    const defaultAppliedQuery = `
+    UPDATE reviews 
+     SET rank = CASE
+      WHEN cards.rarity = 'common' THEN 'C'
+      WHEN cards.rarity = 'uncommon' THEN 'B'
+      WHEN cards.rarity = 'rare' THEN 'A'
+      WHEN cards.rarity = 'mythic' THEN 'S'
+      ELSE 'C'
+    END
+    FROM user_sets, cards 
+    WHERE reviews.user_set_id = user_sets.user_set_id AND reviews.card_id = cards.card_id AND
+    user_sets.default_applied = TRUE AND reviews.rank IS NULL AND user_sets.set_id = $1;
+    `; 
+
+    const nonRatedQuery = `
+      UPDATE reviews 
+      SET rank = 'NR'
+      FROM user_sets
+      WHERE reviews.user_set_id = user_sets.user_set_id AND
+      user_sets.default_applied = FALSE AND reviews.rank IS NULL AND user_sets.set_id = $1;
+    `; 
+
+    await useClient(matchingQuery, [set_id]);
+    await useClient(matchingBonusQuery, [set_id]);
+    await useClient(defaultAppliedQuery, [set_id]);
+    await useClient(nonRatedQuery, [set_id]);
+
+    await client.end(); 
+}
+
+async function useClient(query, dataArray) {
+  try {
+    await client.query(query, dataArray);
+  } catch (err) {
+    console.log(err);
+  } 
+}
+
+
 /*set:SETNAME+in:booster
   Examples: 
     const URL = 'https://api.scryfall.com/sets/fin';
@@ -151,12 +235,21 @@ async function pushToClient(query, dataArray) {
     const URL = 'https://api.scryfall.com/sets/eoe';
     const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Aeoe%2Bin%3Abooster';
 
+    const URL = 'https://api.scryfall.com/sets/eos';
+    const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Aeos%2Bin%3Abooster';
+
     const URL = 'https://api.scryfall.com/sets/fca';
     const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Afca%2Bin%3Abooster';
 */
 
+//const URL = 'https://api.scryfall.com/sets/eos';
+//const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Aeos%2Bin%3Abooster';
+
 //addSet(URL, true);
 //addCards(URLTWO);
 
+//if updating setReviews, you must add the bonus sheet cards as well 
+//updateSetReviews('452951cf-378b-4472-b7fe-572fe2af2ac0');
+
 //call if set has a link
-//addBonusLink('FIN', 'FCA');
+//addBonusLink('EOE', 'EOS');
