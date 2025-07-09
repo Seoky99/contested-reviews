@@ -27,6 +27,12 @@ function CardGalleryPage() {
             case 'cmc': 
                 copy.sort((a, b) => sortUtils.sortingByCMC(a, b)); 
                 break;
+            case 'rating':
+                copy.sort((a, b) => sortUtils.sortingByRating(a, b)); 
+                break;
+            case 'rarity':
+                copy.sort((a, b) => sortUtils.sortingByRarity(a, b)); 
+                break;
             default: 
                 copy.sort((a, b) => sortUtils.sortingByColor(a, b));
         }
@@ -37,6 +43,19 @@ function CardGalleryPage() {
     return (
         <>
             <div className={styles.mechanisms}>
+
+                <div>
+                    <label /*htmlFor="sorting" */>Partition: </label>
+                    <select /*name="sorting" id="sorting" value={selectedSort} onChange={(e) => {
+                        setSelectedSort(e.target.value); sortCards(e.target.value); }} */>
+                        <option default value="none">None</option>
+                        <option value="color">By Color</option>
+                        <option value="cmc">By CMC</option>
+                        <option value="rating">By Rating</option>
+                        <option value="rarity">By Rarity</option>
+                    </select>
+                </div>
+
                 <div>
                     <label htmlFor="sorting">Sort: </label>
                     <select name="sorting" id="sorting" value={selectedSort} onChange={(e) => {
@@ -44,6 +63,8 @@ function CardGalleryPage() {
                         <option default value="none">None</option>
                         <option value="color">By Color</option>
                         <option value="cmc">By CMC</option>
+                        <option value="rating">By Rating</option>
+                        <option value="rarity">By Rarity</option>
                     </select>
                 </div>
                 

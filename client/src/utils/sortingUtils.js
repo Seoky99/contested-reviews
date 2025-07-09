@@ -43,4 +43,34 @@ function sortingByColor(a, b) {
     return 0; 
 }
 
-export default { sortingByCMC, sortingByColor };
+//TODO: FINISH
+function sortingByRating(a, b) {
+
+    const ratingMap = {
+        "S": 0, 
+        "A": 1,
+        "B": 2, 
+        "C": 3, 
+        "D": 4, 
+        "F": 5
+    }
+
+    return ratingMap[a.rank] - ratingMap[b.rank]; 
+}
+
+function sortingByRarity(a, b) {
+
+    const rarityMap = {
+        "mythic": 0,
+        "rare": 1, 
+        "uncommon": 2, 
+        "common": 3
+    }
+
+    console.log(a.rarity);
+
+    return rarityMap[a.rarity] - rarityMap[b.rarity];
+
+}
+
+export default { sortingByCMC, sortingByColor, sortingByRating, sortingByRarity };

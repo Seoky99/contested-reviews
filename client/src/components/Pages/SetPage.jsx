@@ -7,7 +7,7 @@ import styles from "./SetPage.module.css";
 function SetPage() {
 
     const { sets, setSetReviews, setReviews, loading, error } = useFetchSetInformation();
-    const [selectedSetID, setSelectedSetID] = useState('d7beb4b7-e1ff-4d35-ab07-5700f17ea1ea');
+    const [selectedSetID, setSelectedSetID] = useState('452951cf-378b-4472-b7fe-572fe2af2ac0');
     const [selectedSetReviewID, setSelectedSetReviewID] = useState(0);
 
     function handleSetClick(setID) {
@@ -27,7 +27,7 @@ function SetPage() {
     if (loading) { return <h1>Loading!</h1>};
 
     const currentImg = findCorrespondingImg(selectedSetID).set_img; 
-    
+
     const displaySets = sets.map(set => {
         return(
             <li key={set.set_id}>

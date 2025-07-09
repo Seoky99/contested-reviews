@@ -16,8 +16,8 @@ async function initSchema() {
             set_id UUID PRIMARY KEY, 
             set_code TEXT NOT NULL,
             name TEXT NOT NULL,
-            is_bonus BOOLEAN DEFAULT FALSE, 
-            set_img TEXT NOT NULL 
+            is_bonus BOOLEAN DEFAULT FALSE NOT NULL, 
+            set_img TEXT NOT NULL
         );
 
         CREATE TABLE IF NOT EXISTS bonus_links (
@@ -61,7 +61,8 @@ async function initSchema() {
             rank TEXT, 
             notes TEXT,
             FOREIGN KEY (user_set_id) REFERENCES user_sets(user_set_id) ON DELETE CASCADE,
-            FOREIGN KEY (card_id) REFERENCES cards(card_id)
+            FOREIGN KEY (card_id) REFERENCES cards(card_id),
+            UNIQUE (user_set_id, card_id)
         );
         
         CREATE TABLE IF NOT EXISTS tags(

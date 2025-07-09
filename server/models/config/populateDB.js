@@ -1,15 +1,16 @@
 import client from '../client.js';
-import defaultRatings from '../defaultRatings.js';
+import setImageConfig from './setImageConfig.js';
+import bonusCodeConfig from './bonusCodeConfig.js';
 
 //Update the cards as they get spoiled by running addCards(url);
 
 /**
  * Fetches set information or cards for a given URL 
  * @param {string} url - The Scryfall API URL to fetch  
- * @param {boolean} isSet - Fetch the set information on True, cards on False 
- * @returns {Promise<Array>} - Returns the set data as an array for sets, json.data for cards
+ * @param {string} searchTarget - Returns an array of data objects depending on searchTarget: (set, cards, randomArtCrop) 
+ * @returns {Promise<object[]>} - Returns the set data as an array for sets, json.data for cards
  */
-async function fetchScryfall(url, isSet=false) {
+async function fetchScryfall(url, searchTarget) {
   try {
     let hasMore = true;
     const data = [];
@@ -28,7 +29,19 @@ async function fetchScryfall(url, isSet=false) {
 
       const json = await response.json();
 
-      isSet ? data.push([json.id, json.code, json.name]) : data.push(...json.data);
+      switch (searchTarget) {
+        case 'set':
+          data.push({ id: json.id, code: json.code, name: json.name});
+          break; 
+        case 'cards':
+          data.push(...json.data)
+          break; 
+        case 'randomArtCrop':
+          data.push({artCrop: json.art_crop})
+          break;
+        default:
+          throw new Error("Check your searchTarget");
+      }
 
       hasMore = json.has_more;
 
@@ -38,26 +51,22 @@ async function fetchScryfall(url, isSet=false) {
     } while (hasMore);
 
     return data;
+
   } catch (err) {
     console.log('server failure' + err);
   }
 }
 
 /**
- * Adds the set information to the sets table in the database  
- * Note: if you add a bonus set, call addBonusLink
- * TODO: set_img
- * @param {string} url - Scryfall API URL 
- * @param {boolean} isBonus - Whether you are inserting a bonus set 
+ * Fetches a random art crop from any card belonging to the set 
+ * @param {string} setCode 
+ * @returns URL to the image 
  */
-async function addSet(url, isBonus=false) {
- 
-  const query = `INSERT INTO sets(set_id, set_code, name, is_bonus) VALUES ($1, $2, $3, $4) ON CONFLICT (set_id) DO NOTHING`;
+async function fetchRandomArtCropFromSet(setCode) {
+    const url = `https://api.scryfall.com/cards/random?q=set%3A${setCode}`;
+    const data = fetchScryfall(url, 'randomArtCrop');
 
-  const [dataArray] = await fetchScryfall(url, true); 
-  dataArray.push(isBonus);
-
-  pushToClient(query, dataArray);
+    return (await data)[0].artCrop;
 }
 
 /**
@@ -72,22 +81,59 @@ async function addBonusLink(setCode, bonusCode) {
     (SELECT set_id FROM sets WHERE set_code = $2))`;
   
   const dataArray = [setCode.toLowerCase(), bonusCode.toLowerCase()]; 
-  pushToClient(query, dataArray);
+  await useClient(query, dataArray);
+}
+
+/**
+ * Adds the set information to the sets table in the database  
+ * @param {string} setcode - Setcode of the set you are inserting (pass in bonus code here if adding bonus set)
+ * @param {boolean} isBonus - Whether you are inserting a bonus set 
+ * @param {string} associatedCode - If you are adding a bonus set, this is the set code
+ */
+async function addSet(setCode, isBonus, associatedCode) {
+
+  if (isBonus && associatedCode === null) {
+    throw new Error('include the bonus code as well if isBonus');
+  }
+
+  setCode = setCode.toLowerCase();
+
+  const url = `https://api.scryfall.com/sets/${setCode}`;
+  const query = `INSERT INTO sets(set_id, set_code, name, is_bonus, set_img) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (set_id) DO NOTHING`;
+  let dataArray = []; 
+
+  const { id, code, name} = (await fetchScryfall(url, 'set'))[0]; 
+  dataArray.push(id, code, name, isBonus);
+
+   //check if art crop is specified, otherwise fetch a random one  
+  if (setCode in setImageConfig) {
+      dataArray.push(setImageConfig[setCode]);
+  } else {
+      dataArray.push(await fetchRandomArtCropFromSet(setCode)); 
+  }
+
+  await useClient(query, dataArray);
+
+  if (isBonus) {
+    await addBonusLink(associatedCode, setCode);
+  }
 }
 
 /**
  * Adds the cards to the cards table in the database
  * @param {string} url - Scryfall API URL  
  */
-async function addCards(url) {
+async function addCards(setCode) {
+  setCode = setCode.toLowerCase(); 
+  const url = `https://api.scryfall.com/cards/search?q=set%3A${setCode}%2Bin%3Abooster`;
 
-  const data = await fetchScryfall(url);
-  let query = `INSERT INTO cards(card_id, set_id, cmc, colors, name, image_urls, rarity, type_line, keywords, artist)
-                    VALUES`;
+  const data = await fetchScryfall(url, 'cards');
+  let query = `INSERT INTO cards(card_id, set_id, cmc, colors, name, image_urls, rarity, type_line, keywords, artist) VALUES`;
   const dataArray = [];
   let count = 0;
   const numColsInserted = 10;
 
+  //Generates a query VALUES($1, $2, .... $colCount), ($colCount + 1...) for each card  
   data.forEach((card, i) => {
     let querySegment = `(`;
 
@@ -100,8 +146,6 @@ async function addCards(url) {
     query += querySegment;
 
     //handling of multi-face cards >:( i hate them 
-    //Note: in-booster query makes it so that no-face cards should be removed
-
     //Some cards have card_faces component but have image_uris in "main" card - 
 
     let images = [];
@@ -128,28 +172,14 @@ async function addCards(url) {
   //handles cards already added as cards get spoiled
   query += ` ON CONFLICT (card_id) DO NOTHING`;
 
-  pushToClient(query, dataArray);
+  await useClient(query, dataArray);
 }
 
-/**
- * Helper to utilize client 
- * @param {string} query - Scryfall API URL
- * @param {*[]} dataArray - SQL Parametrization array (card values)
- */
-async function pushToClient(query, dataArray) {
-  try {
-    await client.connect();
-    await client.query(query, dataArray);
-  } catch (err) {
-    console.log(err);
-  } finally {
-    await client.end();
-  }
-}
-
-async function updateSetReviews(set_id) {
+async function updateSetReviews(setId) {
 
   await client.connect(); 
+
+  //refactor 
   const matchingQuery = `
     INSERT INTO reviews (user_set_id, card_id)
     SELECT
@@ -210,10 +240,10 @@ async function updateSetReviews(set_id) {
       user_sets.default_applied = FALSE AND reviews.rank IS NULL AND user_sets.set_id = $1;
     `; 
 
-    await useClient(matchingQuery, [set_id]);
-    await useClient(matchingBonusQuery, [set_id]);
-    await useClient(defaultAppliedQuery, [set_id]);
-    await useClient(nonRatedQuery, [set_id]);
+    await useClient(matchingQuery, [setId]);
+    await useClient(matchingBonusQuery, [setId]);
+    await useClient(defaultAppliedQuery, [setId]);
+    await useClient(nonRatedQuery, [setId]);
 
     await client.end(); 
 }
@@ -226,30 +256,58 @@ async function useClient(query, dataArray) {
   } 
 }
 
+/**
+ * Initializes set and its cards. Add its associated bonus set with addBonus.
+ * If you wish to enter a bonus set separately, (perhaps a bonus is announced late into set reviews): 
+ * call addSet(bonusCode, true, setCode); addCards(bonusCode); separately 
+ * @param {string} setCode 
+ * @param {boolean} addBonus 
+ */
+async function populateSet(setCode, addBonus=false) {
+
+    setCode = setCode.toLowerCase();
+
+    if (addBonus && bonusCodeConfig[setCode] === null) {
+      throw new Error("Supply an associated bonus code in bonusCodeConfig.js please");
+    }
+
+    const bonusCodes = bonusCodeConfig[setCode];
+    console.log(bonusCodes);
+
+    try {
+      await client.connect();
+
+      if (addBonus) {
+        await addSet(setCode, false); 
+        await addCards(setCode); 
+
+        for (const bonusCode of bonusCodes) {
+          await addSet(bonusCode, true, setCode);
+          await addCards(bonusCode);
+        }
+
+      } else {
+        await addSet(setCode, false); 
+        await addCards(setCode);
+      }
+
+    } catch (err) {
+      console.log(err);
+    } finally {
+      await client.end(); 
+    }
+}
+
 
 /*set:SETNAME+in:booster
   Examples: 
     const URL = 'https://api.scryfall.com/sets/fin';
-    const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Afin%2Bin%3Abooster';
+    const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Afin%2Bin%3Abooster'; */
 
-    const URL = 'https://api.scryfall.com/sets/eoe';
-    const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Aeoe%2Bin%3Abooster';
-
-    const URL = 'https://api.scryfall.com/sets/eos';
-    const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Aeos%2Bin%3Abooster';
-
-    const URL = 'https://api.scryfall.com/sets/fca';
-    const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Afca%2Bin%3Abooster';
-*/
-
-//const URL = 'https://api.scryfall.com/sets/eos';
-//const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Aeos%2Bin%3Abooster';
-
-//addSet(URL, true);
-//addCards(URLTWO);
+//populateSet("FIN", true); 
 
 //if updating setReviews, you must add the bonus sheet cards as well 
-//updateSetReviews('452951cf-378b-4472-b7fe-572fe2af2ac0');
+updateSetReviews('452951cf-378b-4472-b7fe-572fe2af2ac0');
 
 //call if set has a link
 //addBonusLink('EOE', 'EOS');
