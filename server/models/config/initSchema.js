@@ -29,17 +29,37 @@ async function initSchema() {
         );
 
         CREATE TABLE IF NOT EXISTS cards (
-            card_id UUID PRIMARY KEY, 
-            set_id UUID,
-            cmc INTEGER, 
-            colors TEXT[],
-            name TEXT,
-            image_urls TEXT[], 
-            rarity TEXT,
-            type_line TEXT, 
+            card_id UUID PRIMARY KEY,
+            set_id UUID NOT NULL,  
+            rarity TEXT NOT NULL, 
+            cmc INTEGER NOT NULL,
             keywords TEXT[],
-            artist TEXT, 
+            type_line TEXT NOT NULL, 
+            layout TEXT NOT NULL,
+            digital BOOLEAN,
+            collector_number TEXT NOT NULL, 
             FOREIGN KEY (set_id) REFERENCES sets(set_id)
+        );
+
+        CREATE TABLE IF NOT EXISTS faces (
+            face_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
+            card_id UUID NOT NULL,
+            face_index INTEGER NOT NULL, 
+            colors TEXT[],
+            image_small TEXT, 
+            image_normal TEXT,
+            image_large TEXT, 
+            image_crop TEXT, 
+            name TEXT NOT NULL,
+            mana_cost TEXT, 
+            artist TEXT, 
+            power TEXT, 
+            toughness TEXT, 
+            type_line TEXT,
+            supertypes TEXT[],
+            types TEXT[],
+            subtypes TEXT[],
+            FOREIGN KEY (card_id) REFERENCES cards(card_id) 
         );
 
         CREATE TABLE IF NOT EXISTS user_sets(

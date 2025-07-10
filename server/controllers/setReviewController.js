@@ -1,4 +1,5 @@
-import db from "../models/queries.js";
+import db from "../models/database/queries.js";
+import extractCardFromRows from "./utils/extractCardFromRows.js";
 
 async function getSetReviews(req, res) {
 
@@ -6,6 +7,7 @@ async function getSetReviews(req, res) {
     const userid = 1; 
 
     const rows = await db.getAllSetReviews(userid);
+
     res.json(rows); 
 }
 
@@ -54,24 +56,25 @@ async function getSetReviewCards(req, res) {
     const { setid } = req.params;
 
     const rows = await db.getReviewsWithCards(setid);
-    res.json(rows);
+    const cards = extractCardFromRows(rows); 
+
+    res.json(cards);
 }
 
 /**
  * Takes in the user's set id and card id from the url and returns the appropiate card 
  */
-async function getCardFromSetReview(req, res) {
+async function getCardPageInformation(req, res) {
 
     //implement authentication 
     const userid = 1; 
 
     const { setid, cardid } = req.params; 
 
-    const row = await db.getCardFromSetReview(setid, cardid);
+    const rows = await db.getCardFromSetReview(setid, cardid);
+    const card = extractCardFromRows(rows)[0];
 
-    //there should be only one row ideally 
-
-    res.json(row[0]);
+    res.json(card);
 }
 
 /**
@@ -84,8 +87,6 @@ async function patchCardFromSetReview(req, res) {
     const userid = 1; 
 
     const { setid, cardid } = req.params;
-    
-    console.log(req.body);
     const { rank, notes } = req.body; 
 
     await db.patchCardFromSetReview(setid, cardid, rank, notes);
@@ -94,4 +95,5 @@ async function patchCardFromSetReview(req, res) {
     res.json(JSON.stringify({rank, notes}));
 }
 
-export { getSetReviews, createSetReview, deleteSetReview, getSetReviewCards, getCardFromSetReview, patchCardFromSetReview } ; 
+
+export { getSetReviews, createSetReview, deleteSetReview, getSetReviewCards, getCardPageInformation, patchCardFromSetReview } ; 

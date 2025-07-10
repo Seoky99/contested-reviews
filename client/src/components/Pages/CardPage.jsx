@@ -6,8 +6,8 @@ function CardPage() {
     const { userSetId, cardId } = useParams(); 
     const { cardDetails, setCardDetails, loading, error } = useFetchCard(userSetId, cardId); 
 
-    if (loading) { return <h1>Hiya 2</h1> }
-    if (error) { return <h1>Hiya</h1>} 
+    if (loading) { return <h1>Loading</h1> }
+    if (error) { return <h1>Error</h1>} 
 
     async function handleClick() {
         try {
@@ -38,13 +38,15 @@ function CardPage() {
         setCardDetails(copyDetails); 
     }
 
+    console.log(cardDetails);
+
     return (
         <>
             
             <div className={styles.cardWrapper}>
                 <div className={styles.cardRank}>
                     <h1>{cardDetails.rank === null ? "NR" : cardDetails.rank}</h1>
-                    <img className={styles.cardImage} src={cardDetails.image_urls[0]}></img>
+                    <img className={styles.cardImage} src={cardDetails.faces[0].imageNormal}></img>
                 </div>
 
                 <div className={styles.cardInformation}>

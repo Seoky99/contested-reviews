@@ -13,8 +13,10 @@ function CardGalleryPage() {
     if (error) {return <h1>error!</h1>}
     if (loading) { return <h1>Loading!</h1>}
 
+    console.log(reviews);
+    
     const displayReviews = reviews.map(review => {
-        return <Card key={review.review_id} cardData={review} userSetId={userSetId}></Card>;
+        return <Card key={review.reviewId} cardData={review} userSetId={userSetId}></Card>;
     })
 
     function sortCards(method) {

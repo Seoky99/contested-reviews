@@ -1,6 +1,9 @@
 import client from '../client.js';
 import setImageConfig from './setImageConfig.js';
 import bonusCodeConfig from './bonusCodeConfig.js';
+import queryGenerator from './queryGenerator.js';
+import parseTypeLine from './typelineParser.js';
+import { parse } from 'dotenv';
 
 //Update the cards as they get spoiled by running addCards(url);
 
@@ -127,52 +130,113 @@ async function addCards(setCode) {
   setCode = setCode.toLowerCase(); 
   const url = `https://api.scryfall.com/cards/search?q=set%3A${setCode}%2Bin%3Abooster`;
 
-  const data = await fetchScryfall(url, 'cards');
-  let query = `INSERT INTO cards(card_id, set_id, cmc, colors, name, image_urls, rarity, type_line, keywords, artist) VALUES`;
-  const dataArray = [];
-  let count = 0;
-  const numColsInserted = 10;
+  let data = await fetchScryfall(url, 'cards');
+
+  let cardsInitialQuery = `INSERT INTO cards(card_id, set_id, rarity, cmc, keywords, type_line, layout, digital, collector_number) VALUES`;
+  let facesInitialQuery = `INSERT INTO faces(card_id, face_index, colors, image_small, image_normal, image_large, image_crop, name, mana_cost, artist, power, toughness, type_line, supertypes, types, subtypes) VALUES`;
+  
+  const cardsDataArray = [];
+  const facesDataArray = []; 
+  
+  const numColsCards = 9;
+  const numColsFaces = 16; 
 
   //Generates a query VALUES($1, $2, .... $colCount), ($colCount + 1...) for each card  
+  let cardsQuery = queryGenerator(cardsInitialQuery, data.length, numColsCards);
+  //important line to not overwrite cards 
+  cardsQuery += ` ON CONFLICT (card_id) DO NOTHING`;
+
+
+  let faceCount = 0; 
+
   data.forEach((card, i) => {
-    let querySegment = `(`;
 
-    for (let colCount = 0; colCount < numColsInserted; colCount++) {
-      count++;
-      querySegment += `$${count}${colCount === numColsInserted - 1 ? `` : `, `}`;
-    }
-
-    querySegment += `)${i === data.length - 1 ? `` : `,`}`;
-    query += querySegment;
-
-    //handling of multi-face cards >:( i hate them 
-    //Some cards have card_faces component but have image_uris in "main" card - 
-
-    let images = [];
-    if (card.image_uris) {
-      images.push(card.image_uris.normal);
-    } else {
-      card.card_faces.forEach(face => images.push(face.image_uris.normal)); 
-    }
-
-    dataArray.push(
+     cardsDataArray.push(
       card.id,
       card.set_id,
+      card.rarity, 
       Number(card.cmc),
-      card.colors,
-      card.name,
-      images,
-      card.rarity,
-      card.type_line,
       card.keywords,
-      card.artist,
+      card.type_line,
+      card.layout, 
+      card.digital,
+      card.collector_number
     );
+
+    //multi-face card 
+    if ("card_faces" in card) {
+
+      for (let i = 0; i < card.card_faces.length; i++) {
+
+        const cardFace = card.card_faces[i];
+        faceCount++; 
+
+        const {supertypes, types, subtypes} = parseTypeLine(cardFace.type_line);
+
+        let imageUris = null;
+        if (cardFace.image_uris) {
+          imageUris = cardFace.image_uris;
+        } else if (card.image_uris) {
+          imageUris = card.image_uris;
+        }
+
+        const { small: image_small, normal: image_normal, large: image_large, art_crop: image_crop } = imageUris; 
+
+        facesDataArray.push(
+          card.id, 
+          i,
+          cardFace.colors, 
+          image_small,
+          image_normal,
+          image_large,
+          image_crop,
+          cardFace.name, 
+          "mana_cost" in cardFace ? cardFace.mana_cost : null, 
+          "artist" in cardFace ? cardFace.artist : null, 
+          "power" in cardFace ? cardFace.power : null, 
+          "toughness" in cardFace ? cardFace.toughness : null, 
+          cardFace.type_line, 
+          supertypes, 
+          types, 
+          subtypes
+        );
+      }
+
+    } else {
+
+      faceCount++; 
+      const faceIndex = 0;
+      const {supertypes, types, subtypes} = parseTypeLine(card.type_line);
+
+      const { small: image_small, normal: image_normal, large: image_large, art_crop: image_crop } = card.image_uris; 
+
+      facesDataArray.push(
+        card.id, 
+        faceIndex, 
+        card.colors, 
+        image_small,
+        image_normal,
+        image_large,
+        image_crop,
+        card.name,
+        "mana_cost" in card ? card.mana_cost : null, 
+        "artist" in card ? card.artist : null, 
+        "power" in card ? card.power : null, 
+        "toughness" in card ? card.toughness : null, 
+        card.type_line, 
+        supertypes, 
+        types, 
+        subtypes
+      );
+    }  
   });
 
-  //handles cards already added as cards get spoiled
-  query += ` ON CONFLICT (card_id) DO NOTHING`;
+  let facesQuery = queryGenerator(facesInitialQuery, faceCount, numColsFaces);
+  facesQuery += ` ON CONFLICT (face_id) DO NOTHING`;
+  
 
-  await useClient(query, dataArray);
+  await useClient(cardsQuery, cardsDataArray);
+  await useClient(facesQuery, facesDataArray);
 }
 
 async function updateSetReviews(setId) {
@@ -259,7 +323,7 @@ async function useClient(query, dataArray) {
 /**
  * Initializes set and its cards. Add its associated bonus set with addBonus.
  * If you wish to enter a bonus set separately, (perhaps a bonus is announced late into set reviews): 
- * call addSet(bonusCode, true, setCode); addCards(bonusCode); separately 
+ * call addSet(bonusCode, true, setCode); addCards(bonusCode); separately, with client connect/disc
  * @param {string} setCode 
  * @param {boolean} addBonus 
  */
@@ -307,7 +371,10 @@ async function populateSet(setCode, addBonus=false) {
 //populateSet("FIN", true); 
 
 //if updating setReviews, you must add the bonus sheet cards as well 
-updateSetReviews('452951cf-378b-4472-b7fe-572fe2af2ac0');
+//updateSetReviews('452951cf-378b-4472-b7fe-572fe2af2ac0');
+
+populateSet("FIN", true);
+//addCards("EOE");
 
 //call if set has a link
 //addBonusLink('EOE', 'EOS');

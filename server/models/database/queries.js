@@ -1,5 +1,5 @@
-import pool from "./pool.js"; 
-import rarityMap from "./defaultRatings.js";
+import pool from "../pool.js"; 
+import rarityMap from "../defaultRatings.js";
 
 /**
  * Returns all a user's set reviews and associated set information 
@@ -117,10 +117,14 @@ async function getSets(isBonus=false) {
  */
 async function getReviewsWithCards(userSetId) {
 
-    const query = `SELECT * FROM reviews JOIN cards ON cards.card_id = reviews.card_id WHERE user_set_id = $1;`;
+    const query = `SELECT * FROM reviews JOIN cards ON cards.card_id = reviews.card_id 
+                   JOIN faces ON cards.card_id = faces.card_id WHERE user_set_id = $1;`;
+
+    const map = new Map(); 
 
     try {
         const { rows } = await pool.query(query, [userSetId]);
+
         return rows; 
 
     } catch (err) {
@@ -135,7 +139,10 @@ async function getReviewsWithCards(userSetId) {
  * @returns 
  */
 async function getCardFromSetReview(userSetId, cardId) {
-    const query = `SELECT * FROM reviews JOIN cards ON cards.card_id = reviews.card_id WHERE user_set_id = $1 AND reviews.card_id = $2`;
+    const query = `SELECT * FROM reviews 
+                   JOIN cards ON cards.card_id = reviews.card_id 
+                   JOIN faces ON cards.card_id = faces.card_id
+                   WHERE user_set_id = $1 AND reviews.card_id = $2`;
 
     try {
         const { rows } = await pool.query(query, [userSetId, cardId]);
@@ -161,8 +168,8 @@ async function patchCardFromSetReview(userSetId, cardId, rank, notes) {
     } catch (err) {
         console.log(err);
     }
-
 }
+
 
 export default { getAllSetReviews, createSetReview, deleteSetReview, getSets, getReviewsWithCards, 
                  getCardFromSetReview, patchCardFromSetReview };

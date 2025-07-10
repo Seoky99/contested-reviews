@@ -4,6 +4,7 @@ import styles from "./SetReview.module.css";
 function SetReview({setReviewData, deleteSetReview, selectedSetReviewID, handleSetReviewClick}) {
     
     const {set_review_name, user_set_img, user_set_id} = setReviewData; 
+    console.log(setReviewData);
 
     return (
         <>

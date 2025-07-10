@@ -1,4 +1,4 @@
-import db from '../models/queries.js';
+import db from '../models/database/queries.js';
 
 async function getSets(req, res) {
     const sets = await db.getSets();
