@@ -1,0 +1,48 @@
+.tagStyles {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: black;
+    padding: 5px;
+    width: 10rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: 2px solid black;
+    border-radius: 10px;
+    cursor: pointer;
+
+
+    & p {
+        margin-left: 5px;
+    }
+
+    & button {
+        width: 10px; 
+        height: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: white;
+        border: 2px solid black;
+        border-radius: 5px; 
+        padding: 10px 10px;
+    }
+
+    & .icon {
+        color: black;
+        font-size: 0.8rem;
+    }
+}
+
+.isSelected {
+    border: 2px solid red;
+    background-color: yellow;
+}
+
+.tagButtons {
+    display: flex; 
+    margin-left: auto;
+    gap: 0.2rem;
+}
+

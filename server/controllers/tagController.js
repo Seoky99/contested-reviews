@@ -6,7 +6,17 @@ async function getAllUserTags (req, res) {
     const userId = 1; 
 
     const rows = await db.getAllUserTags(userId); 
-    res.json(rows);
+
+    const camelCaseChange = rows.map(row => {
+        return {
+            userId: row.user_id,
+            tagName: row.name, 
+            setId: row.set_id,
+            tagId: row.tag_id
+        }    
+    })
+
+    res.json(camelCaseChange);
 }
 
 async function createTag(req, res) {
@@ -15,8 +25,9 @@ async function createTag(req, res) {
 
     const { setId, tagName } = req.body;  
 
-    await db.createTag(userId, setId, tagName); 
-    res.json({setId, tagName});
+    const rows = await db.createTag(userId, setId, tagName); 
+    const tagId = rows[0].tag_id;
+    res.json({setId, tagName, userId, tagId});
 }
 
 async function patchTag(req, res) {

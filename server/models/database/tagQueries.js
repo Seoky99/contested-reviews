@@ -1,10 +1,13 @@
 import pool from "../pool.js"; 
+import queryGenerator from "../config/queryGenerator.js";
 
 async function createTag(userId, setId, tagName) {
-    const query = `INSERT INTO tags (user_id, set_id, name) VALUES ($1, $2, $3)`;
+    const query = `INSERT INTO tags (user_id, set_id, name) VALUES ($1, $2, $3)
+                    RETURNING tag_id`;
 
     try {
-        await pool.query(query, [userId, setId, tagName]);
+        const {rows} = await pool.query(query, [userId, setId, tagName]);
+        return rows;
     } catch (err) {
         console.log(err);
     }
@@ -21,22 +24,45 @@ async function getAllUserTags(userId) {
     }
 }
 
-async function assignTagToReview(reviewId, tagId) {
-    const query = `INSERT INTO review_tags(review_id, tag_id) VALUES ($1, $2);`;
+async function assignTagToReview(reviewId, tagIds) {
+    const initialQuery = `INSERT INTO review_tags(review_id, tag_id) VALUES `;
+
+    const query = `${queryGenerator(initialQuery, tagIds.length, 2)} ON CONFLICT DO NOTHING RETURNING review_id, tag_id`;
+    console.log(tagIds);
+    let dataArray = [];
+
+    tagIds.forEach(tagId => dataArray.push(reviewId, tagId));
+
+    console.log(query);
+    console.log(dataArray);
 
     try {
-        const { rows } = await pool.query(query, [reviewId, tagId]);
+        const { rows } = await pool.query(query, dataArray);
+        console.log(rows);
         return rows; 
+    } catch (err) {
+        console.log(err);
+    } 
+}
+
+async function deleteTagsFromReview(reviewId, tagId) {
+    const query = `DELETE FROM review_tags WHERE review_id = $1 AND tag_id = $2`;
+
+    try {
+        await pool.query(query, [reviewId, tagId]);
     } catch (err) {
         console.log(err);
     }
 }
 
 async function getTagsFromReview(userId, reviewId) {
-    const query = `SELECT * FROM review_tags WHERE user_id = $1 AND review_id = $2`;
+    const query = `SELECT * FROM review_tags 
+                    JOIN tags ON tags.tag_id = review_tags.tag_id 
+                    WHERE user_id = $1 AND review_id = $2`;
 
     try {
         const { rows } = await pool.query(query, [userId, reviewId]);
+        
         return rows; 
     } catch (err) {
         console.log(err);
@@ -66,4 +92,4 @@ async function deleteTag(userId, tagId) {
     }
 }
 
-export default { createTag, getAllUserTags, assignTagToReview, getTagsFromReview, patchTag, deleteTag };
+export default { createTag, getAllUserTags, assignTagToReview, getTagsFromReview, deleteTagsFromReview, patchTag, deleteTag };

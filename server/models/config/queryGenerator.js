@@ -1,16 +1,15 @@
 
 /**
- * If using, remember to call ON CONFLICT 
+ * Generates a query ($1, $2, .... $colCount), ($colCount + 1...) for each card  
  * @param {*} initialQuery 
  * @param {*} dataLength 
  * @param {*} numColsInserted 
  * @returns 
  */
-export default function (initialQuery, dataLength, numColsInserted) {
+export default function (initialQuery, dataLength, numColsInserted, offset=0) {
 
-    let count = 0; 
+    let count = offset; 
 
-    //Generates a query VALUES($1, $2, .... $colCount), ($colCount + 1...) for each card  
     for (let i = 0; i < dataLength; i++) {
         let querySegment = `(`;
 

@@ -8,6 +8,7 @@ import SetReviewList from './components/SetReview/SetReviewList.jsx';
 import AddPanel from './components/AddPanel/AddPanel.jsx';
 import CardGalleryPage from './components/Pages/CardGalleryPage.jsx';
 import CardPage from './components/Pages/CardPage.jsx';
+import TagPanel from "./components/Tag/TagPanel.jsx"
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,12 @@ const router = createBrowserRouter([
       {
         path: "setreviews/:userSetId/cards/:cardId",
         Component: CardPage, 
+        children: [
+          {
+            path: "tags/create",
+            Component: TagPanel
+          }
+        ]
       }
     ]
   },

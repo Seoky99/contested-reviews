@@ -1,0 +1,60 @@
+.tagPanel {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    gap: 2rem;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.createTag {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 0.1rem solid black;
+}
+
+.xButton {
+    width: 3rem;
+    margin-left: auto;
+    text-align: center;
+    border: 2px solid black;
+    font-size: 1.2rem;
+    padding: 0.2rem;
+    background-color: red;
+}
+
+.addTagButton {
+    background-color: #fff;
+    width: 15rem;
+    border: 2px solid black;
+    font-size: 0.8rem;
+}
+
+.createTagButton {
+    height: 2rem;
+    text-align: center;
+    padding: 0.4rem;
+    background-color: white;
+    border: 2px solid black;
+}
+
+.reminder {
+  color: black;
+  margin-bottom: 1rem;
+  text-decoration: underline;
+}
+
+.slideIn {
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: slideIn 0.4s forwards ease;
+}
+
+
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

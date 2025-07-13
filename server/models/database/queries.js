@@ -1,5 +1,7 @@
 import pool from "../pool.js"; 
 import rarityMap from "../defaultRatings.js";
+import queryGenerator from "../config/queryGenerator.js";
+import client from "../client.js";
 
 /**
  * Returns all a user's set reviews and associated set information 
@@ -171,5 +173,71 @@ async function patchCardFromSetReview(userSetId, cardId, rank, notes) {
 }
 
 
+/**
+ * Sets the rank and notes of specified card of associated user set
+ * @param {number} userSetId 
+ * @param {uuid} cardId 
+ * @param {string} rank 
+ * @param {string} notes 
+ */
+async function patchCardFromSetReviewByReviewId(reviewId, rank, notes) {
+    const query = `UPDATE reviews SET rank = $1, notes = $2 WHERE review_id = $3`;
+
+    try {
+        await pool.query(query, [rank, notes, reviewId]);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function performPageUpdate(pageInformation) {
+
+    const {reviewId, rank, notes, selectedTags} = pageInformation;
+    const transaction = await pool.connect();  
+
+    let patchCardQuery = `UPDATE reviews SET rank = $1, notes = $2 WHERE review_id = $3`;
+    const patchCardDataArray = [rank, notes, reviewId]; 
+
+    let deleteTagsQuery=``; 
+    let insertTagsQuery=``;
+    let deleteTagsDataArray=[]; 
+    let insertTagsDataArray=[];
+
+    if (selectedTags.length > 0) {
+        deleteTagsQuery = `DELETE FROM review_tags WHERE review_id = $1 AND tag_id NOT IN `;
+        deleteTagsQuery = queryGenerator(deleteTagsQuery, 1, selectedTags.length, 1);
+        deleteTagsDataArray = [reviewId, ...selectedTags]; 
+
+        insertTagsQuery = `INSERT INTO review_tags(review_id, tag_id) VALUES `;
+        insertTagsQuery = `${queryGenerator(insertTagsQuery, selectedTags.length, 2)} ON CONFLICT DO NOTHING`;
+        insertTagsDataArray = [];
+        selectedTags.forEach(tagId => insertTagsDataArray.push(reviewId, tagId));
+    } else {
+        deleteTagsQuery = `DELETE FROM review_tags WHERE review_id = $1`;
+        deleteTagsDataArray = [reviewId];
+    }
+
+    try {
+
+        await transaction.query("BEGIN");
+
+        await transaction.query(patchCardQuery, patchCardDataArray);
+        await transaction.query(deleteTagsQuery, deleteTagsDataArray);
+        if (selectedTags.length > 0) {
+            await transaction.query(insertTagsQuery, insertTagsDataArray);
+        }
+        
+        await transaction.query("COMMIT");
+
+    } catch (err) {
+
+        await transaction.query("ROLLBACK");
+
+    } finally {
+        await transaction.release();
+    }
+
+}
+
 export default { getAllSetReviews, createSetReview, deleteSetReview, getSets, getReviewsWithCards, 
-                 getCardFromSetReview, patchCardFromSetReview };
+                 getCardFromSetReview, patchCardFromSetReview, patchCardFromSetReviewByReviewId, performPageUpdate };

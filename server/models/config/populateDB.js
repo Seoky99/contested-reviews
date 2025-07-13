@@ -239,9 +239,15 @@ async function addCards(setCode) {
   await useClient(facesQuery, facesDataArray);
 }
 
-async function updateSetReviews(setId) {
+async function updateSetReviews(setCode) {
+  setCode = setCode.toLowerCase();
 
   await client.connect(); 
+
+  const rows = await returnFromClient(`SELECT set_id FROM sets WHERE set_code = $1`, [setCode]); 
+  const setId = rows[0].set_id; 
+
+  await addCards(setCode);
 
   //refactor 
   const matchingQuery = `
@@ -307,7 +313,7 @@ async function updateSetReviews(setId) {
     await useClient(matchingQuery, [setId]);
     await useClient(matchingBonusQuery, [setId]);
     await useClient(defaultAppliedQuery, [setId]);
-    await useClient(nonRatedQuery, [setId]);
+    await useClient(nonRatedQuery, [setId]); 
 
     await client.end(); 
 }
@@ -315,6 +321,15 @@ async function updateSetReviews(setId) {
 async function useClient(query, dataArray) {
   try {
     await client.query(query, dataArray);
+  } catch (err) {
+    console.log(err);
+  } 
+}
+
+async function returnFromClient(query, dataArray) {
+  try {
+    const {rows} = await client.query(query, dataArray);
+    return rows; 
   } catch (err) {
     console.log(err);
   } 
@@ -371,9 +386,9 @@ async function populateSet(setCode, addBonus=false) {
 //populateSet("FIN", true); 
 
 //if updating setReviews, you must add the bonus sheet cards as well 
-//updateSetReviews('452951cf-378b-4472-b7fe-572fe2af2ac0');
+updateSetReviews('EOE');
 
-populateSet("FIN", true);
+//populateSet("FIN", true);
 //addCards("EOE");
 
 //call if set has a link

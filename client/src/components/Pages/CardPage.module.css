@@ -1,13 +1,16 @@
 .cardWrapper {
     display: flex; 
-    justify-content: space-between;
-    padding: 1.2rem;
+    justify-content: center;
+    gap: 5rem;
+    padding: 0.3rem;
 }
 
 .cardInformation {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    padding: 0.5rem;
+    width: 55%;
+    gap: 1.2rem;
 }
 
 .cardRank {
@@ -16,13 +19,13 @@
     & h1 {
         position: absolute;
         text-shadow: 2px 2px black;
-        top: 100px;
-        left: 120px;
+        top: 90px;
+        left: 140px;
     }
 }
 
 .cardImage {
-    width: 250px; 
+    width: 350px; 
     height: auto;
 }
 
@@ -34,4 +37,17 @@ textarea {
     background-color: green;
     width: 5rem;
     margin-left: auto;
+}
+
+.notes {
+    display: flex;
+    flex-direction: column;
+}
+
+.addTagButton {
+    color: black;
+    padding: 5px;
+    background-color: white;
+    border-radius: 5px;
+    width: 30%;
 }

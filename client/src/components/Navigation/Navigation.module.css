@@ -2,7 +2,8 @@
     background-color: #fff;
     display: flex; 
     justify-content: flex-end;
-    padding: 0.8rem;
+    align-items: center;
+    padding: 0.2rem 0.8rem;
     position: sticky;
     top: 0px;
     gap: 2rem;
@@ -13,9 +14,14 @@
     }
 }
 
+img {
+    margin-right: auto;
+}
+
 .link {
     text-decoration: none;
     color: black;
+    font-size: 0.8rem;
 }
 
 .link:hover {
@@ -26,4 +32,13 @@
     color: black;
     vertical-align: middle;
     margin-left: 0.2rem;
+}
+
+.homeButton {
+    background-color: white;
+    padding: 0;
+}
+
+.searchWrapper {
+    margin-right: auto;
 }
