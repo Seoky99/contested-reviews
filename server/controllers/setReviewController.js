@@ -42,7 +42,6 @@ async function deleteSetReview(req, res) {
 
     await db.deleteSetReview(setid); 
     res.status(204).send(); 
-
 }
 
 /**
@@ -59,6 +58,30 @@ async function getSetReviewCards(req, res) {
     const cards = extractCardFromRows(rows); 
 
     res.json(cards);
+}
+
+async function getSetReviewTrophies(req, res) {
+
+    //implement authenticaiton 
+    const userid = 1; 
+
+    const { setid } = req.params; 
+    
+    const rows = await db.getSetReviewTrophies(setid);
+    res.json(rows); 
+}
+
+async function putSetReviewTrophies(req, res) {
+    
+    //implement authentication 
+    const userid = 1; 
+
+    const { setid } = req.params; 
+    const trophies = req.body; 
+
+
+    await db.putSetReviewTrophies(setid, trophies); 
+    res.json(trophies); 
 }
 
 /**
@@ -96,4 +119,5 @@ async function patchCardFromSetReview(req, res) {
 }
 
 
-export { getSetReviews, createSetReview, deleteSetReview, getSetReviewCards, getCardPageInformation, patchCardFromSetReview } ; 
+export { getSetReviews, createSetReview, deleteSetReview, getSetReviewCards, getCardPageInformation, 
+    patchCardFromSetReview, getSetReviewTrophies, putSetReviewTrophies } ; 

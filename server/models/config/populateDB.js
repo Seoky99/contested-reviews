@@ -3,7 +3,6 @@ import setImageConfig from './setImageConfig.js';
 import bonusCodeConfig from './bonusCodeConfig.js';
 import queryGenerator from './queryGenerator.js';
 import parseTypeLine from './typelineParser.js';
-import { parse } from 'dotenv';
 
 //Update the cards as they get spoiled by running addCards(url);
 
@@ -386,9 +385,9 @@ async function populateSet(setCode, addBonus=false) {
 //populateSet("FIN", true); 
 
 //if updating setReviews, you must add the bonus sheet cards as well 
-updateSetReviews('EOE');
+//updateSetReviews('EOE');
 
-//populateSet("FIN", true);
+populateSet("FIN", true);
 //addCards("EOE");
 
 //call if set has a link

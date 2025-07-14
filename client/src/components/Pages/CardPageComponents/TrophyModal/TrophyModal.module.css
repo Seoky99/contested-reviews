@@ -1,0 +1,52 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  max-width: 1000px;
+  width: 90%;
+  position: relative;  
+  overflow-y: auto; /* This makes the content scroll if needed */
+   max-height: 80vh;
+
+}
+
+.modalClose {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  font-size: 3rem;
+  cursor: pointer;
+}
+
+.trophy {
+    color: black;
+    display: flex; 
+    flex-direction: column;
+    padding: 15px;
+    width: 20%;
+    font-size: 1.0rem;
+    border: 2px solid black;
+    border-radius: 5px;
+    align-items: center;
+}
+
+.trophyWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}

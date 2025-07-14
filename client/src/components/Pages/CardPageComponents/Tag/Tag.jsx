@@ -3,7 +3,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 //manage mode: if clicked, swap 
-
 function Tag({tagName, handleDelete, toggleTag, viewTaggedCards, tagId, isSelected, isManageMode}) {
 
     const onClickHandler = isManageMode ? toggleTag : viewTaggedCards; 

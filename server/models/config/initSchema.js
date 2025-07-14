@@ -100,7 +100,20 @@ async function initSchema() {
             FOREIGN KEY (review_id) REFERENCES reviews(review_id) ON DELETE CASCADE,
             FOREIGN KEY (tag_id) REFERENCES tags(tag_id) ON DELETE CASCADE,
             PRIMARY KEY (review_id, tag_id)
-        );`;
+        );
+        
+        CREATE TABLE IF NOT EXISTS trophies(
+            trophy_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
+            user_set_id INTEGER, 
+            review_id INTEGER, 
+            name TEXT NOT NULL, 
+            description TEXT, 
+            trophy_img_url TEXT,
+            is_global BOOLEAN DEFAULT FALSE NOT NULL,
+            FOREIGN KEY (review_id) REFERENCES reviews(review_id),
+            FOREIGN KEY (user_set_id) REFERENCES user_sets(user_set_id) ON DELETE CASCADE
+        );
+        `;
 
   try {
     await client.connect();

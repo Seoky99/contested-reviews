@@ -17,7 +17,6 @@ async function assignTagToReview(req, res) {
             tagId: row.tag_id, 
         }    
     })
-
     res.json(camelCaseChange);
 }
 
@@ -37,9 +36,34 @@ async function getTagsFromReview(req, res) {
             tagId: row.tag_id
         }    
     })
-   
     res.json(camelCaseChange);
 }
+
+async function getTrophiesFromReview(req, res) {
+    
+    //implement authentication 
+    const userId = 1; 
+
+    const { reviewid } = req.params; 
+
+    const rows = await ndb.getTrophiesFromReview(reviewid); 
+
+    res.json(rows);
+}
+
+async function assignTrophiesToReview(req, res) {
+    
+    //implement authentication 
+    const userId = 1; 
+
+    const { reviewid } = req.params; 
+    const { trophyIds } = req.body; 
+
+    await ndb.assignTrophiesToReview(reviewid, trophyIds); 
+
+    res.json(trophyIds);
+}
+
 
 async function deleteTagsFromReview(req, res) {
 
@@ -71,7 +95,6 @@ async function updatePageInformation(req, res) {
     await ndb.performPageUpdate({reviewId: reviewid, rank, notes, selectedTags});
 
     res.json({rank, notes, selectedTags});
-
 }
 
-export { assignTagToReview, getTagsFromReview, deleteTagsFromReview, updatePageInformation }
+export { assignTagToReview, getTagsFromReview, deleteTagsFromReview, updatePageInformation, getTrophiesFromReview, assignTrophiesToReview }

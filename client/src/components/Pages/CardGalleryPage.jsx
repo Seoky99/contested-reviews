@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams } from "react-router";
-import Card from "../Card/Card";
+import GalleryCard from "./CardGalleryComponents/GalleryCard/GalleryCard";
 import useFetchGallery from "../../customHooks/useFetchGallery";
 import sortUtils from "../../utils/sortingUtils";
 import styles from "./CardGalleryPage.module.css";
@@ -16,7 +16,7 @@ function CardGalleryPage() {
     console.log(reviews);
     
     const displayReviews = reviews.map(review => {
-        return <Card key={review.reviewId} cardData={review} userSetId={userSetId}></Card>;
+        return <GalleryCard key={review.reviewId} cardData={review} userSetId={userSetId}></GalleryCard>;
     })
 
     function sortCards(method) {

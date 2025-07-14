@@ -6,7 +6,7 @@
  * @param {*} numColsInserted 
  * @returns 
  */
-export default function (initialQuery, dataLength, numColsInserted, offset=0) {
+export default function (initialQuery, dataLength, numColsInserted, offset=0, intCast=false) {
 
     let count = offset; 
 
@@ -15,7 +15,7 @@ export default function (initialQuery, dataLength, numColsInserted, offset=0) {
 
         for (let colCount = 0; colCount < numColsInserted; colCount++) {
         count++;
-        querySegment += `$${count}${colCount === numColsInserted - 1 ? `` : `, `}`;
+        querySegment += `$${count}${intCast ? `::int` : ``}${colCount === numColsInserted - 1 ? `` : `, `}`;
         }
 
         querySegment += `)${i === dataLength - 1 ? `` : `,`}`;

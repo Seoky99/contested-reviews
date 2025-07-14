@@ -1,7 +1,7 @@
-import styles from "./Card.module.css"
+import styles from "./GalleryCard.module.css"
 import { Link } from "react-router";
 
-function Card({cardData, userSetId}) {
+function GalleryCard({cardData, userSetId}) {
     return (
         <div className={styles.card}>
             <Link className={styles.cardButton} style={{backgroundImage: `url(${cardData.faces[0].imageNormal})`}} 
@@ -12,4 +12,4 @@ function Card({cardData, userSetId}) {
     );
 }
 
-export default Card; 
+export default GalleryCard; 

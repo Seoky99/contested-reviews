@@ -4,11 +4,12 @@ import { createBrowserRouter, RouterProvider } from 'react-router';
 import './index.css';
 import Root from './Root.jsx';
 import SetPage from "./components/Pages/SetPage.jsx";
+import CardGalleryPage from './components/Pages/CardGalleryPage.jsx';
+import SetReviewPage from './components/Pages/SetReviewPage.jsx';
 import SetReviewList from './components/SetReview/SetReviewList.jsx';
 import AddPanel from './components/AddPanel/AddPanel.jsx';
-import CardGalleryPage from './components/Pages/CardGalleryPage.jsx';
-import CardPage from './components/Pages/CardPage.jsx';
-import TagPanel from "./components/Tag/TagPanel.jsx"
+import CardPage from "./components/Pages/CardPage.jsx";
+import TagPanel from "./components/Pages/CardPageComponents/Tag/TagPanel.jsx";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
           }
         ]
       }, 
+      {
+        path: "setreviews/:userSetId",
+        Component: SetReviewPage,
+      },
       {
         path: "setreviews/:userSetId/cards",
         Component: CardGalleryPage,
