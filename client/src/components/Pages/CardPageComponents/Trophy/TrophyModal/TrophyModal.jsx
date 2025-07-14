@@ -1,10 +1,11 @@
 import { __unsafe_useEmotionCache } from "@emotion/react";
 import styles from "./TrophyModal.module.css";
-import CardTrophy from "./CardTrophy";
-import Card from "@mui/material/Card";
+import ModalSelect from "./ModalSelect";
 
-export default function TrophyModal({ isOpen, onClose, trophies, setTrophies, reviewId }) {
+export default function TrophyModal({ isOpen, onClose, trophies, setTrophies, reviewData }) {
   if (!isOpen) return null;
+
+  const { review_id, card_name, image_normal } = reviewData;
 
   /* Three states of a trophy: 
         -assignedThis
@@ -12,22 +13,21 @@ export default function TrophyModal({ isOpen, onClose, trophies, setTrophies, re
         -unassigned 
   */
 
-  function handleTrophyClick(reviewId, trophyId) {
+  function handleTrophyClick(selectedId) {
     let trophyCopy = [...trophies]; 
 
     trophyCopy = trophyCopy.map(trophy => {
 
-      if (trophyId === trophy.trophy_id) {
-        if (trophy.review_id === reviewId) {
-          return {...trophy, review_id: null}
+      if (selectedId === trophy.trophy_id) {
+        if (trophy.review_id === review_id) {
+          return {...trophy, review_id: null, image_normal: null, card_name: null}
         } else {
-          return {...trophy, review_id: reviewId}
+          return {...trophy, review_id, image_normal: image_normal, card_name: card_name}
         }
       } else {
         return trophy;
       }
     })
-    console.log(trophyCopy);
     setTrophies(trophyCopy);
   }
 
@@ -38,19 +38,14 @@ export default function TrophyModal({ isOpen, onClose, trophies, setTrophies, re
 
     if (trophy.review_id === null) {
         displayStyle = `${styles.unassigned}`;
-    }
-    else if (trophy.review_id === reviewId) {
+    } else if (trophy.review_id === review_id) {
         displayStyle = `${styles.assignedThis}`;
     } else {
         displayStyle = `${styles.assignedOther}`;
     }
 
     return (
-        <div className={`${styles.trophy} ${displayStyle}`} key={trophy.trophy_id} onClick={() => handleTrophyClick(reviewId, trophy.trophy_id)}>
-            <CardTrophy/>
-            <h3>{trophy.name}</h3>
-            <h4>{trophy.review_id}</h4>
-        </div>
+        <ModalSelect key={trophy.trophy_id} displayStyle={displayStyle} trophy={trophy} handleTrophyClick={handleTrophyClick}></ModalSelect>
     );
   });
 

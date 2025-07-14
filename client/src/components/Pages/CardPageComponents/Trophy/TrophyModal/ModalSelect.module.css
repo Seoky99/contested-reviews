@@ -1,0 +1,16 @@
+
+.trophy {
+    color: black;
+    display: flex; 
+    flex-direction: column;
+    padding: 15px;
+    width: 20%;
+    font-size: 1.0rem;
+    border: 2px solid black;
+    border-radius: 5px;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    text-align: center;
+    cursor: pointer;
+}

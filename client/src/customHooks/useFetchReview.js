@@ -47,17 +47,14 @@ function useFetchReview(userSetId, cardId) {
             setSelectedTags(new Set(reviewTagsData.map(tag => tag.tagId)));
         }
 
-        async function fetchAllTrophies(userSetId, reviewId) {
-            const urls = [`http://localhost:8080/api/setreviews/${userSetId}/trophies`,
-                          `http://localhost:8080/api/reviews/${reviewId}/trophies`
-                         ];
-            const trophyResponses = await Promise.all(urls.map(url => fetch(url)));
-            trophyResponses.forEach(response => {
-                if (!response.ok) {
-                    throw new Error("Trophies fetch failure" + response.status);
-                }
-            })
-            const [trophiesData, selectedTrophiesData] = await Promise.all(trophyResponses.map(response => response.json()));
+        async function fetchAllTrophies(userSetId) {
+            const url = [`http://localhost:8080/api/setreviews/${userSetId}/trophies`];
+            const trophyResponse = await fetch(url);
+      
+            if (!trophyResponse.ok) {
+                throw new Error("Trophies fetch failure" + trophyResponse.status);
+            }
+            const trophiesData = await trophyResponse.json();
             setTrophies(trophiesData);
         }
 

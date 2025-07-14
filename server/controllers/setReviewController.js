@@ -79,7 +79,6 @@ async function putSetReviewTrophies(req, res) {
     const { setid } = req.params; 
     const trophies = req.body; 
 
-
     await db.putSetReviewTrophies(setid, trophies); 
     res.json(trophies); 
 }

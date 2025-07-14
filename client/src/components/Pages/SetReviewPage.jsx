@@ -1,6 +1,11 @@
 import styles from "./SetReviewPage.module.css";
+import { useParams } from "react-router";
 
-function SetReviewPage({}) {
+function SetReviewPage() {
+
+    const { userSetId } = useParams();
+    console.log(userSetId);
+    //const { } = useFetchSetReview(); 
 
     return (
         <div className={styles.setReviewWrapper}>

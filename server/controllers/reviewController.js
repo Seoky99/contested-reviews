@@ -90,9 +90,11 @@ async function updatePageInformation(req, res) {
     const userid = 1; 
 
     const { reviewid } = req.params;
-    const { rank, notes, selectedTags } = req.body; 
+    let { rank, notes, selectedTags, trophies, userSetId } = req.body;  
 
-    await ndb.performPageUpdate({reviewId: reviewid, rank, notes, selectedTags});
+    trophies = trophies.map(trophy => ({ trophy_id: trophy.trophy_id, review_id: trophy.review_id})); 
+
+    await ndb.performPageUpdate({reviewId: reviewid, rank, notes, selectedTags, trophies, userSetId});
 
     res.json({rank, notes, selectedTags});
 }

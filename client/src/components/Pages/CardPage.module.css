@@ -14,13 +14,17 @@
 }
 
 .cardRank {
-    font-size: 3rem;
+    display: inline-block; 
+    padding: 0;
+    gap: 0.5rem;
+    position: relative;
 
     & h1 {
         position: absolute;
-        text-shadow: 2px 2px black;
-        top: 90px;
-        left: 140px;
+        top: 1.6rem;
+        left: 1.6rem;
+        text-shadow: 2px 2px 2px black;
+        font-size: 5rem;
     }
 }
 
@@ -35,8 +39,14 @@ textarea {
 
 .saveButton {
     background-color: green;
-    width: 5rem;
+    font-size: 1.2rem;
+    text-align: center;
+    width: 6rem;
     margin-left: auto;
+    padding: 0.8rem 1.4rem;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 5px;
 }
 
 .addTagButton {

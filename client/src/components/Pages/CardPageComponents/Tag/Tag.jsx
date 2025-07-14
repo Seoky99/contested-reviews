@@ -2,14 +2,19 @@ import styles from "./Tag.module.css";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-//manage mode: if clicked, swap 
+/**
+ * 
+ * @param {Object} props
+ * @param {boolean} props.isManageMode - If tag is in manageMode, users can edit and delete set-specific tags through the tag
+ * @param {boolean} props.isSelected - The tag is now associated with this review.                                                     
+ * @returns 
+ */
 function Tag({tagName, handleDelete, toggleTag, viewTaggedCards, tagId, isSelected, isManageMode}) {
 
     const onClickHandler = isManageMode ? toggleTag : viewTaggedCards; 
     const selectStyle = isSelected && isManageMode ? styles.isSelected : ``;
 
     return (
-        <>
             <div className={`${styles.tagStyles} ${selectStyle}`} onClick={onClickHandler}>
                 <p>{tagName}</p>
                 <div className={styles.tagButtons}>
@@ -21,7 +26,6 @@ function Tag({tagName, handleDelete, toggleTag, viewTaggedCards, tagId, isSelect
                      }
                 </div>
             </div>
-        </>
     )
 }
 

@@ -1,5 +1,5 @@
 import Tag from "./Tag";
-import styles from "./TagList.module.css";
+import styles from "./ReviewTagList.module.css";
 
 function TagList({reviewTags, handleDelete, selectedTags, toggleTag, reviewId, showPanel}) {
     

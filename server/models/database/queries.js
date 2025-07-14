@@ -156,8 +156,22 @@ async function getCardFromSetReview(userSetId, cardId) {
 }
 
 async function getSetReviewTrophies(userSetId) {
-    const query = `SELECT * FROM trophies WHERE user_set_id = $1`
+    //const query = `SELECT * FROM trophies WHERE user_set_id = $1`
 
+    const query = `SELECT
+                    trophies.trophy_id,
+                    trophies.user_set_id,
+                    trophies.review_id,
+                    trophies.name,
+                    trophies.description,
+                    trophies.trophy_img_url,
+                    trophies.is_global,
+                    faces.name AS card_name,
+                    faces.image_normal
+                FROM trophies
+                LEFT JOIN reviews ON reviews.review_id = trophies.review_id
+                LEFT JOIN faces ON faces.card_id = reviews.card_id AND faces.face_index = 0
+                WHERE trophies.user_set_id = $1;`
     try {
         const { rows } = await pool.query(query, [userSetId]);
         return rows; 
@@ -227,7 +241,6 @@ async function assignTrophiesToReview(reviewId, trophyIds) {
 }
 
 async function putSetReviewTrophies(userSetId, trophies) {
-
     let initialQuery = `UPDATE trophies SET review_id = data.review_id FROM ( VALUES `;
     let querySegment = queryGenerator(initialQuery, trophies.length, 2, 1, true);
     let query = querySegment += `) AS data(trophy_id, review_id) WHERE trophies.trophy_id = data.trophy_id AND trophies.user_set_id = $1`;
@@ -244,7 +257,7 @@ async function putSetReviewTrophies(userSetId, trophies) {
 
 async function performPageUpdate(pageInformation) {
 
-    const {reviewId, rank, notes, selectedTags} = pageInformation;
+    const {reviewId, rank, notes, selectedTags, trophies, userSetId} = pageInformation;
     const transaction = await pool.connect();  
 
     let patchCardQuery = `UPDATE reviews SET rank = $1, notes = $2 WHERE review_id = $3`;
@@ -269,6 +282,13 @@ async function performPageUpdate(pageInformation) {
         deleteTagsDataArray = [reviewId];
     }
 
+    let initialQuery = `UPDATE trophies SET review_id = data.review_id FROM ( VALUES `;
+    let querySegment = queryGenerator(initialQuery, trophies.length, 2, 1, true);
+    let updateTrophiesQuery = querySegment += `) AS data(trophy_id, review_id) WHERE trophies.trophy_id = data.trophy_id AND trophies.user_set_id = $1`;
+
+    let updateTrophiesDataArray = [(userSetId)]; 
+    trophies.forEach(trophy => updateTrophiesDataArray.push((trophy.trophy_id), (trophy.review_id)));
+
     try {
 
         await transaction.query("BEGIN");
@@ -278,6 +298,7 @@ async function performPageUpdate(pageInformation) {
         if (selectedTags.length > 0) {
             await transaction.query(insertTagsQuery, insertTagsDataArray);
         }
+        await transaction.query(updateTrophiesQuery, updateTrophiesDataArray);
         
         await transaction.query("COMMIT");
 
@@ -288,7 +309,6 @@ async function performPageUpdate(pageInformation) {
     } finally {
         await transaction.release();
     }
-
 }
 
 export default { getAllSetReviews, createSetReview, deleteSetReview, getSets, getReviewsWithCards, getSetReviewTrophies, putSetReviewTrophies, getTrophiesFromReview, assignTrophiesToReview,

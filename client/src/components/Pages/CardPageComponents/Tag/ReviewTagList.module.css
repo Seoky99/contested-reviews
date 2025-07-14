@@ -1,0 +1,4 @@
+.tagContainer {
+    display: flex;
+    gap: 1rem;
+}

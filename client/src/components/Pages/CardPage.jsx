@@ -40,7 +40,9 @@ function CardPage() {
                 headers: {
                     'Content-Type': 'application/json',
                 }, 
-                body: JSON.stringify({rank: cardDetails.rank, notes: cardDetails.notes, selectedTags: Array.from(selectedTags)}),
+                body: JSON.stringify({rank: cardDetails.rank, notes: cardDetails.notes, selectedTags: Array.from(selectedTags), 
+                                      userSetId: cardDetails.userSetId, trophies: trophies
+                }),
             });
             const success = await response.json(); 
             console.log(success);
@@ -72,22 +74,25 @@ function CardPage() {
 
     const reviewTags = setTags.filter(tag => selectedTags.has(tag.tagId));
     const reviewId = cardDetails.reviewId;
+
+    const reviewData = {review_id: cardDetails.reviewId, card_name: cardDetails.faces[0].name, image_normal: cardDetails.faces[0].imageNormal};
     const displayTrophies = trophies.filter(trophy => trophy.review_id === reviewId);
     
-    console.log(trophies);
+    console.log(cardDetails);
+    console.log(trophies); 
 
     return (
             <div className={styles.cardWrapper}>
                 <div className={styles.cardRank}>
-                    <h1>{cardDetails.rank === null ? "NR" : cardDetails.rank}</h1>
                     <img className={styles.cardImage} src={cardDetails.faces[0].imageNormal}></img>
+                    <h1>{cardDetails.rank === null ? "NR" : cardDetails.rank}</h1>
                 </div>
 
                 <div className={styles.cardInformation}>
                     <div className={styles.header}>
                         <h1>{cardDetails.faces[0].name}</h1>
                         <TrophyDisplay displayTrophies={displayTrophies} modalOnClick={openModal}></TrophyDisplay>
-                        <TrophyModal isOpen={isModalOpen} onClose={closeModal} trophies={trophies} setTrophies={setTrophies} reviewId={reviewId}/>
+                        <TrophyModal isOpen={isModalOpen} onClose={closeModal} trophies={trophies} setTrophies={setTrophies} reviewData={reviewData}/>
                     </div>
 
                     <RankWidget rank={cardDetails.rank} handleRankChange={handleRankChange}/>
