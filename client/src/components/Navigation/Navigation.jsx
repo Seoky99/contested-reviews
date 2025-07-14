@@ -11,8 +11,7 @@ function Navigation() {
                 <img src="/logo4.png" height="50" width="135"></img>
             </Link>
             <div className={styles.searchWrapper}>
-                <input type="search">
-                </input>
+                <input type="search" placeholder="Under Construction!"></input>
                 <SearchIcon className={styles.search}/>
             </div>
             <Link to="/setreviews" className={styles.link}>My Set Reviews</Link>

@@ -4,7 +4,8 @@ import useFetchReview from "../../customHooks/useFetchReview";
 
 import ReviewTagList from "./CardPageComponents/Tag/ReviewTagList";
 import TagPanel from "./CardPageComponents/Tag/TagPanel";
-import TrophyModal from "./CardPageComponents/TrophyModal/TrophyModal";
+import TrophyModal from "./CardPageComponents/Trophy/TrophyModal/TrophyModal";
+import TrophyDisplay from "./CardPageComponents/Trophy/TrophyDisplay/TrophyDisplay";
 import Notes from "./CardPageComponents/Notes/Notes";
 import RankWidget from "./CardPageComponents/RankWidget/RankWidget";
 import { useState } from "react";
@@ -71,8 +72,9 @@ function CardPage() {
 
     const reviewTags = setTags.filter(tag => selectedTags.has(tag.tagId));
     const reviewId = cardDetails.reviewId;
-
-    console.log(cardDetails);
+    const displayTrophies = trophies.filter(trophy => trophy.review_id === reviewId);
+    
+    console.log(trophies);
 
     return (
             <div className={styles.cardWrapper}>
@@ -84,12 +86,14 @@ function CardPage() {
                 <div className={styles.cardInformation}>
                     <div className={styles.header}>
                         <h1>{cardDetails.faces[0].name}</h1>
-                        <button onClick={openModal} className={styles.addTrophyButton}>Add Trophy</button>
-                        <TrophyModal isOpen={isModalOpen} onClose={closeModal} trophies={trophies}/>
+                        <TrophyDisplay displayTrophies={displayTrophies} modalOnClick={openModal}></TrophyDisplay>
+                        <TrophyModal isOpen={isModalOpen} onClose={closeModal} trophies={trophies} setTrophies={setTrophies} reviewId={reviewId}/>
                     </div>
 
                     <RankWidget rank={cardDetails.rank} handleRankChange={handleRankChange}/>
                     <Notes notesValue={cardDetails.notes} handleNotesChange={handleNotesChange}/>
+                    
+                    <p>Tags:</p>
                     <ReviewTagList reviewTags={reviewTags} handleDelete={handleDelete} selectedTags={selectedTags}
                                    toggleTag={toggleTag} reviewId={reviewId} showPanel={showPanel}/>
                    

@@ -50,3 +50,15 @@
   flex-wrap: wrap;
   gap: 20px;
 }
+
+.assignedThis {
+  background-color: yellow;
+}
+
+.assignedOther {
+  background-color: grey;
+}
+
+.unassigned {
+  background-color: white;
+}
