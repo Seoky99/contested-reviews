@@ -1,11 +1,22 @@
 import styles from "./SetReviewPage.module.css";
 import { useParams } from "react-router";
+import useFetchSetReview from "../../customHooks/useFetchSetReview";
+import TrophyReview from "./SetReviewPageComponents/TrophyReview.jsx/TrophyReview";
 
 function SetReviewPage() {
 
     const { userSetId } = useParams();
     console.log(userSetId);
-    //const { } = useFetchSetReview(); 
+    const { trophies, setTrophies, loading, error } = useFetchSetReview(userSetId); 
+
+    if (loading) { return <h1>Loading!</h1>};
+    if (error) { return <h1>Error!</h1>};
+
+    console.log(trophies);
+
+    const trophyList = trophies.map(trophy => {
+        return <TrophyReview key={trophy.trophy_id} trophyData={trophy}/>
+    })
 
     return (
         <div className={styles.setReviewWrapper}>
@@ -15,10 +26,13 @@ function SetReviewPage() {
                 <h1></h1>
             </div>
             <div className={styles.statWrapper}>
-                <h1>stats go here</h1>
+                <h1>My Stats</h1>
             </div>
             <div className={styles.trophyWrapper}>
-                <h1>Trophies Go here</h1>
+                <h1>My Trophies</h1>
+                <div className={styles.trophyListWrapper}>
+                    { trophyList }
+                </div>
             </div>
         </div>
     );

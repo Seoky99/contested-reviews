@@ -387,7 +387,7 @@ async function populateSet(setCode, addBonus=false) {
 //if updating setReviews, you must add the bonus sheet cards as well 
 //updateSetReviews('EOE');
 
-populateSet("FIN", true);
+updateSetReviews("EOE");
 //addCards("EOE");
 
 //call if set has a link
