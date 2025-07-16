@@ -8,9 +8,9 @@ const colorRank = {
 
 function sortingByCMC(a, b) {
 
-    if (a.cmc === b.cmc) {
+    /*if (a.cmc === b.cmc) {
         return sortingByColor(a, b);
-    }
+    } */
 
     return a.cmc - b.cmc; 
 }
@@ -18,8 +18,8 @@ function sortingByCMC(a, b) {
 function sortingByColor(a, b) {
 
     //safety check in case scryfall somehow decides to change ordering of .colors
-    let colorsA = [...a.colors].sort((c, d) => colorRank[c] - colorRank[d]); 
-    let colorsB = [...b.colors].sort((c, d) => colorRank[c] - colorRank[d]);
+    let colorsA = [...a.faces[0].colors].sort((c, d) => colorRank[c] - colorRank[d]); 
+    let colorsB = [...b.faces[0].colors].sort((c, d) => colorRank[c] - colorRank[d]);
 
     if (colorsA.length !== colorsB.length) {
         return colorsA.length - colorsB.length;
@@ -69,7 +69,7 @@ function sortingByRarity(a, b) {
 
     console.log(a.rarity);
 
-    return rarityMap[a.rarity] - rarityMap[b.rarity];
+    return rarityMap[b.rarity] - rarityMap[a.rarity];
 
 }
 

@@ -10,3 +10,9 @@
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   gap: 2rem;
 }
+
+.partitionContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}

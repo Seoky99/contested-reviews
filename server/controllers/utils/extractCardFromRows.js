@@ -27,7 +27,8 @@
             supertypes: row.supertypes,
             types: row.types,
             subtypes: row.subtypes,
-            imageNormal: row.image_normal
+            imageNormal: row.image_normal,
+            colors: row.colors 
         });
     }
 

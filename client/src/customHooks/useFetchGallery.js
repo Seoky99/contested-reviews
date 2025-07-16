@@ -12,7 +12,7 @@ function useFetchGallery(userSetID) {
             const url = `http://localhost:8080/api/setreviews/${userSetID}/cards`;      
             try {
                 const response = await fetch(url);
-                const reviewData = await response.json();                
+                const reviewData = await response.json();          
                 setReviews(reviewData);
             } catch (err) {
                 console.log(err);

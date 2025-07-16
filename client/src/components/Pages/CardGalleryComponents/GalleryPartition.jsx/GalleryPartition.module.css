@@ -1,0 +1,13 @@
+.partition {
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 2rem;
+    padding: 0.4rem;
+}
+
+.label {
+    box-shadow: 5px 5px black;
+    background-color: white;
+    color: black;
+    padding: 0.2rem;
+}
