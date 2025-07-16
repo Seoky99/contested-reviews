@@ -55,6 +55,8 @@ function useFetchReview(userSetId, cardId) {
                 throw new Error("Trophies fetch failure" + trophyResponse.status);
             }
             const trophiesData = await trophyResponse.json();
+                        console.log(trophiesData);
+
             setTrophies(trophiesData);
         }
 

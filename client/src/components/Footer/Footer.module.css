@@ -1,5 +1,7 @@
 .footerWrapper {
-    font-size: 3rem;
-    padding: 3rem;
+    font-size: 0.6rem;
+    padding: 1.2rem;
     background-color: #DCDCDC;
+    margin-top: auto;
+    color: black;
 }

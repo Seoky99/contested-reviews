@@ -231,7 +231,7 @@ async function addCards(setCode) {
   });
 
   let facesQuery = queryGenerator(facesInitialQuery, faceCount, numColsFaces);
-  facesQuery += ` ON CONFLICT (face_id) DO NOTHING`;
+  facesQuery += ` ON CONFLICT (card_id, face_index) DO NOTHING`;
   
 
   await useClient(cardsQuery, cardsDataArray);
@@ -382,11 +382,10 @@ async function populateSet(setCode, addBonus=false) {
     const URL = 'https://api.scryfall.com/sets/fin';
     const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Afin%2Bin%3Abooster'; */
 
-//populateSet("FIN", true); 
-
 //if updating setReviews, you must add the bonus sheet cards as well 
 //updateSetReviews('EOE');
 
+//populateSet("FIN", true); 
 updateSetReviews("EOE");
 //addCards("EOE");
 

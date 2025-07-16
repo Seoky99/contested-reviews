@@ -42,7 +42,7 @@ async function initSchema() {
         );
 
         CREATE TABLE IF NOT EXISTS faces (
-            face_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
+            face_id INTEGER GENERATED ALWAYS AS IDENTITY, 
             card_id UUID NOT NULL,
             face_index INTEGER NOT NULL, 
             colors TEXT[],
@@ -59,6 +59,7 @@ async function initSchema() {
             supertypes TEXT[],
             types TEXT[],
             subtypes TEXT[],
+            PRIMARY KEY (card_id, face_index),
             FOREIGN KEY (card_id) REFERENCES cards(card_id) 
         );
 
