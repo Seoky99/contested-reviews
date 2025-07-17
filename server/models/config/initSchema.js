@@ -89,10 +89,10 @@ async function initSchema() {
         CREATE TABLE IF NOT EXISTS tags(
             tag_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
             user_id INTEGER,
-            set_id UUID,
+            user_set_id INTEGER,
             name TEXT NOT NULL,
             FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-            FOREIGN KEY (set_id) REFERENCES sets(set_id)
+            FOREIGN KEY (user_set_id) REFERENCES user_sets(user_set_id) ON DELETE CASCADE
         );
 
         CREATE TABLE IF NOT EXISTS review_tags(

@@ -32,7 +32,7 @@ async function getTagsFromReview(req, res) {
         return {
             userId: row.user_id,
             tagName: row.name, 
-            setId: row.set_id,
+            userSetId: row.user_set_id,
             tagId: row.tag_id
         }    
     })
@@ -84,6 +84,17 @@ async function deleteTagsFromReview(req, res) {
     res.status(204).send();
 }
 
+async function getPageInformation(req, res) {
+
+    //implement authentication 
+    const userid = 1; 
+
+    const { reviewid } = req.params; 
+    
+
+    return 2; 
+}
+
 async function updatePageInformation(req, res) {
 
     //implement authentication 
@@ -99,4 +110,4 @@ async function updatePageInformation(req, res) {
     res.json({rank, notes, selectedTags});
 }
 
-export { assignTagToReview, getTagsFromReview, deleteTagsFromReview, updatePageInformation, getTrophiesFromReview, assignTrophiesToReview }
+export { assignTagToReview, getTagsFromReview, deleteTagsFromReview, getPageInformation, updatePageInformation, getTrophiesFromReview, assignTrophiesToReview }

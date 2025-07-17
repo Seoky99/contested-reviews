@@ -79,7 +79,6 @@ function CardPage() {
     const displayTrophies = trophies.filter(trophy => trophy.review_id === reviewId);
     
     console.log(cardDetails);
-    console.log(trophies); 
 
     return (
             <div className={styles.cardWrapper}>
@@ -105,7 +104,7 @@ function CardPage() {
                     <button className={styles.addTagButton} onClick={() => setShowPanel(!showPanel)}>Manage Tags {showPanel ? `▲` : `▼`}</button>
 
                     {showPanel && <TagPanel selectedTags={selectedTags} setSelectedTags={setSelectedTags}
-                                            setTags={setTags} setSetTags={setSetTags} setId={cardDetails.setId}
+                                            setTags={setTags} setSetTags={setSetTags} userSetId={cardDetails.userSetId}
                                             toggleTag={toggleTag}/>}
                     
                     {saving && <h4>Saving!</h4>}

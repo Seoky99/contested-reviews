@@ -226,6 +226,17 @@ async function getTrophiesFromReview(reviewId) {
     }
 }
 
+async function getSetReviewTags(userSetId) {
+        const query = `SELECT * FROM tags WHERE user_set_id = $1`;
+
+    try {
+        const {rows} = await pool.query(query, [userSetId]);
+        return rows; 
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 async function assignTrophiesToReview(reviewId, trophyIds) {
     let initialQuery = `UPDATE trophies SET review_id = $1 WHERE trophy_id IN `;
     let query = queryGenerator(initialQuery, 1, trophyIds.length, 1);
@@ -253,6 +264,24 @@ async function putSetReviewTrophies(userSetId, trophies) {
     } catch (err) {
         console.log(err);
     } 
+}
+
+async function getReviewPageInformation(reviewId) {
+
+    //extracting card details 
+    const query = `SELECT * FROM reviews 
+                JOIN cards ON cards.card_id = reviews.card_id 
+                JOIN faces ON cards.card_id = faces.card_id
+                WHERE user_set_id = $1 AND reviews.card_id = $2`;
+
+    const newQuery = `SELECT * FROM reviews JOIN cards on cards.card_id = reviews.card_id 
+    JOIN faces ON cards.card_id = faces.card_id 
+    WHERE reviews.review_id = $1;`
+
+    //remember to call extract cards from rows  
+
+    //extracting 
+
 }
 
 async function performPageUpdate(pageInformation) {
@@ -312,4 +341,4 @@ async function performPageUpdate(pageInformation) {
 }
 
 export default { getAllSetReviews, createSetReview, deleteSetReview, getSets, getReviewsWithCards, getSetReviewTrophies, putSetReviewTrophies, getTrophiesFromReview, assignTrophiesToReview,
-                 getCardFromSetReview, patchCardFromSetReview, patchCardFromSetReviewByReviewId, performPageUpdate };
+                 getCardFromSetReview, getSetReviewTags, patchCardFromSetReview, patchCardFromSetReviewByReviewId, performPageUpdate };

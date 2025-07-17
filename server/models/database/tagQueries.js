@@ -1,12 +1,12 @@
 import pool from "../pool.js"; 
 import queryGenerator from "../config/queryGenerator.js";
 
-async function createTag(userId, setId, tagName) {
-    const query = `INSERT INTO tags (user_id, set_id, name) VALUES ($1, $2, $3)
+async function createTag(userId, userSetId, tagName) {
+    const query = `INSERT INTO tags (user_id, user_set_id, name) VALUES ($1, $2, $3)
                     RETURNING tag_id`;
 
     try {
-        const {rows} = await pool.query(query, [userId, setId, tagName]);
+        const {rows} = await pool.query(query, [userId, userSetId, tagName]);
         return rows;
     } catch (err) {
         console.log(err);

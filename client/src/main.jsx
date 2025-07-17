@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css';
 import Root from './Root.jsx';
 import SetPage from "./components/Pages/SetPage.jsx";
@@ -10,6 +11,8 @@ import SetReviewList from './components/SetReview/SetReviewList.jsx';
 import AddPanel from './components/AddPanel/AddPanel.jsx';
 import CardPage from "./components/Pages/CardPage.jsx";
 import TagPanel from "./components/Pages/CardPageComponents/Tag/TagPanel.jsx";
+
+const queryClient = new QueryClient(); 
 
 const router = createBrowserRouter([
   {
@@ -54,6 +57,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router}/>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router}/>
+    </QueryClientProvider>
   </StrictMode>,
 )

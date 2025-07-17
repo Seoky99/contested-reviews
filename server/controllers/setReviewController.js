@@ -60,6 +60,27 @@ async function getSetReviewCards(req, res) {
     res.json(cards);
 }
 
+async function getSetReviewTags(req, res) {
+
+    //implement authentication 
+    const userid = 1; 
+
+    const { setid } = req.params;
+
+    const rows = await db.getSetReviewTags(setid);
+
+    const camelCaseChange = rows.map(row => {
+        return {
+            userId: row.user_id,
+            tagName: row.name, 
+            userSetId: row.user_set_id,
+            tagId: row.tag_id
+        }    
+    })
+
+    res.json(camelCaseChange);
+}
+
 async function getSetReviewTrophies(req, res) {
 
     //implement authenticaiton 
@@ -119,4 +140,4 @@ async function patchCardFromSetReview(req, res) {
 
 
 export { getSetReviews, createSetReview, deleteSetReview, getSetReviewCards, getCardPageInformation, 
-    patchCardFromSetReview, getSetReviewTrophies, putSetReviewTrophies } ; 
+    patchCardFromSetReview, getSetReviewTags, getSetReviewTrophies, putSetReviewTrophies } ; 

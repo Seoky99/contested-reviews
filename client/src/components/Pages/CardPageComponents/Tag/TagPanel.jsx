@@ -3,7 +3,7 @@ import { useState } from "react";
 import TagList from "./TagList";
 
 //delete tags if you can- check if setId
-function TagPanel({selectedTags, setSelectedTags, setTags, setSetTags, setId, toggleTag}) {
+function TagPanel({selectedTags, setSelectedTags, setTags, setSetTags, userSetId, toggleTag}) {
 
     const [newTagName, setNewTagName] = useState('');
 
@@ -15,7 +15,7 @@ function TagPanel({selectedTags, setSelectedTags, setTags, setSetTags, setId, to
                 headers: {
                     'Content-Type': 'application/json',
                 }, 
-                body: JSON.stringify({tagName: newTagName, setId}),
+                body: JSON.stringify({tagName: newTagName, userSetId}),
             });
 
             if (!response.ok) {

@@ -11,7 +11,7 @@ async function getAllUserTags (req, res) {
         return {
             userId: row.user_id,
             tagName: row.name, 
-            setId: row.set_id,
+            userSetId: row.user_set_id,
             tagId: row.tag_id
         }    
     })
@@ -23,11 +23,11 @@ async function createTag(req, res) {
     //implement authentication 
     const userId = 1; 
 
-    const { setId, tagName } = req.body;  
+    const { userSetId, tagName } = req.body;  
 
-    const rows = await db.createTag(userId, setId, tagName); 
+    const rows = await db.createTag(userId, userSetId, tagName); 
     const tagId = rows[0].tag_id;
-    res.json({setId, tagName, userId, tagId});
+    res.json({userSetId, tagName, userId, tagId});
 }
 
 async function patchTag(req, res) {

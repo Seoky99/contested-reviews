@@ -66,11 +66,7 @@ function sortingByRarity(a, b) {
         "uncommon": 2, 
         "common": 3
     }
-
-    console.log(a.rarity);
-
     return rarityMap[b.rarity] - rarityMap[a.rarity];
-
 }
 
 export default { sortingByCMC, sortingByColor, sortingByRating, sortingByRarity };

@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react"
-
 /**
  * Fetches all the information the "card page" requires for a review
  * Card details (ranks, notes), user tags 
@@ -19,7 +17,8 @@ function useFetchReview(userSetId, cardId) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    useEffect( () => {
+    const returnData = {};
+
 
         async function fetchCard() {
             const cardUrl = `http://localhost:8080/api/setreviews/${userSetId}/cards/${cardId}`;
@@ -32,9 +31,9 @@ function useFetchReview(userSetId, cardId) {
             return [cardData.reviewId, cardData.userSetId]; 
         } 
 
-        async function fetchAllTags(userSetId, reviewId) {
+        async function fetchAllTags(reviewId) {
             const urls = [`http://localhost:8080/api/reviews/${reviewId}/tags`,
-                          `http://localhost:8080/api/setreviews/${userSetId}/tags` ];
+                          `http://localhost:8080/api/tags` ];
             
             const tagsResponses = await Promise.all(urls.map(url => fetch(url)));
             tagsResponses.forEach(response => {
@@ -43,7 +42,6 @@ function useFetchReview(userSetId, cardId) {
                 }
             })
             const [reviewTagsData, setTagsData] = await Promise.all(tagsResponses.map(response => response.json()));
-            console.log(setTagsData);
             setSetTags(setTagsData);
             setSelectedTags(new Set(reviewTagsData.map(tag => tag.tagId)));
         }
@@ -66,7 +64,7 @@ function useFetchReview(userSetId, cardId) {
                 const [reviewId, userSetId] = await fetchCard(); 
 
                 if (reviewId && userSetId) {
-                    await fetchAllTags(userSetId, reviewId); 
+                    await fetchAllTags(reviewId); 
                     await fetchAllTrophies(userSetId, reviewId);
                 } else {
                     throw new Error("Error in fetching ids");
@@ -74,14 +72,10 @@ function useFetchReview(userSetId, cardId) {
             } catch (err) {
                 console.log(err); 
                 setError(err);
-            } finally {
-                setLoading(false);
-            }
+            } 
         }
 
-        fetchPageDetails(); 
-
-    }, [userSetId, cardId]); 
+        
 
     return { cardDetails, setCardDetails, setTags, setSetTags, selectedTags, setSelectedTags, trophies, setTrophies, loading, error };
 }
