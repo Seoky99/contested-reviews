@@ -4,12 +4,12 @@ import { createBrowserRouter, RouterProvider } from 'react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css';
 import Root from './Root.jsx';
-import SetPage from "./components/Pages/SetPage.jsx";
-import CardGalleryPage from './components/Pages/CardGalleryPage.jsx';
-import SetReviewPage from './components/Pages/SetReviewPage.jsx';
-import SetReviewList from './components/SetReview/SetReviewList.jsx';
+import SetReviewPage from "./components/Pages/SetReviewComponents/SetReviewPage.jsx";
+import CardGalleryPage from './components/Pages/CardGalleryComponents/CardGalleryPage.jsx';
+import SetReviewDisplayPage from './components/Pages/SetReviewDisplayPageComponents/SetReviewDisplayPage.jsx';
+import SetReviewList from "./components/Pages/SetReviewComponents/SetReview/SetReviewList.jsx"
 import AddPanel from './components/AddPanel/AddPanel.jsx';
-import CardPage from "./components/Pages/CardPage.jsx";
+import CardPage from "./components/Pages/CardPageComponents/CardPage.jsx";
 import TagPanel from "./components/Pages/CardPageComponents/Tag/TagPanel.jsx";
 import NotFoundPage from './components/Pages/ErrorHandling/NotFoundPage.jsx';
 
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "setreviews",
-        Component: SetPage,
+        Component: SetReviewPage,
         children: [
           {
             path: "",
@@ -36,7 +36,7 @@ const router = createBrowserRouter([
       }, 
       {
         path: "setreviews/:userSetId",
-        Component: SetReviewPage,
+        Component: SetReviewDisplayPage,
       },
       {
         path: "setreviews/:userSetId/cards",

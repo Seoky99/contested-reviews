@@ -112,7 +112,7 @@ async function initSchema() {
             description TEXT, 
             trophy_img_url TEXT,
             is_global BOOLEAN DEFAULT FALSE NOT NULL,
-            FOREIGN KEY (review_id) REFERENCES reviews(review_id),
+            FOREIGN KEY (review_id) REFERENCES reviews(review_id) ON DELETE SET NULL,
             FOREIGN KEY (user_set_id) REFERENCES user_sets(user_set_id) ON DELETE CASCADE
         );
         `;

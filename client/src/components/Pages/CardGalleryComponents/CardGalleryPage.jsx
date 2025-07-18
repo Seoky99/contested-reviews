@@ -1,10 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useParams, useLocation } from "react-router";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
-import GalleryPartition from "./CardGalleryComponents/GalleryPartition.jsx/GalleryPartition";
-import fetchGallery from "../../queryFunctions/fetchGallery.js";
+import GalleryPartition from "./GalleryPartition.jsx/GalleryPartition";
+import fetchGallery from "../../../queryFunctions/fetchGallery.js";
 import styles from "./CardGalleryPage.module.css";
-import { applyMechanisms } from "../../utils/applyMechanisms.js";
+import { applyMechanisms } from "../../../utils/applyMechanisms.js"
 import isEqual from 'lodash/isEqual';
 
 function CardGalleryPage() {

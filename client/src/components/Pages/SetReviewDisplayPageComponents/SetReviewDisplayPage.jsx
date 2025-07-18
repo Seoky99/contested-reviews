@@ -1,9 +1,9 @@
-import styles from "./SetReviewPage.module.css";
+import styles from "./SetReviewDisplayPage.module.css";
 import { useParams } from "react-router";
-import useFetchSetReview from "../../customHooks/useFetchSetReview";
-import TrophyReview from "./SetReviewPageComponents/TrophyReview.jsx/TrophyReview";
+import useFetchSetReview from "../../../customHooks/useFetchSetReview";
+import TrophyReview from "./TrophyReview.jsx/TrophyReview";
 
-function SetReviewPage() {
+function SetReviewDisplayPage() {
 
     const { userSetId } = useParams();
     console.log(userSetId);
@@ -39,4 +39,4 @@ function SetReviewPage() {
 
 }
 
-export default SetReviewPage;
+export default SetReviewDisplayPage;

@@ -1,21 +1,21 @@
 import { useState, useMemo, useEffect } from "react";
 import { useParams, useLocation, Link } from "react-router";
-import { applyMechanisms } from "../../utils/applyMechanisms";
+import { applyMechanisms } from "../../../utils/applyMechanisms.js";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
 import styles from "./CardPage.module.css";
-import useFetchReview from "../../customHooks/useFetchReview";
-import ReviewTagList from "./CardPageComponents/Tag/ReviewTagList";
-import TagPanel from "./CardPageComponents/Tag/TagPanel";
-import TrophyModal from "./CardPageComponents/Trophy/TrophyModal/TrophyModal";
-import TrophyDisplay from "./CardPageComponents/Trophy/TrophyDisplay/TrophyDisplay";
-import Notes from "./CardPageComponents/Notes/Notes";
-import RankWidget from "./CardPageComponents/RankWidget/RankWidget";
-import fetchGallery from "../../queryFunctions/fetchGallery";
-import navTools from "../../utils/cardNavigation.js";
+import useFetchReview from "../../../customHooks/useFetchReview.js";
+import ReviewTagList from "./Tag/ReviewTagList.jsx";
+import TagPanel from "./Tag/TagPanel.jsx";
+import TrophyModal from "./Trophy/TrophyModal/TrophyModal.jsx";
+import TrophyDisplay from "./Trophy/TrophyDisplay/TrophyDisplay.jsx";
+import Notes from "./Notes/Notes.jsx";
+import RankWidget from "./RankWidget/RankWidget.jsx";
+import fetchGallery from "../../../queryFunctions/fetchGallery.js";
+import navTools from "../../../utils/cardNavigation.js";
 
 function CardPage() {
     let { userSetId, cardId, reviewId } = useParams(); 

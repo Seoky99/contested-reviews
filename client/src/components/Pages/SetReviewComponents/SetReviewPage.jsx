@@ -1,10 +1,10 @@
 import { useState } from 'react'; 
-import useFetchSetInformation from '../../customHooks/useFetchSetInformation';
+import useFetchSetInformation from '../../../customHooks/useFetchSetInformation';
 import { Outlet } from "react-router";
-import Set from "../Set/Set";
-import styles from "./SetPage.module.css";
+import Set from './Set/Set';
+import styles from "./SetReviewPage.module.css";
 
-function SetPage() {
+function SetReviewPage() {
 
     const { sets, setSetReviews, setReviews, loading, error } = useFetchSetInformation();
     const [selectedSetID, setSelectedSetID] = useState('452951cf-378b-4472-b7fe-572fe2af2ac0');
@@ -47,4 +47,4 @@ function SetPage() {
     );
 }; 
 
-export default SetPage;
+export default SetReviewPage;
