@@ -11,6 +11,7 @@ import SetReviewList from './components/SetReview/SetReviewList.jsx';
 import AddPanel from './components/AddPanel/AddPanel.jsx';
 import CardPage from "./components/Pages/CardPage.jsx";
 import TagPanel from "./components/Pages/CardPageComponents/Tag/TagPanel.jsx";
+import NotFoundPage from './components/Pages/ErrorHandling/NotFoundPage.jsx';
 
 const queryClient = new QueryClient(); 
 
@@ -50,6 +51,9 @@ const router = createBrowserRouter([
             Component: TagPanel
           }
         ]
+      }, {
+        path: "*",
+        Component: NotFoundPage
       }
     ]
   },

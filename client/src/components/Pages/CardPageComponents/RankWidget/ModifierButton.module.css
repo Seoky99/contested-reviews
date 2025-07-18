@@ -1,0 +1,16 @@
+.modifierButton {
+    border-radius: 10%;
+    width: 25px; 
+    height: 25px; 
+    font-size: 1.2rem;
+    font-weight: 500;
+    cursor: pointer; 
+}
+
+.selected {
+    background-color: yellow;
+}
+
+.notSelected {
+    background-color: grey;
+}

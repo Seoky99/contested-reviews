@@ -43,19 +43,28 @@ function sortingByColor(a, b) {
     return 0; 
 }
 
-//TODO: FINISH
 function sortingByRating(a, b) {
-
     const ratingMap = {
-        "S": 0, 
-        "A": 1,
-        "B": 2, 
-        "C": 3, 
-        "D": 4, 
-        "F": 5,
-        "NR": 6
+        "S+": 0,
+        "S": 1,
+        "S-": 2,
+        "A+": 3,
+        "A": 4,
+        "A-": 5,
+        "B+": 6,
+        "B": 7,
+        "B-": 8,
+        "C+": 9,
+        "C": 10,
+        "C-": 11,
+        "D+": 12,
+        "D": 13,
+        "D-": 14,
+        "F+": 15,
+        "F": 16,
+        "F-": 17,
+        "NR": 18
     }
-
     return ratingMap[a.rank] - ratingMap[b.rank]; 
 }
 

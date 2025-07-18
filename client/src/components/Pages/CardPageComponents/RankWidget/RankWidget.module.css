@@ -1,0 +1,15 @@
+.buttonContainer {
+    display: flex;
+    gap: 2rem;
+}
+
+.modifierButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.alternate {
+    display: flex; 
+    flex-direction: column;
+}

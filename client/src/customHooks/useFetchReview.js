@@ -34,6 +34,10 @@ function useFetchReview(reviewId) {
             }
             const {cardDetails, reviewTags, setTags, trophies} = await response.json();
 
+            if (cardDetails.notes === null) {
+                cardDetails.notes = '';
+            }
+
             setCardDetails(cardDetails);
             setSetTags(setTags);
             setSelectedTags(new Set(reviewTags.map(tag => tag.tagId)));

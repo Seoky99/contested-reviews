@@ -2,18 +2,27 @@ import { Outlet } from "react-router";
 import Navigation from "./components/Navigation/Navigation";
 import Footer from "./components/Footer/Footer";
 import styles from "./Root.module.css"; 
+import ErrorFallbackPage from "./components/Pages/ErrorHandling/ErrorFallbackPage";
+import { ErrorBoundary } from "react-error-boundary";
+import {useLocation} from "react-router"; 
 
 function Root() {
+
+    const location = useLocation();
+
     return (
-        <>
-            <div className={styles.pageWrapper}>
-                <Navigation/>
-                <div className={styles.contentWrapper}>
+        <div className={styles.pageWrapper}>
+            <Navigation/>
+            
+            <div className={styles.contentWrapper}>
+                <ErrorBoundary fallback={<ErrorFallbackPage/>} resetKeys={[location.pathname]}>
                     <Outlet/>
-                </div>
-                <Footer/>
+                </ErrorBoundary>
             </div>
-        </>
+
+           
+            <Footer/>
+        </div>
     );
 }
 

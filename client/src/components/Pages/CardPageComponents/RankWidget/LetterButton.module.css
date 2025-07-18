@@ -1,0 +1,17 @@
+.letterButton {
+    border-radius: 10%;
+    width: 60px; 
+    height: 60px; 
+    font-size: 3rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.selected {
+    background-color: yellow;
+
+}
+
+.notSelected {
+    background-color: grey; 
+}

@@ -6,7 +6,6 @@ import { useQueryClient, useQuery } from "@tanstack/react-query";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
-
 import styles from "./CardPage.module.css";
 import useFetchReview from "../../customHooks/useFetchReview";
 import ReviewTagList from "./CardPageComponents/Tag/ReviewTagList";
@@ -16,7 +15,7 @@ import TrophyDisplay from "./CardPageComponents/Trophy/TrophyDisplay/TrophyDispl
 import Notes from "./CardPageComponents/Notes/Notes";
 import RankWidget from "./CardPageComponents/RankWidget/RankWidget";
 import fetchGallery from "../../queryFunctions/fetchGallery";
-
+import navTools from "../../utils/cardNavigation.js";
 
 function CardPage() {
     let { userSetId, cardId, reviewId } = useParams(); 
@@ -72,22 +71,11 @@ function CardPage() {
     const sortOrder = [];
     sorted.forEach( partition => {
         partition.items.forEach( card => {
-            sortOrder.push([card.faces[0].name, card.reviewId, card.cardId]);
+            sortOrder.push({sortName: card.faces[0].name, sortReviewId: card.reviewId, sortCardId: card.cardId});
         });
     })
 
-    const myIndex = sortOrder.findIndex( review => review[1] === reviewId);
-    
-    const addQuestionMark = params.toString() === '' ? `` : `?`; 
-
-    const nextCheck = myIndex >= sortOrder.length - 1 ? sortOrder[myIndex][1] :  sortOrder[myIndex + 1][1] ; 
-    const prevCheck = myIndex <= 0 ? sortOrder[myIndex][1] : sortOrder[myIndex - 1][1]; 
-
-    const nextCheckTwo = myIndex >= sortOrder.length - 1 ? sortOrder[myIndex][1] :  sortOrder[myIndex+1][2] ; 
-    const prevCheckTwo = myIndex <= 0 ? sortOrder[myIndex][1] : sortOrder[myIndex-1][2]; 
-
-    const nextUrl = `/setreviews/${userSetId}/reviews/${nextCheck}/cards/${nextCheckTwo}` + addQuestionMark + params.toString();
-    const prevUrl = `/setreviews/${userSetId}/reviews/${prevCheck}/cards/${prevCheckTwo}` + addQuestionMark + params.toString();;
+    const { myIndex, nextUrl, prevUrl, cardGalleryUrl } = navTools(sortOrder, reviewId, userSetId, params);
 
     if (loading) { return <h1>Loading</h1> }
     if (error) { return <h1>Error</h1>} 
@@ -117,15 +105,9 @@ function CardPage() {
             });
 
             const success = await response.json(); 
-            
             await queryClient.invalidateQueries(['cards', userSetId]);
-
-          
             const cacheKey = ['sortOrder', userSetId, filter, partition, sort];
-            console.log(cacheKey);
-
             await queryClient.invalidateQueries(cacheKey);
-
             console.log(success); 
         } catch (err) {
             console.log(err); 
@@ -148,18 +130,14 @@ function CardPage() {
         }
     }
 
-    function handleRankChange(e) { setCardDetails({...cardDetails, rank: e.target.value}); }
+    function handleRankChange(rank) { setCardDetails({...cardDetails, rank: rank}); }
     function handleNotesChange(e) { setCardDetails({...cardDetails, notes: e.target.value}); }
     function openModal() {setIsModalOpen(true);}
     function closeModal() {setIsModalOpen(false);}
 
-    reviewId = Number(reviewId);
     const reviewTags = setTags.filter(tag => selectedTags.has(tag.tagId));
     const reviewData = {review_id: cardDetails.reviewId, card_name: cardDetails.faces[0].name, image_normal: cardDetails.faces[0].imageNormal};
     const displayTrophies = trophies.filter(trophy => trophy.review_id === reviewId);
-
-
-    const cardGalleryUrl = `/setreviews/${userSetId}/cards` + addQuestionMark + params.toString();
 
     return (
             
@@ -172,7 +150,7 @@ function CardPage() {
 
                     <div className={styles.cardRank}>
                         <img className={styles.cardImage} src={cardDetails.faces[0].borderCrop}></img>
-                        <h1>{cardDetails.rank === null ? "NR" : cardDetails.rank}</h1>
+                        <h1>{cardDetails.rank === null ? "NR" : cardDetails.rank}</h1> 
 
                         <div className={styles.navButtonWrapper}>
                             <Link to={prevUrl} className={styles.navButton}><ArrowBackIcon/></Link> 
@@ -185,10 +163,11 @@ function CardPage() {
                         <div className={styles.header}>
                             <h1>{cardDetails.faces[0].name}</h1>
                             <TrophyDisplay displayTrophies={displayTrophies} modalOnClick={openModal}></TrophyDisplay>
+                            <button type="submit" onClick={handleSaveClick} className={styles.saveButton}>Save</button>
                             <TrophyModal isOpen={isModalOpen} onClose={closeModal} trophies={trophies} setTrophies={setTrophies} reviewData={reviewData}/>
                         </div>
 
-                        <RankWidget rank={cardDetails.rank} handleRankChange={handleRankChange}/>
+                        <RankWidget rank={cardDetails.rank} handleRankChange={handleRankChange}/> 
                         <Notes notesValue={cardDetails.notes} handleNotesChange={handleNotesChange}/>
                 
                         <ReviewTagList reviewTags={reviewTags} handleDelete={handleDelete} selectedTags={selectedTags}
@@ -201,7 +180,6 @@ function CardPage() {
                                                 toggleTag={toggleTag}/>}
                         
                         {saving && <h4>Saving!</h4>}
-                        <button type="submit" onClick={handleSaveClick} className={styles.saveButton}>Save</button>
                     </div>
                 </div>
             </div>
