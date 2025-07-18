@@ -1,5 +1,6 @@
 import db from "../models/database/tagQueries.js";
 import ndb from "../models/database/queries.js";
+import extractCardFromRows from "./utils/extractCardFromRows.js";
 
 async function assignTagToReview(req, res) {
 
@@ -91,8 +92,24 @@ async function getPageInformation(req, res) {
 
     const { reviewid } = req.params; 
     
+    const { cardDetails, reviewTags, allTags, trophies } = await ndb.getReviewPageInformation(reviewid, userid);
 
-    return 2; 
+    function camelCaseChange(rows) {
+    const camelCase = rows.map(row => {
+        return {
+            userId: row.user_id,
+            tagName: row.name, 
+            userSetId: row.user_set_id,
+            tagId: row.tag_id
+        }});
+        return camelCase;     
+    }
+
+    const transformedCardDetails = extractCardFromRows(cardDetails)[0];
+    const ccReviewTags = camelCaseChange(reviewTags); 
+    const ccAllTags = camelCaseChange(allTags);
+
+    res.json({cardDetails: transformedCardDetails, reviewTags: ccReviewTags, setTags: ccAllTags, trophies});
 }
 
 async function updatePageInformation(req, res) {

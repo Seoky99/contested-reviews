@@ -266,22 +266,68 @@ async function putSetReviewTrophies(userSetId, trophies) {
     } 
 }
 
-async function getReviewPageInformation(reviewId) {
+async function getReviewPageInformation(reviewId, userId) {
+
+    const transaction = await pool.connect();  
 
     //extracting card details 
-    const query = `SELECT * FROM reviews 
-                JOIN cards ON cards.card_id = reviews.card_id 
-                JOIN faces ON cards.card_id = faces.card_id
-                WHERE user_set_id = $1 AND reviews.card_id = $2`;
+    const cardQuery = `SELECT * FROM reviews 
+                        JOIN cards on cards.card_id = reviews.card_id 
+                        JOIN faces ON cards.card_id = faces.card_id 
+                        WHERE reviews.review_id = $1;`
 
-    const newQuery = `SELECT * FROM reviews JOIN cards on cards.card_id = reviews.card_id 
-    JOIN faces ON cards.card_id = faces.card_id 
-    WHERE reviews.review_id = $1;`
+    const cardDataArray = [reviewId];
 
     //remember to call extract cards from rows  
 
-    //extracting 
+    //extracting tags 
+    const reviewTagQuery = `SELECT * FROM review_tags 
+                    JOIN tags ON tags.tag_id = review_tags.tag_id 
+                    WHERE user_id = $1 AND review_id = $2`;
+    
+    const reviewTagDataArray = [userId, reviewId]; 
 
+    const allTagsQuery = `SELECT * FROM tags WHERE user_set_id = (SELECT user_set_id FROM reviews WHERE review_id = $1)`;
+
+    const allTagsDataArray = [reviewId]; 
+
+    const trophyQuery =  `SELECT
+                            trophies.trophy_id,
+                            trophies.user_set_id,
+                            trophies.review_id,
+                            trophies.name,
+                            trophies.description,
+                            trophies.trophy_img_url,
+                            trophies.is_global,
+                            faces.name AS card_name,
+                            faces.image_normal
+                        FROM trophies
+                        LEFT JOIN reviews ON reviews.review_id = trophies.review_id
+                        LEFT JOIN faces ON faces.card_id = reviews.card_id AND faces.face_index = 0
+                        WHERE trophies.user_set_id = (SELECT user_set_id FROM reviews WHERE review_id = $1);`
+
+    const trophyDataArray = [reviewId];
+
+
+    try {
+        await transaction.query("BEGIN");
+
+        const cardDetails = (await transaction.query(cardQuery, cardDataArray)).rows;
+        const reviewTags = (await transaction.query(reviewTagQuery, reviewTagDataArray)).rows;
+        const allTags = (await transaction.query(allTagsQuery, allTagsDataArray)).rows;
+        const trophies = (await transaction.query(trophyQuery, trophyDataArray)).rows;
+
+        await transaction.query("COMMIT");
+
+        return {cardDetails, reviewTags, allTags, trophies}; 
+
+    } catch (err) {
+
+        await transaction.query("ROLLBACK");
+
+    } finally {
+        await transaction.release();
+    }
 }
 
 async function performPageUpdate(pageInformation) {
@@ -341,4 +387,4 @@ async function performPageUpdate(pageInformation) {
 }
 
 export default { getAllSetReviews, createSetReview, deleteSetReview, getSets, getReviewsWithCards, getSetReviewTrophies, putSetReviewTrophies, getTrophiesFromReview, assignTrophiesToReview,
-                 getCardFromSetReview, getSetReviewTags, patchCardFromSetReview, patchCardFromSetReviewByReviewId, performPageUpdate };
+                 getCardFromSetReview, getSetReviewTags, patchCardFromSetReview, patchCardFromSetReviewByReviewId, performPageUpdate, getReviewPageInformation };

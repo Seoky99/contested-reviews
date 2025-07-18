@@ -28,6 +28,7 @@
             types: row.types,
             subtypes: row.subtypes,
             imageNormal: row.image_normal,
+            borderCrop: row.border_crop,
             colors: row.colors 
         });
     }

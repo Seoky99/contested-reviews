@@ -50,6 +50,7 @@ async function initSchema() {
             image_normal TEXT,
             image_large TEXT, 
             image_crop TEXT, 
+            border_crop TEXT,
             name TEXT NOT NULL,
             mana_cost TEXT, 
             artist TEXT, 

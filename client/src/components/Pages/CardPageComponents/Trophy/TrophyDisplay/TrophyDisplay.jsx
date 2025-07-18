@@ -7,9 +7,6 @@ function TrophyDisplay({displayTrophies, modalOnClick}) {
         return <Trophy key={trophy.trophy_id} trophyData={trophy}></Trophy>
     }) 
 
-    console.log(displayTrophies);
-    console.log(trophies)
-    
     return (
         <div className={styles.displayWrapper}>
             {trophies}

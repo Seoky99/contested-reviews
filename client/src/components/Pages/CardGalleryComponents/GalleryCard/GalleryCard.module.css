@@ -12,6 +12,7 @@
     height: 20rem;
     width: 15rem;
     display: block;
+    padding: 0;
   }
 
   & h1 {

@@ -42,7 +42,7 @@ const router = createBrowserRouter([
         Component: CardGalleryPage,
       },
       {
-        path: "setreviews/:userSetId/cards/:cardId",
+        path: "setreviews/:userSetId/reviews/:reviewId/cards/:cardId",
         Component: CardPage, 
         children: [
           {
@@ -60,5 +60,5 @@ createRoot(document.getElementById('root')).render(
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router}/>
     </QueryClientProvider>
-  </StrictMode>,
+  </StrictMode>
 )

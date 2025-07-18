@@ -28,6 +28,12 @@
     }
 }
 
+.pageWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
 .cardImage {
     width: 350px; 
     height: auto;
@@ -65,4 +71,36 @@ textarea {
 .header {
     display: flex;
     gap: 1rem;
+}
+
+.navButton {
+    padding: 10px;
+    display: flex;
+
+    background-color: white;
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+    box-shadow: 5px 5px 5px black;
+}
+
+.navButtonWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.2rem;
+}
+
+.tempWrap {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.4rem;
+}
+
+.mechs {
+    background-color: black;
+    padding: 3px;
+    margin-bottom: auto;
+    border-bottom: 3px solid yellow;
 }

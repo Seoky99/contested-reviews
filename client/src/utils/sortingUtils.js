@@ -52,7 +52,8 @@ function sortingByRating(a, b) {
         "B": 2, 
         "C": 3, 
         "D": 4, 
-        "F": 5
+        "F": 5,
+        "NR": 6
     }
 
     return ratingMap[a.rank] - ratingMap[b.rank]; 

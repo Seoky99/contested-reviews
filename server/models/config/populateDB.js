@@ -132,13 +132,13 @@ async function addCards(setCode) {
   let data = await fetchScryfall(url, 'cards');
 
   let cardsInitialQuery = `INSERT INTO cards(card_id, set_id, rarity, cmc, keywords, type_line, layout, digital, collector_number) VALUES`;
-  let facesInitialQuery = `INSERT INTO faces(card_id, face_index, colors, image_small, image_normal, image_large, image_crop, name, mana_cost, artist, power, toughness, type_line, supertypes, types, subtypes) VALUES`;
+  let facesInitialQuery = `INSERT INTO faces(card_id, face_index, colors, image_small, image_normal, image_large, image_crop, border_crop, name, mana_cost, artist, power, toughness, type_line, supertypes, types, subtypes) VALUES`;
   
   const cardsDataArray = [];
   const facesDataArray = []; 
   
   const numColsCards = 9;
-  const numColsFaces = 16; 
+  const numColsFaces = 17; 
 
   //Generates a query VALUES($1, $2, .... $colCount), ($colCount + 1...) for each card  
   let cardsQuery = queryGenerator(cardsInitialQuery, data.length, numColsCards);
@@ -179,7 +179,7 @@ async function addCards(setCode) {
           imageUris = card.image_uris;
         }
 
-        const { small: image_small, normal: image_normal, large: image_large, art_crop: image_crop } = imageUris; 
+        const { small: image_small, normal: image_normal, large: image_large, art_crop: image_crop, border_crop: border_crop } = imageUris; 
 
         facesDataArray.push(
           card.id, 
@@ -189,6 +189,7 @@ async function addCards(setCode) {
           image_normal,
           image_large,
           image_crop,
+          border_crop,
           cardFace.name, 
           "mana_cost" in cardFace ? cardFace.mana_cost : null, 
           "artist" in cardFace ? cardFace.artist : null, 
@@ -207,7 +208,7 @@ async function addCards(setCode) {
       const faceIndex = 0;
       const {supertypes, types, subtypes} = parseTypeLine(card.type_line);
 
-      const { small: image_small, normal: image_normal, large: image_large, art_crop: image_crop } = card.image_uris; 
+      const { small: image_small, normal: image_normal, large: image_large, art_crop: image_crop, border_crop: border_crop } = card.image_uris; 
 
       facesDataArray.push(
         card.id, 
@@ -217,6 +218,7 @@ async function addCards(setCode) {
         image_normal,
         image_large,
         image_crop,
+        border_crop,
         card.name,
         "mana_cost" in card ? card.mana_cost : null, 
         "artist" in card ? card.artist : null, 

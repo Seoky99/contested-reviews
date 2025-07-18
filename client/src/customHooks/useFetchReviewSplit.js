@@ -1,26 +1,4 @@
-/**
- * Fetches all the information the "card page" requires for a review
- * Card details (ranks, notes), user tags 
- * TODO: Consider refactoring all under one endpoint 
- * @param {*} userSetId 
- * @param {*} cardId 
- * @returns 
- */
-function useFetchReview(userSetId, cardId) {
-
-    const [cardDetails, setCardDetails] = useState(null);
-    const [setTags, setSetTags] = useState([]); 
-    const [selectedTags, setSelectedTags] = useState((new Set()));
-
-    const [trophies, setTrophies] = useState([]);
-
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    const returnData = {};
-
-
-        async function fetchCard() {
+/*async function fetchCard() {
             const cardUrl = `http://localhost:8080/api/setreviews/${userSetId}/cards/${cardId}`;
             const response = await fetch(cardUrl);
             if (!response.ok) {
@@ -28,12 +6,13 @@ function useFetchReview(userSetId, cardId) {
             }
             const cardData = await response.json();
             setCardDetails(cardData);
+
             return [cardData.reviewId, cardData.userSetId]; 
         } 
 
-        async function fetchAllTags(reviewId) {
+        async function fetchAllTags(userSetId, reviewId) {
             const urls = [`http://localhost:8080/api/reviews/${reviewId}/tags`,
-                          `http://localhost:8080/api/tags` ];
+                          `http://localhost:8080/api/setreviews/${userSetId}/tags` ];
             
             const tagsResponses = await Promise.all(urls.map(url => fetch(url)));
             tagsResponses.forEach(response => {
@@ -54,7 +33,7 @@ function useFetchReview(userSetId, cardId) {
                 throw new Error("Trophies fetch failure" + trophyResponse.status);
             }
             const trophiesData = await trophyResponse.json();
-                        console.log(trophiesData);
+            console.log(trophiesData);
 
             setTrophies(trophiesData);
         }
@@ -64,7 +43,7 @@ function useFetchReview(userSetId, cardId) {
                 const [reviewId, userSetId] = await fetchCard(); 
 
                 if (reviewId && userSetId) {
-                    await fetchAllTags(reviewId); 
+                    await fetchAllTags(userSetId, reviewId); 
                     await fetchAllTrophies(userSetId, reviewId);
                 } else {
                     throw new Error("Error in fetching ids");
@@ -72,12 +51,7 @@ function useFetchReview(userSetId, cardId) {
             } catch (err) {
                 console.log(err); 
                 setError(err);
-            } 
-        }
-
-        
-
-    return { cardDetails, setCardDetails, setTags, setSetTags, selectedTags, setSelectedTags, trophies, setTrophies, loading, error };
-}
-
-export default useFetchReview; 
+            } finally {
+                setLoading(false);
+            }
+        } */

@@ -4,7 +4,7 @@ import styles from "./GalleryPartition.module.css";
 function GalleryPartition({children, userSetId, name}) {
 
     const display = children.map(review => {
-        return <GalleryCard key={review.reviewId} cardData={review} userSetId={userSetId}></GalleryCard>;
+        return <GalleryCard key={review.reviewId} reviewId={review.reviewId} cardData={review} userSetId={userSetId}></GalleryCard>;
     })
 
     //make deicsion including with no chidlren
