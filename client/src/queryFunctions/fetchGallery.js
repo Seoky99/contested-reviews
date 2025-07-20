@@ -1,5 +1,4 @@
 async function fetchGallery(userSetId) {
-
     const url = `http://localhost:8080/api/setreviews/${userSetId}/cards`;      
     try {
         const response = await fetch(url);

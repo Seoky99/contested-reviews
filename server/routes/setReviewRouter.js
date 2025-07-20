@@ -1,8 +1,12 @@
 import express from "express"; 
-import { createSetReview, getSetReviews, getSetReviewCards, getSetReviewTags, getSetReviewTrophies, putSetReviewTrophies, getCardPageInformation, patchCardFromSetReview, deleteSetReview } from "../controllers/setReviewController.js";
+import { getSetReviewCardsEdit, postSetReviewCardsEdit, createSetReview, getSetReviews, getSetReviewCards, getSetReviewTags, getSetReviewTrophies, 
+    putSetReviewTrophies, getCardPageInformation, patchCardFromSetReview, deleteSetReview } from "../controllers/setReviewController.js";
 
 const setReviewRouter = express.Router(); 
 
+
+setReviewRouter.post("/:setid/cards/edit", postSetReviewCardsEdit);
+setReviewRouter.get("/:setid/cards/edit", getSetReviewCardsEdit);
 setReviewRouter.patch("/:setid/cards/:cardid", patchCardFromSetReview);
 setReviewRouter.get("/:setid/cards/:cardid", getCardPageInformation);
 

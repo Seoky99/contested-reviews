@@ -1,0 +1,15 @@
+
+.addPanel {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.imageWrapper {
+    width: 50%;
+}
+
+.image {
+  width: 80%;
+}

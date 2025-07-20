@@ -3,8 +3,7 @@ import styles from "./SetReview.module.css";
 
 function SetReview({setReviewData, deleteSetReview, selectedSetReviewID, handleSetReviewClick}) {
     
-    const {set_review_name, user_set_img, user_set_id} = setReviewData; 
-    console.log(setReviewData);
+    const {name, user_set_img, user_set_id} = setReviewData; 
 
     return (
         <>
@@ -12,7 +11,7 @@ function SetReview({setReviewData, deleteSetReview, selectedSetReviewID, handleS
             style={{backgroundImage: `url(${user_set_img})`}}>
                 0%
             </button>
-            <p>{set_review_name}</p>
+            <p>{name}</p>
             {selectedSetReviewID === user_set_id && <SetWidgets userSetId={user_set_id} deleteSetReview={deleteSetReview}></SetWidgets>}
         </>
     );

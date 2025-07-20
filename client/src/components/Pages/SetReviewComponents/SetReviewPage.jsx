@@ -6,7 +6,7 @@ import styles from "./SetReviewPage.module.css";
 
 function SetReviewPage() {
 
-    const { sets, setSetReviews, setReviews, loading, error } = useFetchSetInformation();
+    const { sets, setReviews, setSetReviews, loading, error } = useFetchSetInformation();
     const [selectedSetID, setSelectedSetID] = useState('452951cf-378b-4472-b7fe-572fe2af2ac0');
     const [selectedSetReviewID, setSelectedSetReviewID] = useState(0);
 
@@ -21,6 +21,8 @@ function SetReviewPage() {
     function findCorrespondingImg(setID) {
         return sets.find(set => setID === set.set_id);
     }
+
+    console.log(setReviews);
 
     //Replace with user-friendly pages 
     if (error) { return <h1>Error!</h1>}; 

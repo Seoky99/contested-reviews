@@ -8,7 +8,6 @@ import { useEffect, useState } from "react"
  * @param {*} cardId 
  * @returns 
  */
-//function useFetchReview(userSetId, cardId) {
 function useFetchReview(reviewId) {
 
     const [cardDetails, setCardDetails] = useState(null);

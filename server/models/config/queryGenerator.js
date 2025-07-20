@@ -7,7 +7,6 @@
  * @returns 
  */
 export default function (initialQuery, dataLength, numColsInserted, offset=0, intCast=false) {
-
     let count = offset; 
 
     for (let i = 0; i < dataLength; i++) {

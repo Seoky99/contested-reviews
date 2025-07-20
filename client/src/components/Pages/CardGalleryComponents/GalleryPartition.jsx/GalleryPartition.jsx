@@ -1,17 +1,16 @@
-import GalleryCard from "../GalleryCard/GalleryCard";
 import styles from "./GalleryPartition.module.css";
 
-function GalleryPartition({children, userSetId, name}) {
+function GalleryPartition({userSetId, reviewArray, renderChild}) {
+    const { key: name, items } = reviewArray;
+    
+    const display = items.map(review => {
+        return renderChild(review, userSetId);
+    });
 
-    const display = children.map(review => {
-        return <GalleryCard key={review.reviewId} reviewId={review.reviewId} cardData={review} userSetId={userSetId}></GalleryCard>;
-    })
-
-    //make deicsion including with no chidlren
+    //no children will not be displayed - depends on partition value tbh
     if (display.length === 0) return;
     
     return (
-
             <>
                 <h1 className={styles.label}>{name}</h1>
                 <div className={styles.partition}>

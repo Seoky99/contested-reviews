@@ -1,6 +1,30 @@
 import db from "../models/database/queries.js";
 import extractCardFromRows from "./utils/extractCardFromRows.js";
 
+async function getSetReviewCardsEdit(req, res) {
+    //implement authentication 
+    const userid = 1; 
+
+    const { setid } = req.params; 
+
+    const { allCards: cards } = await db.getSetReviewCardsEdit(setid);
+    const allCards = extractCardFromRows(cards); 
+
+    return res.json({allCards});
+}
+
+async function postSetReviewCardsEdit(req, res) {
+    //imlpement authentication 
+    const userid = 1; 
+
+    const { setid } = req.params; 
+    const { added, removed } = req.body; 
+
+    await db.postSetReviewCardsEdit(setid, added, removed);
+
+    res.json({success: true});
+}
+
 async function getSetReviews(req, res) {
 
     //implement authentication 
@@ -23,14 +47,15 @@ async function createSetReview(req, res) {
     //implement authentication 
     const userid = 1; 
 
-    const { setid, name } = req.body; 
+    const { sr_name, setid } = req.body; 
     
     //sent via checkbox in the form 
     const defaultApplied = 'defaultApplied' in req.body; 
     const bonusAdded = 'bonusAdded' in req.body; 
+    const makeShard = 'makeShard' in req.body; 
 
-    await db.createSetReview(userid, setid, name, defaultApplied, bonusAdded);
-    res.json({setid, name});
+    const {user_set_img, name, user_set_id } = await db.createSetReview(userid, setid, sr_name, defaultApplied, bonusAdded, makeShard);
+    res.json({user_set_img, name, user_set_id});
 }
 
 async function deleteSetReview(req, res) {
@@ -139,5 +164,5 @@ async function patchCardFromSetReview(req, res) {
 }
 
 
-export { getSetReviews, createSetReview, deleteSetReview, getSetReviewCards, getCardPageInformation, 
+export { getSetReviewCardsEdit, postSetReviewCardsEdit, getSetReviews, createSetReview, deleteSetReview, getSetReviewCards, getCardPageInformation, 
     patchCardFromSetReview, getSetReviewTags, getSetReviewTrophies, putSetReviewTrophies } ; 

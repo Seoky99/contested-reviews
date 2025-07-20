@@ -70,7 +70,6 @@ async function getTagsFromReview(userId, reviewId) {
 }
 
 async function patchTag(userId, tagId, tagName) {
-
     const query = `UPDATE tags SET name = $3 WHERE user_id = $1 AND tag_id = $2`;
     
     try {

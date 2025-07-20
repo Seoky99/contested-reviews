@@ -3,13 +3,102 @@ import rarityMap from "../defaultRatings.js";
 import queryGenerator from "../config/queryGenerator.js";
 import trophyData from "../config/trophyData.js";
 
+async function getSetReviewCardsEdit(userSetId) {
+
+    let transaction; 
+    const extractSetId = `SELECT set_id, includes_bonus FROM user_sets WHERE user_set_id = $1`;
+
+    try {
+        transaction = await pool.connect();
+        await transaction.query("BEGIN");
+
+        const { rows } = await transaction.query(extractSetId, [userSetId]);
+        const {set_id, includes_bonus} = rows[0];
+        
+        const allCardsQuery = `SELECT
+                                cards.*,
+                                faces.*,
+                                reviews.review_id,
+                                reviews.rank,
+                                tags.name AS tag_name
+                            FROM cards
+                            LEFT JOIN reviews
+                                ON cards.card_id = reviews.card_id AND reviews.user_set_id = $1
+                            LEFT JOIN faces
+                                ON cards.card_id = faces.card_id
+                            LEFT JOIN review_tags
+                                ON reviews.review_id = review_tags.review_id
+                            LEFT JOIN tags
+                                ON tags.tag_id = review_tags.tag_id
+                            WHERE cards.set_id = $2${includes_bonus ? ` OR cards.set_id IN 
+                                   (SELECT bonus_set_id FROM bonus_links WHERE main_set_id = $2)`: ``}`;
+    
+        const { rows: allCards } = await transaction.query(allCardsQuery, [userSetId, set_id]);
+
+        await transaction.query("COMMIT");
+
+        return { allCards }; 
+    } catch (err) {
+        console.log(err);
+        await transaction.query("ROLLBACK");
+    } finally {
+        transaction.release(); 
+    }
+}
+
+async function postSetReviewCardsEdit(userSetId, added, removed) {
+    let transaction; 
+    const extractDefaultApplied = `SELECT default_applied FROM user_sets WHERE user_set_id = $1`; 
+    let insertCardsToReviewInitialQuery = `INSERT INTO reviews(user_set_id, card_id, rank) VALUES `;
+
+    const NUM_COLS_INSERT = 3; 
+    let insertCardsToReview = queryGenerator(insertCardsToReviewInitialQuery, added.length, NUM_COLS_INSERT);
+
+      try {
+
+        transaction = await pool.connect();
+        await transaction.query("BEGIN");
+
+        const {rows: defaultAppliedRows} = await transaction.query(extractDefaultApplied, [userSetId]);
+        const {defaultApplied} = defaultAppliedRows[0];
+
+        if (added.length > 0)  {
+            const dataArray = []; 
+                added.forEach(cardId => {
+                    dataArray.push(userSetId, cardId);
+                    //defaultApplied ? dataArray.push(rarityMap[card.rarity]) : dataArray.push("NR");
+                    dataArray.push("NR");
+                });
+            
+            await transaction.query(insertCardsToReview, dataArray);
+        }
+
+        if (removed.length > 0) {
+            const placeholders = removed.map((_, i) => `$${i + 1}`).join(", ");
+            const query = `DELETE FROM reviews WHERE card_id IN (${placeholders})`;
+            await transaction.query(query, removed);
+        }
+
+        await transaction.query("COMMIT");
+
+      } catch (err) {
+
+        await transaction.query("ROLLBACK");
+
+      } finally {
+         transaction.release(); 
+      }
+
+}
+
+
 /**
  * Returns all a user's set reviews and associated set information 
  * @param {number} userid 
  * @returns An array of objects containing set_review_name, set_code, set_name, user_set_id, user_set_img
  */
 async function getAllSetReviews(userid) {
-    const query = `SELECT user_sets.name AS set_review_name, set_code, sets.name AS set_name, user_set_id, user_set_img 
+    const query = `SELECT user_sets.name, user_set_id, user_set_img 
                     FROM user_sets 
                     JOIN sets ON user_sets.set_id = sets.set_id 
                     WHERE user_id = $1`;
@@ -30,56 +119,63 @@ async function getAllSetReviews(userid) {
  * @param {boolean} defaultApplied - Ranking specified by defaultRatings object 
  * @param {boolean} bonusAdded - Bonus draft legal cards also make it into the set, populates bonus_links
  */
-async function createSetReview(userid, setid, name, defaultApplied, bonusAdded) {
-    const query = `INSERT INTO user_sets(user_id, set_id, name, default_applied, includes_bonus) VALUES ($1, $2, $3, $4, $5)
-                    RETURNING user_set_id`;
+
+//refactor to do one transaction 
+async function createSetReview(userid, setid, sr_name, defaultApplied, bonusAdded, makeShard) {
+
+    const extractSetImgQuery = `SELECT set_img FROM sets WHERE set_id = $1`; 
+    const insertIntoReviewsQuery = `INSERT INTO user_sets(user_id, set_id, name, default_applied, includes_bonus, user_set_img)
+                   VALUES ($1, $2, $3, $4, $5, $6)
+                   RETURNING user_set_id, name, user_set_img`;
+    const getCardsToInsertQuery = `SELECT * FROM cards WHERE set_id = $1${bonusAdded ? ` OR set_id IN 
+                                   (SELECT bonus_set_id FROM bonus_links WHERE main_set_id = $1)`: ``}`;
+    let insertCardsToReviewInitialQuery = `INSERT INTO reviews(user_set_id, card_id, rank) VALUES `;
+    const initialTrophyQuery = `INSERT INTO trophies(user_set_id, name, description, trophy_img_url) VALUES `;
+    let transaction; 
 
     try {
-        const { rows } = await pool.query(query, [userid, setid, name, defaultApplied, bonusAdded]);
-        const userSetId = rows[0].user_set_id;
+        transaction = await pool.connect();
+        await transaction.query("BEGIN");
 
-        //TODO: add constraint on name 
-        const {rows:[{ user_set_id }]} = await pool.query(`SELECT user_set_id FROM user_sets WHERE user_id = $1 AND name = $2;`, [userid, name]);
+        const { rows: setImgRow } = await transaction.query(extractSetImgQuery, [setid]);
+        const setImg = setImgRow[0].set_img; 
 
-        //I LOVE BONUS SHEETS! I LOVE BONUS SHEETS! (going insane)
-        const { rows: cards } = await pool.query(`SELECT * FROM cards WHERE set_id = $1${bonusAdded ? ` OR set_id IN
-         (SELECT bonus_set_id FROM bonus_links WHERE main_set_id = $1)`: ``}`, [setid]);
-  
-        let reviewQuery = `INSERT INTO reviews(user_set_id, card_id, rank) VALUES `;
-        
-        const dataArray = []; 
-        let count = 0; 
-        const numColsInserted = 3;
-        
-        cards.forEach( (card, i) => {
-            let querySegment = `(`; 
+        const { rows: userSetInfo } = await transaction.query(insertIntoReviewsQuery, [userid, setid, sr_name, defaultApplied, bonusAdded, setImg]);
+        const { user_set_id, name, user_set_img } = userSetInfo[0];
 
-            for (let colCount = 0; colCount < numColsInserted; colCount++) {
-                count++;
-                querySegment += `$${count}${colCount === numColsInserted - 1 ? `` : `, `}`;
-            }
+        if (!makeShard) {
+            const { rows: cards } = await transaction.query(getCardsToInsertQuery, [setid]);
+
+            const NUM_COLS_INSERT = 3; 
+            let insertCardsToReview = queryGenerator(insertCardsToReviewInitialQuery, cards.length, NUM_COLS_INSERT);
+
+            const dataArray = []; 
+            cards.forEach(card => {
+                dataArray.push(user_set_id, card.card_id);
+                defaultApplied ? dataArray.push(rarityMap[card.rarity]) : dataArray.push("NR");
+            });
             
-            querySegment += `)${i === cards.length - 1 ? `` : `,`}`;
-            reviewQuery += querySegment;
-
-            dataArray.push(user_set_id, card.card_id);
-            defaultApplied ? dataArray.push(rarityMap[card.rarity]) : dataArray.push("NR");
-        });
-
-        await pool.query(reviewQuery, dataArray);
+            await transaction.query(insertCardsToReview, dataArray);
+        }
 
         //Generating trophy data for set review 
-        const initialTQuery = `INSERT INTO trophies(user_set_id, name, description, trophy_img_url) VALUES `;
-        let trophyQuery = queryGenerator(initialTQuery, trophyData.length, 4);
+        const NUM_COLS_TROPHIES = 4; 
+        let trophyQuery = queryGenerator(initialTrophyQuery, trophyData.length, NUM_COLS_TROPHIES);
         trophyQuery += ` ON CONFLICT DO NOTHING`; 
 
         const trophyDataArray = []; 
-        trophyData.forEach(trophy => trophyDataArray.push(userSetId, ...trophy));
+        trophyData.forEach(trophy => trophyDataArray.push(user_set_id, ...trophy));
 
-        await pool.query(trophyQuery, trophyDataArray);
+        await transaction.query(trophyQuery, trophyDataArray);
+
+        await transaction.query("COMMIT");
+        return { user_set_id, name, user_set_img };
         
     } catch (err) {
         console.log(err);
+        await transaction.query("ROLLBACK");
+    } finally {
+        transaction.release();
     }
 }
 
@@ -89,11 +185,8 @@ async function createSetReview(userid, setid, name, defaultApplied, bonusAdded) 
  */
 async function deleteSetReview(userSetId) {
     const query = `DELETE FROM user_sets WHERE user_set_id = $1`;
-
     try {
-
         await pool.query(query, [userSetId]);
-
     } catch (err) {
         console.log(err);
     }
@@ -107,10 +200,8 @@ async function getSets(isBonus=false) {
     const query = `SELECT * FROM sets${isBonus ? `` : ` WHERE is_bonus = false`}`;
 
     try {
-
         const { rows } = await pool.query(query);
         return rows; 
-
     } catch (err) {
         console.log(err);
     }
@@ -122,13 +213,15 @@ async function getSets(isBonus=false) {
  * @returns 
  */
 async function getReviewsWithCards(userSetId) {
-    const query = `SELECT * FROM reviews JOIN cards ON cards.card_id = reviews.card_id 
-                   JOIN faces ON cards.card_id = faces.card_id WHERE user_set_id = $1;`;
+    const query = `SELECT cards.*, faces.*, reviews.*, tags.name AS tag_name FROM reviews 
+                   JOIN cards ON cards.card_id = reviews.card_id 
+                   JOIN faces ON cards.card_id = faces.card_id 
+                   LEFT JOIN review_tags ON reviews.review_id = review_tags.review_id
+                   LEFT JOIN tags ON tags.tag_id = review_tags.tag_id
+                   WHERE reviews.user_set_id = $1;`;
     try {
         const { rows } = await pool.query(query, [userSetId]);
-
         return rows; 
-
     } catch (err) {
         console.log(err);
     }
@@ -149,7 +242,6 @@ async function getCardFromSetReview(userSetId, cardId) {
     try {
         const { rows } = await pool.query(query, [userSetId, cardId]);
         return rows; 
-
     } catch (err) {
         console.log(err);
     }
@@ -268,8 +360,6 @@ async function putSetReviewTrophies(userSetId, trophies) {
 
 async function getReviewPageInformation(reviewId, userId) {
 
-    const transaction = await pool.connect();  
-
     //extracting card details 
     const cardQuery = `SELECT * FROM reviews 
                         JOIN cards on cards.card_id = reviews.card_id 
@@ -308,8 +398,10 @@ async function getReviewPageInformation(reviewId, userId) {
 
     const trophyDataArray = [reviewId];
 
+    let transaction; 
 
     try {
+        transaction = await pool.connect();  
         await transaction.query("BEGIN");
 
         const cardDetails = (await transaction.query(cardQuery, cardDataArray)).rows;
@@ -322,11 +414,9 @@ async function getReviewPageInformation(reviewId, userId) {
         return {cardDetails, reviewTags, allTags, trophies}; 
 
     } catch (err) {
-
         await transaction.query("ROLLBACK");
-
     } finally {
-        await transaction.release();
+        transaction.release();
     }
 }
 
@@ -382,9 +472,9 @@ async function performPageUpdate(pageInformation) {
         await transaction.query("ROLLBACK");
 
     } finally {
-        await transaction.release();
+        transaction.release();
     }
 }
 
-export default { getAllSetReviews, createSetReview, deleteSetReview, getSets, getReviewsWithCards, getSetReviewTrophies, putSetReviewTrophies, getTrophiesFromReview, assignTrophiesToReview,
+export default { getSetReviewCardsEdit, postSetReviewCardsEdit, getAllSetReviews, createSetReview, deleteSetReview, getSets, getReviewsWithCards, getSetReviewTrophies, putSetReviewTrophies, getTrophiesFromReview, assignTrophiesToReview,
                  getCardFromSetReview, getSetReviewTags, patchCardFromSetReview, patchCardFromSetReviewByReviewId, performPageUpdate, getReviewPageInformation };

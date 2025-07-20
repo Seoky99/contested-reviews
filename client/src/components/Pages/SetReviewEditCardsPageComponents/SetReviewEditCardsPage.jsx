@@ -1,34 +1,25 @@
 import { useState, useEffect, useMemo } from "react";
-import { useNavigate, useParams, useLocation, Link } from "react-router";
-import { useQueryClient, useQuery } from "@tanstack/react-query";
-import GalleryPartition from "./GalleryPartition.jsx/GalleryPartition";
-import GalleryCard from "./GalleryCard/GalleryCard.jsx";
-import fetchGallery from "../../../queryFunctions/fetchGallery.js";
-import styles from "./CardGalleryPage.module.css";
-import { applyMechanisms } from "../../../utils/applyMechanisms.js"
-import isEqual from 'lodash/isEqual';
+import { useNavigate, useParams, useLocation } from "react-router";
+import GalleryPartition from "../CardGalleryComponents/GalleryPartition.jsx/GalleryPartition.jsx";
+import EditCard from "./EditCard.jsx";
+import useFetchSetReviewCardsEdit from "../../../customHooks/useFetchSetReviewCardsEdit.js";
+import styles from "./SetReviewEditCardsPage.module.css";
+import { applyMechanisms } from "../../../utils/applyMechanisms.js";
+import { useQueryClient } from '@tanstack/react-query';
 
-function CardGalleryPage() {
+function SetReviewEditCardsPage() {
     let { userSetId } = useParams();
 
+    userSetId = Number(userSetId);
+
+    let { cards, initiallySelected, setInitiallySelected, selected, setSelected, loading, error } = useFetchSetReviewCardsEdit(userSetId); 
     let location = useLocation(); 
     let navigate = useNavigate();
-
-    userSetId = Number(userSetId);
 
     const params = new URLSearchParams(location.search); 
     const filter = params.has('filter') ? params.get('filter') : 'none';
     const sort = params.has('sort') ? params.get('sort') : 'none';
     const partition = params.has('partition') ? params.get('partition') : 'none';
-
-    const queryClient = useQueryClient();
-
-    //Cache the review data to be recompute SORTING ORDER quickly in the individual card page 
-    const { data: reviews, isLoading, error } = useQuery({
-        queryKey: ['cards', userSetId],
-        queryFn: async () => fetchGallery(userSetId), 
-        staleTime: 5 * 60 * 1000,
-    });
 
     function setParams(mechanism, mechValue) {
         const params = new URLSearchParams(location.search);
@@ -36,46 +27,69 @@ function CardGalleryPage() {
         navigate(`?${params.toString()}`, { replace: true } );
     }
 
+    const queryClient = useQueryClient();
+
     const transformedReviews = useMemo(() => {
-        if (!reviews) {
+        if (!cards) {
             return null; 
         }
-        return applyMechanisms(reviews, filter, partition, sort);    
-    }, [reviews, filter, partition, sort]) 
-
-    
-    useEffect(() => {
-        if (!transformedReviews) return;
-
-        const cacheKey = ['sortOrder', userSetId, filter, partition, sort];
-        const alreadyCached = queryClient.getQueryData(cacheKey);
-
-        if (!alreadyCached || !isEqual(alreadyCached, transformedReviews)) {
-            queryClient.setQueryData(cacheKey, transformedReviews);
-        }
-    }, [transformedReviews, queryClient, userSetId, sort, filter, partition]);
-
-    //create hide ratings button?
-    if (error) {return <h1>error!</h1>}
-    if (isLoading) { return <h1>Loading!</h1>}
+        return applyMechanisms(cards, filter, partition, sort);    
+    }, [cards, filter, partition, sort]) 
 
     console.log(transformedReviews);
 
-    const renderChild = (review, userSetId) => {
-        return <GalleryCard key={review.reviewId} reviewId={review.reviewId} cardData={review} userSetId={userSetId}/>;
+    if (error) { return <h1>error!</h1>}
+    if (loading) { return <h1>Loading!</h1>}
+
+    function toggleSelection(cardId) {
+        const selectedCopy = new Set(selected);
+
+        if (selectedCopy.has(cardId)) {
+            selectedCopy.delete(cardId);
+        } else {
+            selectedCopy.add(cardId); 
+        }
+
+        setSelected(selectedCopy);
+    }
+
+    async function handleSaving() {
+        const added = [...selected].filter(id => !initiallySelected.has(id));
+        const removed = [...initiallySelected].filter(id => !selected.has(id));
+
+        try {
+            const url = `http://localhost:8080/api/setreviews/${userSetId}/cards/edit`;
+            const response = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ added, removed}),
+            });
+
+            if (!response.ok) {
+                throw new Error("server error" + response.status);
+            }
+
+            await queryClient.invalidateQueries(['cards', userSetId]);
+            navigate(`/setreviews/${userSetId}/cards`);
+
+        } catch (err) {
+            console.log(err); 
+        }
+    }
+
+    const renderChild = (review) => {
+        return <EditCard key={review.cardId} cardData={review} selected={selected} toggleSelection={() => toggleSelection(review.cardId)}/>;
     }
 
     const displayReviews = transformedReviews.map(reviewArray => {
         return <GalleryPartition key={reviewArray.key} userSetId={userSetId} reviewArray={reviewArray} renderChild={renderChild}></GalleryPartition>
     });   
 
-    const hasQuestion = params.toString() !== '';
-
     return (
         <>
             <div className={styles.mechanisms}>
 
-                <Link className={styles.editLink} to={`/setreviews/${userSetId}/cards/edit${hasQuestion ? `?${params.toString()}` : ``}`}>Add or remove cards!</Link>
+                <button className={styles.saveButton} onClick={handleSaving}>SAVE CHANGES</button>
 
                 <div>
                     <label htmlFor="partition">Partition:</label>
@@ -109,9 +123,9 @@ function CardGalleryPage() {
                 </div>
             </div>
 
-            <div className={styles.partitionContainer}>{displayReviews}</div>
+            {<div className={styles.partitionContainer}>{displayReviews}</div>}
         </>
     );
 }
 
-export default CardGalleryPage;
+export default SetReviewEditCardsPage;

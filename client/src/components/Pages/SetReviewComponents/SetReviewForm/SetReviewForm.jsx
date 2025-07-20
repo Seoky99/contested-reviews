@@ -1,18 +1,12 @@
-import styles from "./AddPanel.module.css";
-import { useOutletContext } from "react-router";
+import styles from "./SetReviewForm.module.css";
 
-function AddPanel() {
-
-    const {currentImg, selectedSetID} = useOutletContext();
-
+function SetReviewForm({selectedSetID, createSetReview}) {
     return (
-    <div className={styles.addPanel}>
-        <img src={currentImg}></img>
-        <form action="http://localhost:8080/api/setreviews/" method="post">
+        <form className={styles.setReviewForm} onSubmit={createSetReview}>
             <input hidden readOnly value={selectedSetID} name="setid" id="setid" type="text"></input>
             <div className={styles.formSeparator}>
-                <label htmlFor="name">Name your set review:</label>
-                <input type="text" id="name" name="name"></input>
+                <label htmlFor="sr_name">Name your set review:</label>
+                <input type="text" id="sr_name" name="sr_name"></input>
             </div>
             <div className={styles.formSeparator}>
                 <label htmlFor="defaultApplied">Apply default ratings:</label>
@@ -22,11 +16,14 @@ function AddPanel() {
                 <label htmlFor="bonusAdded">Include Bonus Sheet in Ratings:</label>
                 <input type="checkbox" id="bonusAdded" name="bonusAdded"></input>
             </div>
+            <div className={styles.formSeparator}>
+                <label htmlFor="makeShard">Create a Shard!</label>
+                <input type="checkbox" id="makeShard" name="makeShard"></input>
+            </div>
             {/*<label for="set-review-profile">Choose image for set review *Under Construction</label>*/}
             <button className={styles.submitButton} type="submit">Create the set!</button>
         </form>
-    </div>
     );
 }
 
-export default AddPanel; 
+export default SetReviewForm;

@@ -2,7 +2,6 @@
  export default function(rows) {
 
     const cardMap = new Map();
-
     for (const row of rows) {
         if (!cardMap.has(row.card_id)) {
             cardMap.set(row.card_id, {
@@ -16,7 +15,8 @@
                 reviewId: row.review_id,
                 notes: row.notes, 
                 rank: row.rank,
-                faces: []
+                faces: [],
+                tags: [],
             });
         }
 
@@ -31,6 +31,10 @@
             borderCrop: row.border_crop,
             colors: row.colors 
         });
+
+        if (row.tag_name !== null) {cardMap.get(row.card_id).tags.push({
+            tagName: row.tag_name
+        })}
     }
 
     return Array.from(cardMap.values());
