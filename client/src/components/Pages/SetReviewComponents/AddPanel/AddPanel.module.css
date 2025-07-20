@@ -6,10 +6,8 @@
   text-align: center;
 }
 
-.imageWrapper {
-    width: 50%;
-}
-
 .image {
-  width: 80%;
+    width: 300px; 
+    height: auto;
+    border-radius: 20px;
 }

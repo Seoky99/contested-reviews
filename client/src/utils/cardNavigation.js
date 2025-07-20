@@ -15,6 +15,5 @@ export default function(sortOrder, reviewId, userSetId, params) {
 
     const cardGalleryUrl = `/setreviews/${userSetId}/cards` + addQuestionMark + params.toString();
 
-
     return {myIndex, nextUrl, prevUrl, cardGalleryUrl}; 
 }

@@ -1,8 +1,22 @@
 
-.setReview {
-  padding: 1.2rem 2.4rem;
+.setReview {  
+  padding: 2.4rem 4.2rem;
   font-size: 2rem;
-  text-shadow: 2px 2px 2px black;
   background-size: cover;
   color: #fff;
+  cursor: pointer;
+  box-shadow: 6px 6px black;
+}
+
+.label {
+  background-color: #FAFAFA; 
+  color: black;
+  border-radius: 5px;
+  padding: 1px 10px;
+}
+
+.srWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
 }

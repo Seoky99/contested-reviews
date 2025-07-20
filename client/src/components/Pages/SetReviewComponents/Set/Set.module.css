@@ -1,10 +1,12 @@
 .set {
-  padding: 2.4rem 4.0rem;
-  font-size: 5rem;
+  padding: 1.2rem 2.4rem;
   text-shadow: 2px 2px 2px black;
   background-size: cover;
   color: #fff;
-  flex: 1;
-  min-width: 0;
-  font-size: clamp(1rem, 10vw, 5rem);
+  width: 12rem;
+  font-size: 3rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 6px 6px black;
+
 }

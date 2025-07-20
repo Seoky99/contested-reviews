@@ -27,7 +27,7 @@ function AddPanel() {
             }
 
             const data = await response.json();  
-            setSetReviews([...setReviews, data])
+            setSetReviews([data, ...setReviews])
 
             navigate("../");
                         

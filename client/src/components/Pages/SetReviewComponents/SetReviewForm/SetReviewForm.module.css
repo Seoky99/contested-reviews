@@ -1,9 +1,9 @@
 .setReviewForm {
-    padding: 0.5rem;
+    padding: 2rem 1rem;
     font-size: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 10%;
+    gap: 5%;
     border: 2px solid white;
     border-radius: 5px;
 }
@@ -19,7 +19,7 @@
 }
 
 .submitButton {
-    padding: 0.4rem 0.6rem;
+    padding: 0.4rem 0.4rem;
     width: 7rem;
     margin-left: auto;
 }

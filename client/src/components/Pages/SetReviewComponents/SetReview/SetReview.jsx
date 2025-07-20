@@ -1,19 +1,17 @@
 import SetWidgets from './SetWidgets';
 import styles from "./SetReview.module.css";
 
-function SetReview({setReviewData, deleteSetReview, selectedSetReviewID, handleSetReviewClick}) {
+function SetReview({setReviewData, handleSetReviewClick}) {
     
     const {name, user_set_img, user_set_id} = setReviewData; 
 
     return (
-        <>
+        <div className={styles.srWrapper}>
             <button onClick={() => handleSetReviewClick(user_set_id)} className={styles.setReview} 
-            style={{backgroundImage: `url(${user_set_img})`}}>
-                0%
+            style={{backgroundImage: `url(${user_set_img})`}}> 
             </button>
-            <p>{name}</p>
-            {selectedSetReviewID === user_set_id && <SetWidgets userSetId={user_set_id} deleteSetReview={deleteSetReview}></SetWidgets>}
-        </>
+            <p className={styles.label}>{name}</p>
+        </div>
     );
 }
 

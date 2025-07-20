@@ -1,50 +1,34 @@
 import SetReview from "./SetReview";
 import styles from "./SetReviewList.module.css";
 import { useOutletContext, Link } from "react-router";
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
-function SetReviewList() {
+function SetReviewList({setReviews, setSetReviews, handleSetReviewClick, selectedSetReviewID}) {
 
-    const { setReviews, setSetReviews, handleSetReviewClick, selectedSetReviewID } = useOutletContext();
-
-    async function deleteSetReview(userSetId) {
-        const url = `http://localhost:8080/api/setreviews/${userSetId}`;
-        try {
-            const response = await fetch(url, {
-                method: 'DELETE',
-            });
-            
-            if (!response.ok) {
-                throw new Error(`Server error: ${response.status}`);
-            }
-
-            const newSetReviews = [...setReviews].filter(setReview => setReview.user_set_id !== userSetId); 
-            setSetReviews(newSetReviews);
-
-        } catch (err) {
-            console.log(err);
-        }
-    }
+    /*const { setReviews, setSetReviews, handleSetReviewClick, selectedSetReviewID } = useOutletContext(); */
 
     const displaySetReviews = setReviews.map(setReview => {
         return(
             <li key={setReview.user_set_id}>
                 <SetReview handleSetReviewClick={handleSetReviewClick} setReviewData={setReview} 
-                selectedSetReviewID={selectedSetReviewID} deleteSetReview={() => deleteSetReview(setReview.user_set_id)}/>
+                selectedSetReviewID={selectedSetReviewID}/>
             </li>)
     }) 
 
     return( 
-        <>
-            <p>My current sets: </p>
-            <ul className={styles.setReviewWrapper}>
+
+        <div className={styles.setReviewWrapper}>
+            <p className={styles.srLabel}>My Set Reviews:</p>
+            <ul className={styles.setReviews}>
                 <li>
                     <Link to="/setreviews/create" className={styles.addSet}>
-                        +
+                        <AddBoxIcon fontSize="large" className={styles.iconPos}/>
                     </Link>
+                    <p className={styles.label}>Create Set Review!</p>
                 </li>
                 {displaySetReviews}
             </ul>
-        </>
+        </div>
     );
 }
 

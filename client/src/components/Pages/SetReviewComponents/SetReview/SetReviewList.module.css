@@ -1,28 +1,48 @@
-.setReviewWrapper {
-  display: grid;
-  grid-template-columns: repeat( auto-fit, minmax(8rem, 1fr) );
+.setReviews {
+  display: flex; 
+  flex-wrap: wrap;
   gap: 1.2rem;
 }   
 
-.addSet {
-  display: inline-block;
-  text-align: center;
-  padding: 1.2rem 2.4rem;
-  border-radius: 8px;
-  border: 1px solid transparent;
-  font-size: 2rem;
-  color: #fff;
-  text-shadow: 2px 2px 2px black;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-  text-decoration: none;
+.setReviewWrapper {
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
+  display: flex; 
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.addSet:hover {
-  border-color: #646cff;
+.srLabel {
+  background-color: white;
+  color: black;
+  padding: 0.2rem 0.4rem;  
+  border-radius: 5px;
+  box-shadow: 6px 6px black;
+  width: 15%;
 }
-.addSet:focus,
-.addSet:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+
+.addSet {
+  display: flex;
+  position: relative;
+  padding: 2.4rem 4.2rem;
+  color: #fff;
+  cursor: pointer;
+  background-color: white;
+  border: 2px solid black;
+  border-radius: 5px;
+  box-shadow: 6px 6px black;
+}
+
+
+.iconPos {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: black;
+}
+
+.label {
+  display: flex;
+  padding: 5px;
 }

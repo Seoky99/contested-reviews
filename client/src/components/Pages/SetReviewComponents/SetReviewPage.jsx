@@ -1,25 +1,58 @@
 import { useState } from 'react'; 
-import useFetchSetInformation from '../../../customHooks/useFetchSetInformation';
 import { Outlet } from "react-router";
+import useFetchSetInformation from '../../../customHooks/useFetchSetInformation';
 import Set from './Set/Set';
+import SetReviewDisplay from './SetReview/SetReviewDisplay';
 import styles from "./SetReviewPage.module.css";
+import SetReviewList from './SetReview/SetReviewList';
 
 function SetReviewPage() {
 
-    const { sets, setReviews, setSetReviews, loading, error } = useFetchSetInformation();
-    const [selectedSetID, setSelectedSetID] = useState('452951cf-378b-4472-b7fe-572fe2af2ac0');
-    const [selectedSetReviewID, setSelectedSetReviewID] = useState(0);
+    const { sets, setReviews, setSetReviews, selectedSetID, setSelectedSetID, 
+        selectedSetReviewID, setSelectedSetReviewID, loading, error } = useFetchSetInformation();
+  
+    const [selectedSet] = sets.filter(set => set.set_id === selectedSetID);
+    const [selectedSetReview] = setReviews.filter(sr => sr.user_set_id === selectedSetReviewID);
 
     function handleSetClick(setID) {
         setSelectedSetID(setID);
     }
 
     function handleSetReviewClick(id) { 
-        selectedSetReviewID === id ? setSelectedSetReviewID(0) : setSelectedSetReviewID(id);
+        setSelectedSetReviewID(id);
     }
 
-    function findCorrespondingImg(setID) {
-        return sets.find(set => setID === set.set_id);
+     async function deleteSetReview(userSetId) {
+
+        //TODO: Create modal instead
+        const confirmed = window.confirm("Are you sure you want to delete this?");
+
+        if (!confirmed) {
+            return;
+        }
+
+        const url = `http://localhost:8080/api/setreviews/${userSetId}`;
+        try {
+            const response = await fetch(url, {
+                method: 'DELETE',
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status}`);
+            }
+
+            const newSetReviews = [...setReviews].filter(setReview => setReview.user_set_id !== userSetId); 
+            setSetReviews(newSetReviews);
+
+            if (newSetReviews.length > 0) {
+                setSelectedSetReviewID(newSetReviews[0].user_set_id);
+            } else {
+                setSelectedSetReviewID(-1);
+            }
+
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     console.log(setReviews);
@@ -28,7 +61,6 @@ function SetReviewPage() {
     if (error) { return <h1>Error!</h1>}; 
     if (loading) { return <h1>Loading!</h1>};
 
-    const currentImg = findCorrespondingImg(selectedSetID).set_img; 
 
     const displaySets = sets.map(set => {
         return(
@@ -41,10 +73,15 @@ function SetReviewPage() {
         
         <div className={styles.pageWrapper}>
 
-            <p>Available sets:</p>
-            <ul className={styles.setWrapper}>{displaySets}</ul>
+            <Outlet className={styles.addScreen} context={{setReviews, setSetReviews, deleteSetReview, selectedSetReview, selectedSetReviewID, currentImg: selectedSet.set_img, selectedSetID}}/>
 
-            <Outlet context={{setReviews, setSetReviews, handleSetReviewClick, selectedSetReviewID, currentImg, selectedSetID}}/>
+            <div className={styles.sideBar}>
+                <p>Available Sets:</p>
+                <ul className={styles.setWrapper}>{displaySets}</ul>
+            </div>
+
+            <SetReviewList setReviews={setReviews} setSetReviews={setSetReviews} handleSetReviewClick={handleSetReviewClick}
+            selectedSetReviewID={selectedSetID}></SetReviewList>
         </div>
     );
 }; 

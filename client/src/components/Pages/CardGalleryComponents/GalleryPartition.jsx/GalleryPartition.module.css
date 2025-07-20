@@ -1,8 +1,7 @@
 .partition {
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    display: flex;
+    flex-wrap: wrap; 
     gap: 2rem;
-    padding: 0.4rem;
 }
 
 .label {

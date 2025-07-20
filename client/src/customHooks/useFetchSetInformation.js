@@ -4,6 +4,10 @@ function useFetchSetInformation() {
 
     const [sets, setSets] = useState([]);
     const [setReviews, setSetReviews] = useState([]);
+
+    const [selectedSetID, setSelectedSetID] = useState('');
+    const [selectedSetReviewID, setSelectedSetReviewID] = useState();
+
     const [loading, setLoading] = useState(true);
     const [ error, setError ] = useState(null);
 
@@ -17,8 +21,12 @@ function useFetchSetInformation() {
             try {
                 const responses = await Promise.all(urls.map(url => fetch(url)));
                 const [setData, setReviewData] = await Promise.all(responses.map(response => response.json()));
+                
                 setSets(setData); 
                 setSetReviews(setReviewData);
+                setSelectedSetID(setData[0].set_id);
+                setSelectedSetReviewID(setReviewData.length > 0 ? setReviewData[0].user_set_id : -1); 
+
             } catch (err) {
                 console.log(err);
                 setError(err);
@@ -29,7 +37,8 @@ function useFetchSetInformation() {
         fetchPageInformation(); 
     }, []); 
 
-    return {sets, setReviews, setSetReviews, loading, error}; 
+    return {sets, setReviews, setSetReviews, selectedSetID, setSelectedSetID, selectedSetReviewID, setSelectedSetReviewID, 
+        loading, error}; 
 }
 
 export default useFetchSetInformation;
