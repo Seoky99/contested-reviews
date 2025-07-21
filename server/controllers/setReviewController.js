@@ -1,5 +1,7 @@
 import db from "../models/database/queries.js";
+import statsdb from "../models/database/statsQueries.js";
 import extractCardFromRows from "./utils/extractCardFromRows.js";
+import ratingsNumericMap from "./utils/ratingsNumericMap.js";
 
 async function getSetReviewCardsEdit(req, res) {
     //implement authentication 
@@ -163,6 +165,55 @@ async function patchCardFromSetReview(req, res) {
     res.json(JSON.stringify({rank, notes}));
 }
 
+async function getSetReviewStatsColors(req, res) {
+
+    //implement authentication 
+    const userid = 1; 
+
+    const { setid } = req.params; 
+
+    const rows = await statsdb.getRatedReviews(setid); 
+
+    const colorMap = new Map(); 
+
+    rows.forEach( row => {
+
+        let colorKey = ""; 
+
+        if (row.colors.length < 1) {
+            if (row.types.includes("Land")) {
+                colorKey = "L"; 
+            } else {
+                colorKey = "C"; 
+            }
+        } else {
+            colorKey = row.colors.join(",");
+        }
+
+        colorKey += ` - ${row.rarity}`; 
+
+        if (!colorMap.has(colorKey)) {
+            colorMap.set(colorKey, []);
+        }
+
+        colorMap.get(colorKey).push(ratingsNumericMap[row.rank]);
+    })
+
+    const raw = Array.from(colorMap);
+
+    const averages = {};
+
+    for (const [color, scores] of raw) {
+        let sum = 0;
+        for (let i = 0; i < scores.length; i++) {
+            sum += scores[i];
+        }
+        averages[color] = scores.length > 0 ? sum / scores.length : null;
+    }
+
+    res.json(averages);
+}
+ 
 
 export { getSetReviewCardsEdit, postSetReviewCardsEdit, getSetReviews, createSetReview, deleteSetReview, getSetReviewCards, getCardPageInformation, 
-    patchCardFromSetReview, getSetReviewTags, getSetReviewTrophies, putSetReviewTrophies } ; 
+    patchCardFromSetReview, getSetReviewTags, getSetReviewTrophies, putSetReviewTrophies, getSetReviewStatsColors } ; 

@@ -79,4 +79,36 @@ function sortingByRarity(a, b) {
     return rarityMap[b.rarity] - rarityMap[a.rarity];
 }
 
-export default { sortingByCMC, sortingByColor, sortingByRating, sortingByRarity };
+function sortingByCN(a, b) {
+    return a.collectorNumber - b.collectorNumber; 
+}
+
+function tempSort([a], [b]) {
+
+    const tempMap = {
+        'W - common': 0,
+        'W - uncommon': 1,
+        'W - rare': 2,
+        'W - mythic': 3,
+        'U - common': 4,
+        'U - uncommon': 5,
+        'U - rare': 6,
+        'U - mythic': 7,
+        'B - common': 8,
+        'B - uncommon': 9,
+        'B - rare': 10,
+        'B - mythic': 11,
+        'R - common': 12,
+        'R - uncommon': 13,
+        'R - rare': 14,
+        'R - mythic': 15,
+        'G - common': 16,
+        'G - uncommon': 17,
+        'G - rare': 18,
+        'G - mythic': 19
+    }
+
+    return tempMap[a] - tempMap[b];
+}
+
+export default { sortingByCMC, sortingByColor, sortingByRating, sortingByRarity, sortingByCN, tempSort};

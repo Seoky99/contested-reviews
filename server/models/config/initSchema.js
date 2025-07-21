@@ -72,6 +72,7 @@ async function initSchema() {
             user_set_img TEXT,
             default_applied BOOLEAN DEFAULT FALSE,
             includes_bonus BOOLEAN DEFAULT FALSE,
+            add_spoilers BOOLEAN DEFAULT TRUE,
             FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
             FOREIGN KEY (set_id) REFERENCES sets(set_id)
         );

@@ -23,7 +23,6 @@ function SetReviewPage() {
     }
 
      async function deleteSetReview(userSetId) {
-
         //TODO: Create modal instead
         const confirmed = window.confirm("Are you sure you want to delete this?");
 

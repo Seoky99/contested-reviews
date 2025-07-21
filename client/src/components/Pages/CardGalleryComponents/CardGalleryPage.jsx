@@ -97,6 +97,7 @@ function CardGalleryPage() {
                         <option value="cmc">By CMC</option>
                         <option value="rating">By Rating</option>
                         <option value="rarity">By Rarity</option>
+                        <option value="CN">By CN</option>
                     </select>
                 </div>
                 

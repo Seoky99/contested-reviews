@@ -9,12 +9,14 @@ import { useEffect, useState } from "react"
 function useFetchSetReview(userSetId) {
 
     const [trophies, setTrophies] = useState([]);
+    const [openTrophyPresents, setOpenTrophyPresents] = useState([]);
+    const [stats, setStats] = useState({});
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect( () => {
-        async function fetchAllTrophies(userSetId) {
+        async function fetchAllTrophies() {
             const url = [`http://localhost:8080/api/setreviews/${userSetId}/trophies`];
             const trophyResponse = await fetch(url);
       
@@ -22,13 +24,30 @@ function useFetchSetReview(userSetId) {
                 throw new Error("Trophies fetch failure" + trophyResponse.status);
             }
             const trophiesData = await trophyResponse.json();
+
+            const trophyPresentsInit = Array(trophiesData.length).fill(false); 
+
             setTrophies(trophiesData);
+            setOpenTrophyPresents(trophyPresentsInit);
+        }
+
+        async function fetchStats() {
+       const url = [`http://localhost:8080/api/setreviews/${userSetId}/stats/colors`];
+            const statsResponse = await fetch(url);
+      
+            if (!statsResponse.ok) {
+                throw new Error("Trophies fetch failure" + statsResponse.status);
+            }
+            const stats = await statsResponse.json();
+
+            setStats(stats);
         }
 
         async function fetchPageDetails() {
             try {
                 //const [reviewId, userSetId] = await fetchCard(); 
-                await fetchAllTrophies(userSetId);
+                await fetchAllTrophies();                
+                await fetchStats();  
             } catch (err) {
                 console.log(err); 
                 setError(err);
@@ -41,7 +60,7 @@ function useFetchSetReview(userSetId) {
 
     }, [userSetId]); 
 
-    return { trophies, setTrophies, loading, error };
+    return { trophies, setTrophies, openTrophyPresents, setOpenTrophyPresents, stats, loading, error };
 }
 
 export default useFetchSetReview; 

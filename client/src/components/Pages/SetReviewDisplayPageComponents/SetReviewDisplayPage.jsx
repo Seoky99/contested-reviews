@@ -1,22 +1,43 @@
 import styles from "./SetReviewDisplayPage.module.css";
+import { useState } from 'react';
 import { useParams } from "react-router";
 import useFetchSetReview from "../../../customHooks/useFetchSetReview";
 import TrophyReview from "./TrophyReview.jsx/TrophyReview";
+import Dropdown from "./Dropdown/Dropdown";
+import Present from "./Present/Present";
+import TempColorRankingChart from "./Charts/ColorRankingChart";
 
 function SetReviewDisplayPage() {
 
     const { userSetId } = useParams();
     console.log(userSetId);
-    const { trophies, setTrophies, loading, error } = useFetchSetReview(userSetId); 
+    const { trophies, setTrophies, openTrophyPresents, setOpenTrophyPresents, stats, loading, error } = useFetchSetReview(userSetId); 
+
+    const [ statsOpen, setStatsOpen ] = useState(false);
+    const [ trophyOpen, setTrophyOpen ] = useState(false);
 
     if (loading) { return <h1>Loading!</h1>};
     if (error) { return <h1>Error!</h1>};
 
-    console.log(trophies);
+    function openPresent(i) {
+        const newPresents = [...openTrophyPresents]; 
+        newPresents[i] = true; 
 
-    const trophyList = trophies.map(trophy => {
-        return <TrophyReview key={trophy.trophy_id} trophyData={trophy}/>
-    })
+        setOpenTrophyPresents(newPresents);
+    }
+
+    function revealAllPresents() {
+        const newPresents = Array(openTrophyPresents.length).fill(true);
+        setOpenTrophyPresents(newPresents);
+    }
+
+    const trophyPresentList = trophies.map( (trophy, i) => {
+        return <Present key={trophy.trophy_id} isOpen={openTrophyPresents[i]} setIsOpen={() => openPresent(i)}>
+                    <TrophyReview trophyData={trophy} isOpen={openTrophyPresents[i]}/>
+               </Present>
+    });
+
+    console.log(stats);
 
     return (
         <div className={styles.setReviewWrapper}>
@@ -25,15 +46,17 @@ function SetReviewDisplayPage() {
                 <img></img>
                 <h1></h1>
             </div>
-            <div className={styles.statWrapper}>
-                <h1>My Stats</h1>
-            </div>
-            <div className={styles.trophyWrapper}>
-                <h1>My Trophies</h1>
-                <div className={styles.trophyListWrapper}>
-                    { trophyList }
-                </div>
-            </div>
+            <Dropdown header={"My Stats"} isOpen={statsOpen} setIsOpen={setStatsOpen}>
+                <TempColorRankingChart averages={stats}></TempColorRankingChart>
+            </Dropdown>
+            <Dropdown header={"My Trophies"} isOpen={trophyOpen} setIsOpen={setTrophyOpen}>
+                <>
+                    <button onClick={revealAllPresents}>Reveal All!</button>
+                    <div className={styles.trophyListWrapper}>
+                        { trophyPresentList }
+                    </div>
+                </>
+            </Dropdown>
         </div>
     );
 

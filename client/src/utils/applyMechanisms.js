@@ -111,6 +111,9 @@ function applyMechanisms(reviewData, filter, partition, sort) {
         case 'rarity':
             sortFunction = sortUtils.sortingByRarity; 
             break;
+        case 'CN':
+            sortFunction = sortUtils.sortingByCN;
+            break;
         default: 
             throw new Error("you messed up");
     }

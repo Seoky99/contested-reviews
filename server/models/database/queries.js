@@ -74,9 +74,9 @@ async function postSetReviewCardsEdit(userSetId, added, removed) {
         }
 
         if (removed.length > 0) {
-            const placeholders = removed.map((_, i) => `$${i + 1}`).join(", ");
-            const query = `DELETE FROM reviews WHERE card_id IN (${placeholders})`;
-            await transaction.query(query, removed);
+            const placeholders = removed.map((_, i) => `$${i + 2}`).join(", ");
+            const query = `DELETE FROM reviews WHERE card_id IN (${placeholders}) AND user_set_id = $1`;
+            await transaction.query(query, [userSetId, ...removed]);
         }
 
         await transaction.query("COMMIT");

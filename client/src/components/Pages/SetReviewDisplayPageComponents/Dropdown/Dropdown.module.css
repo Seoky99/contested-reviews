@@ -1,0 +1,9 @@
+.dropHeader {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    background-color: white;
+    border: 5px solid black;
+    border-radius: 5px;
+    color: black;
+}

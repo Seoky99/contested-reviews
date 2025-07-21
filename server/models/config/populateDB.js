@@ -265,7 +265,8 @@ async function updateSetReviews(setCode) {
       AND r.card_id = c.card_id
     WHERE
       us.set_id = $1
-      AND r.review_id IS NULL;
+      AND r.review_id IS NULL
+      AND us.add_spoilers = TRUE;
     `; 
 
     const matchingBonusQuery = `
@@ -285,6 +286,7 @@ async function updateSetReviews(setCode) {
     WHERE
       us.set_id = $1
       AND us.includes_bonus = TRUE
+      AND us.add_spoilers = TRUE
       AND r.review_id IS NULL;
     `; 
 
@@ -378,18 +380,6 @@ async function populateSet(setCode, addBonus=false) {
     }
 }
 
-
-/*set:SETNAME+in:booster
-  Examples: 
-    const URL = 'https://api.scryfall.com/sets/fin';
-    const URLTWO = 'https://api.scryfall.com/cards/search?q=set%3Afin%2Bin%3Abooster'; */
-
-//if updating setReviews, you must add the bonus sheet cards as well 
-//updateSetReviews('EOE');
-
-populateSet("FIN", true); 
-//updateSetReviews("EOE");
+//populateSet("EOE", true); 
+updateSetReviews("EOE");
 //addCards("EOE");
-
-//call if set has a link
-//addBonusLink('EOE', 'EOS');

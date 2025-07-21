@@ -1,9 +1,11 @@
 import express from "express"; 
 import { getSetReviewCardsEdit, postSetReviewCardsEdit, createSetReview, getSetReviews, getSetReviewCards, getSetReviewTags, getSetReviewTrophies, 
-    putSetReviewTrophies, getCardPageInformation, patchCardFromSetReview, deleteSetReview } from "../controllers/setReviewController.js";
+    putSetReviewTrophies, getCardPageInformation, patchCardFromSetReview, deleteSetReview, getSetReviewStatsColors } from "../controllers/setReviewController.js";
 
 const setReviewRouter = express.Router(); 
 
+
+setReviewRouter.get("/:setid/stats/colors", getSetReviewStatsColors);
 
 setReviewRouter.post("/:setid/cards/edit", postSetReviewCardsEdit);
 setReviewRouter.get("/:setid/cards/edit", getSetReviewCardsEdit);
