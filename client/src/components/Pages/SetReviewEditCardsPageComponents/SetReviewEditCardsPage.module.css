@@ -18,5 +18,11 @@
 }
 
 .saveButton {
-  padding: 0.2rem;
+  background-color: #FFF;
+  text-decoration: none;
+  color: black;
+  padding: 0.4rem;
+  border-radius: 5px; 
+  border: 5px solid black;
+  margin-right: auto;
 }

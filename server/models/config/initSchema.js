@@ -46,6 +46,7 @@ async function initSchema() {
             card_id UUID NOT NULL,
             face_index INTEGER NOT NULL, 
             colors TEXT[],
+            color_name TEXT,
             image_small TEXT, 
             image_normal TEXT,
             image_large TEXT, 

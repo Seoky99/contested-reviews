@@ -1,13 +1,13 @@
 import { Outlet } from "react-router"; 
+import { ErrorBoundary } from "react-error-boundary";
+import { useLocation } from "react-router"; 
 import Navigation from "./components/Navigation/Navigation";
 import Footer from "./components/Footer/Footer";
 import styles from "./Root.module.css"; 
 import ErrorFallbackPage from "./components/Pages/ErrorHandling/ErrorFallbackPage";
-import { ErrorBoundary } from "react-error-boundary";
-import {useLocation} from "react-router"; 
+
 
 function Root() {
-
     const location = useLocation();
 
     return (
@@ -19,8 +19,6 @@ function Root() {
                     <Outlet/>
                 </ErrorBoundary>
             </div>
-
-           
             <Footer/>
         </div>
     );

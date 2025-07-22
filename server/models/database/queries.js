@@ -98,7 +98,7 @@ async function postSetReviewCardsEdit(userSetId, added, removed) {
  * @returns An array of objects containing set_review_name, set_code, set_name, user_set_id, user_set_img
  */
 async function getAllSetReviews(userid) {
-    const query = `SELECT user_sets.name, user_set_id, user_set_img 
+    const query = `SELECT user_sets.*, sets.name AS set_name, set_code, set_img
                     FROM user_sets 
                     JOIN sets ON user_sets.set_id = sets.set_id 
                     WHERE user_id = $1`;
@@ -109,6 +109,20 @@ async function getAllSetReviews(userid) {
         console.log(err);
     }
 }
+
+async function getSetReview(userid, userSetId) {
+    const query = `SELECT user_sets.*, sets.name AS set_name, set_code, set_img
+                    FROM user_sets 
+                    JOIN sets ON user_sets.set_id = sets.set_id 
+                    WHERE user_id = $1 AND user_set_id = $2`;
+    try {
+        const { rows } = await pool.query(query, [userid, userSetId]);
+        return rows; 
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 
 /**
  * Creates a set review with the specified name and parameters.
@@ -476,5 +490,5 @@ async function performPageUpdate(pageInformation) {
     }
 }
 
-export default { getSetReviewCardsEdit, postSetReviewCardsEdit, getAllSetReviews, createSetReview, deleteSetReview, getSets, getReviewsWithCards, getSetReviewTrophies, putSetReviewTrophies, getTrophiesFromReview, assignTrophiesToReview,
+export default { getSetReview, getSetReviewCardsEdit, postSetReviewCardsEdit, getAllSetReviews, createSetReview, deleteSetReview, getSets, getReviewsWithCards, getSetReviewTrophies, putSetReviewTrophies, getTrophiesFromReview, assignTrophiesToReview,
                  getCardFromSetReview, getSetReviewTags, patchCardFromSetReview, patchCardFromSetReviewByReviewId, performPageUpdate, getReviewPageInformation };

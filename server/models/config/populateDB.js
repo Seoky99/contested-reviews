@@ -1,8 +1,9 @@
 import client from '../client.js';
 import setImageConfig from './setImageConfig.js';
-import bonusCodeConfig from './bonusCodeConfig.js';
+import bonusCodeConfig from '../utils/bonusCodeConfig.js';
 import queryGenerator from './queryGenerator.js';
-import parseTypeLine from './typelineParser.js';
+import parseTypeLine from '../utils/typelineParser.js';
+import sanitizeColors from '../utils/sanitizeColors.js';
 
 //Update the cards as they get spoiled by running addCards(url);
 
@@ -132,13 +133,13 @@ async function addCards(setCode) {
   let data = await fetchScryfall(url, 'cards');
 
   let cardsInitialQuery = `INSERT INTO cards(card_id, set_id, rarity, cmc, keywords, type_line, layout, digital, collector_number) VALUES`;
-  let facesInitialQuery = `INSERT INTO faces(card_id, face_index, colors, image_small, image_normal, image_large, image_crop, border_crop, name, mana_cost, artist, power, toughness, type_line, supertypes, types, subtypes) VALUES`;
+  let facesInitialQuery = `INSERT INTO faces(card_id, face_index, colors, color_name, image_small, image_normal, image_large, image_crop, border_crop, name, mana_cost, artist, power, toughness, type_line, supertypes, types, subtypes) VALUES`;
   
   const cardsDataArray = [];
   const facesDataArray = []; 
   
   const numColsCards = 9;
-  const numColsFaces = 17; 
+  const numColsFaces = 18; 
 
   //Generates a query VALUES($1, $2, .... $colCount), ($colCount + 1...) for each card  
   let cardsQuery = queryGenerator(cardsInitialQuery, data.length, numColsCards);
@@ -179,12 +180,15 @@ async function addCards(setCode) {
           imageUris = card.image_uris;
         }
 
+        const { colorsSorted, colorName } = sanitizeColors(cardFace);
+
         const { small: image_small, normal: image_normal, large: image_large, art_crop: image_crop, border_crop: border_crop } = imageUris; 
 
         facesDataArray.push(
           card.id, 
           i,
-          cardFace.colors, 
+          colorsSorted,
+          colorName, 
           image_small,
           image_normal,
           image_large,
@@ -209,11 +213,13 @@ async function addCards(setCode) {
       const {supertypes, types, subtypes} = parseTypeLine(card.type_line);
 
       const { small: image_small, normal: image_normal, large: image_large, art_crop: image_crop, border_crop: border_crop } = card.image_uris; 
+      const { colorsSorted, colorName } = sanitizeColors(card);
 
       facesDataArray.push(
         card.id, 
         faceIndex, 
-        card.colors, 
+        colorsSorted, 
+        colorName,
         image_small,
         image_normal,
         image_large,
@@ -380,6 +386,6 @@ async function populateSet(setCode, addBonus=false) {
     }
 }
 
-//populateSet("EOE", true); 
-updateSetReviews("EOE");
+populateSet("FIN", true); 
+//updateSetReviews("EOE");
 //addCards("EOE");

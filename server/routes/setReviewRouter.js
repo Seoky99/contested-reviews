@@ -1,5 +1,5 @@
 import express from "express"; 
-import { getSetReviewCardsEdit, postSetReviewCardsEdit, createSetReview, getSetReviews, getSetReviewCards, getSetReviewTags, getSetReviewTrophies, 
+import { getSetReview, getSetReviewCardsEdit, postSetReviewCardsEdit, createSetReview, getSetReviews, getSetReviewCards, getSetReviewTags, getSetReviewTrophies, 
     putSetReviewTrophies, getCardPageInformation, patchCardFromSetReview, deleteSetReview, getSetReviewStatsColors } from "../controllers/setReviewController.js";
 
 const setReviewRouter = express.Router(); 
@@ -20,6 +20,7 @@ setReviewRouter.get("/:setid/trophies", getSetReviewTrophies);
 setReviewRouter.get("/:setid/cards", getSetReviewCards);
 
 setReviewRouter.delete("/:setid", deleteSetReview);
+setReviewRouter.get("/:setid", getSetReview);
 
 setReviewRouter.post("/", createSetReview);
 setReviewRouter.get("/", getSetReviews);

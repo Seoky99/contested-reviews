@@ -8,6 +8,8 @@ import { useEffect, useState } from "react"
  */
 function useFetchSetReview(userSetId) {
 
+    const [setReviewData, setSetReviewData ] = useState(null);
+
     const [trophies, setTrophies] = useState([]);
     const [openTrophyPresents, setOpenTrophyPresents] = useState([]);
     const [stats, setStats] = useState({});
@@ -43,11 +45,33 @@ function useFetchSetReview(userSetId) {
             setStats(stats);
         }
 
+        async function fetchSetReviewInfo() {
+            const url = `http://localhost:8080/api/setreviews/${userSetId}`;
+
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error("server error");
+                }
+                const setReviewData = await response.json();
+                console.log(setReviewData);
+                setSetReviewData(setReviewData);
+
+            } catch (err) {
+                console.log(err);
+                setError(err);
+            } finally {
+                setLoading(false);
+            }
+        } 
+
         async function fetchPageDetails() {
             try {
                 //const [reviewId, userSetId] = await fetchCard(); 
                 await fetchAllTrophies();                
                 await fetchStats();  
+                await fetchSetReviewInfo(); 
             } catch (err) {
                 console.log(err); 
                 setError(err);
@@ -60,7 +84,7 @@ function useFetchSetReview(userSetId) {
 
     }, [userSetId]); 
 
-    return { trophies, setTrophies, openTrophyPresents, setOpenTrophyPresents, stats, loading, error };
+    return { setReviewData, trophies, setTrophies, openTrophyPresents, setOpenTrophyPresents, stats, loading, error };
 }
 
 export default useFetchSetReview; 

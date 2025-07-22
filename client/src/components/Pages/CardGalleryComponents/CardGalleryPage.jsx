@@ -1,18 +1,24 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useParams, useLocation, Link } from "react-router";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { applyMechanisms } from "../../../utils/applyMechanisms.js"
 import GalleryPartition from "./GalleryPartition.jsx/GalleryPartition";
 import GalleryCard from "./GalleryCard/GalleryCard.jsx";
 import fetchGallery from "../../../queryFunctions/fetchGallery.js";
+import EditButton from "./EditButton/EditButton.jsx";
 import styles from "./CardGalleryPage.module.css";
-import { applyMechanisms } from "../../../utils/applyMechanisms.js"
 import isEqual from 'lodash/isEqual';
+import Mechanisms from "./Mechanisms/Mechanisms.jsx";
+import MechanismIcons from "./Mechanisms/MechanismIcons.jsx";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 function CardGalleryPage() {
     let { userSetId } = useParams();
 
     let location = useLocation(); 
     let navigate = useNavigate();
+    const [sideBarActive, setSideBarActive] = useState(true);
 
     userSetId = Number(userSetId);
 
@@ -69,49 +75,27 @@ function CardGalleryPage() {
         return <GalleryPartition key={reviewArray.key} userSetId={userSetId} reviewArray={reviewArray} renderChild={renderChild}></GalleryPartition>
     });   
 
-    const hasQuestion = params.toString() !== '';
-
     return (
-        <>
-            <div className={styles.mechanisms}>
-
-                <Link className={styles.editLink} to={`/setreviews/${userSetId}/cards/edit${hasQuestion ? `?${params.toString()}` : ``}`}>Add or remove cards!</Link>
-
-                <div>
-                    <label htmlFor="partition">Partition:</label>
-                    <select name="partition" id="sorting" value={partition} onChange={(e) => {
-                        setParams('partition', e.target.value)}}>
-                        <option default value="none">None</option>
-                        <option value="color">By Color</option>
-                        <option value="cmc">By CMC</option>
-                        <option value="rank">By Rating</option>
-                        <option value="rarity">By Rarity</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label htmlFor="sorting">Sort: </label>
-                    <select name="sorting" id="sorting" value={sort} onChange={(e) => { setParams('sort', e.target.value)}}>
-                        <option default value="none">None</option>
-                        <option value="color">By Color</option>
-                        <option value="cmc">By CMC</option>
-                        <option value="rating">By Rating</option>
-                        <option value="rarity">By Rarity</option>
-                        <option value="CN">By CN</option>
-                    </select>
-                </div>
-                
-                <div>
-                    <label htmlFor="filtering">Filter: </label>
-                    <select name="fitering" id="filtering" value={filter}  onChange={(e) => { setParams('filter', e.target.value)}}>
-                        <option default value="none">None</option>
-                        <option value="color">By Red</option>
-                    </select>
-                </div>
-            </div>
-
-            <div className={styles.partitionContainer}>{displayReviews}</div>
-        </>
+            sideBarActive ? (<div className={styles.pageWrapper}>
+                                <div className={styles.sideBar}>
+                                    <div className={styles.paddedContent}>
+                                        <Mechanisms filter={filter} sort={sort} partition={partition} setParams={setParams}/>
+                                        <EditButton userSetId={userSetId} params={params}/>
+                                    </div>
+                                    <button className={styles.leftButton} onClick={() => setSideBarActive(!sideBarActive)}><ArrowBackIosIcon/></button>
+                                </div>
+                                <div className={styles.partitionContainer}>{displayReviews}</div>
+                            </div>) : 
+                            
+                            <div className={styles.pageWrapper}>
+                                <div className={styles.sideBarAlternate}>
+                                    <div className={styles.moreContent}>
+                                        <MechanismIcons filter={filter} sort={sort} partition={partition}/>
+                                    </div>
+                                    <button className={styles.rightButton} onClick={() => setSideBarActive(!sideBarActive)}><ArrowForwardIosIcon/></button>
+                                </div>
+                                <div className={styles.partitionContainer}>{displayReviews}</div>
+                            </div>
     );
 }
 

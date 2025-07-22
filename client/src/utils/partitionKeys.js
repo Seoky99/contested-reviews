@@ -8,7 +8,7 @@ function makeKeyColor(review) {
     let key = '';
 
     //make colorless cards their own color?
-    if (review.faces[0].colors.length === 0 && review.faces[0].types.includes('Land')) {
+    if (review.faces[0].colors.length === 0) {
         key = 'CC';
     } else {
         key = review.faces[0].colors.join(",");

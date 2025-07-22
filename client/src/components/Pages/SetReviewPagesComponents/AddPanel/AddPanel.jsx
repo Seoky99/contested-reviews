@@ -1,10 +1,9 @@
 import styles from "./AddPanel.module.css";
 import SetReviewForm from "../SetReviewForm/SetReviewForm";
-import { useOutletContext, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
-function AddPanel() {
+function AddPanel({currentImg, selectedSetID}) {
 
-    const {setSetReviews, setReviews, currentImg, selectedSetID} = useOutletContext();
     const navigate = useNavigate(); 
 
     async function createSetReview(e) {
@@ -26,10 +25,8 @@ function AddPanel() {
                 throw new Error("Server error" + response.status);
             }
 
-            const data = await response.json();  
-            setSetReviews([data, ...setReviews])
-
-            navigate("../");
+            await response.json();  
+            navigate("/setreviews");
                         
         } catch (err) {
             throw new Error("Fetching error " + err);

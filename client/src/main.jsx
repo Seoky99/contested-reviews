@@ -4,13 +4,11 @@ import { createBrowserRouter, RouterProvider } from 'react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css';
 import Root from './Root.jsx';
-import SetReviewPage from "./components/Pages/SetReviewComponents/SetReviewPage.jsx";
+import SetReviewPage from "./components/Pages/SetReviewPagesComponents/SetReviewPage.jsx";
 import CardGalleryPage from './components/Pages/CardGalleryComponents/CardGalleryPage.jsx';
-import SetReviewDisplayPage from './components/Pages/SetReviewDisplayPageComponents/SetReviewDisplayPage.jsx';
+import SetReviewViewPage from "./components/Pages/SetReviewViewPageComponents/SetReviewViewPage.jsx";
 import SetReviewEditCardsPage from "./components/Pages/SetReviewEditCardsPageComponents/SetReviewEditCardsPage.jsx";
-import SetReviewDisplay from './components/Pages/SetReviewComponents/SetReview/SetReviewDisplay.jsx';
-import SetReviewList from "./components/Pages/SetReviewComponents/SetReview/SetReviewList.jsx"
-import AddPanel from "./components/Pages/SetReviewComponents/AddPanel/AddPanel.jsx";
+import SetReviewAddPage from './components/Pages/SetReviewPagesComponents/SetReviewAddPage.jsx';
 import CardPage from "./components/Pages/CardPageComponents/CardPage.jsx";
 import TagPanel from "./components/Pages/CardPageComponents/Tag/TagPanel.jsx";
 import NotFoundPage from './components/Pages/ErrorHandling/NotFoundPage.jsx';
@@ -26,20 +24,14 @@ const router = createBrowserRouter([
       {
         path: "setreviews",
         Component: SetReviewPage,
-        children: [
-          {
-            path: "",
-            Component: SetReviewDisplay,
-          }, 
-          {
-            path: "create",
-            Component: AddPanel,
-          }
-        ]
       }, 
       {
+        path: "setreviews/create",
+        Component: SetReviewAddPage,
+      },
+      {
         path: "setreviews/:userSetId",
-        Component: SetReviewDisplayPage,
+        Component: SetReviewViewPage,
       },
       {
         path: "setreviews/:userSetId/cards",

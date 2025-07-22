@@ -5,9 +5,15 @@
 }
 
 .label {
+
+    display: flex;
     box-shadow: 5px 5px black;
     background-color: white;
     color: black;
-    padding: 0.4rem;
-    font-size: 1.5rem;    
+    align-items: center;
+
+    & h1 {
+        padding: 0.4rem;
+        font-size: 1.5rem;    
+    }
 }

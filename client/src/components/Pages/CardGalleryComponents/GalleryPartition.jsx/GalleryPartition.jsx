@@ -12,7 +12,10 @@ function GalleryPartition({userSetId, reviewArray, renderChild}) {
     
     return (
             <>
-                <h1 className={styles.label}>{name}</h1>
+                <div className={styles.label}>
+                    <h1>{name}</h1>
+                    <p><i>({items.length})</i></p>
+                </div>
                 <div className={styles.partition}>
                     {display}
                 </div> 

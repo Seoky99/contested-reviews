@@ -1,17 +1,19 @@
-import styles from "./SetReviewDisplayPage.module.css";
 import { useState } from 'react';
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
+import styles from "./SetReviewViewPage.module.css";
 import useFetchSetReview from "../../../customHooks/useFetchSetReview";
 import TrophyReview from "./TrophyReview.jsx/TrophyReview";
 import Dropdown from "./Dropdown/Dropdown";
 import Present from "./Present/Present";
 import TempColorRankingChart from "./Charts/ColorRankingChart";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 function SetReviewDisplayPage() {
 
     const { userSetId } = useParams();
-    console.log(userSetId);
-    const { trophies, setTrophies, openTrophyPresents, setOpenTrophyPresents, stats, loading, error } = useFetchSetReview(userSetId); 
+    const navigate = useNavigate(); 
+
+    const { setReviewData, trophies, setTrophies, openTrophyPresents, setOpenTrophyPresents, stats, loading, error } = useFetchSetReview(userSetId); 
 
     const [ statsOpen, setStatsOpen ] = useState(false);
     const [ trophyOpen, setTrophyOpen ] = useState(false);
@@ -37,11 +39,18 @@ function SetReviewDisplayPage() {
                </Present>
     });
 
+    
+    function navBack() {
+        navigate("/setreviews");
+    }
+
     console.log(stats);
 
     return (
         <div className={styles.setReviewWrapper}>
-            <h1>SETREVIEW NAME</h1>
+            <button className={styles.navButton} onClick={navBack}><ArrowBackIcon fontSize="large"/></button>
+
+            <h1>{setReviewData.name}</h1>
             <div className={styles.bannerWrapper}>
                 <img></img>
                 <h1></h1>

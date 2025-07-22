@@ -1,22 +1,11 @@
-import { useState } from 'react'; 
-import { Outlet } from "react-router";
-import useFetchSetInformation from '../../../customHooks/useFetchSetInformation';
-import Set from './Set/Set';
-import SetReviewDisplay from './SetReview/SetReviewDisplay';
 import styles from "./SetReviewPage.module.css";
+import useFetchSetReviewInfo from "../../../customHooks/useFetchSetReviewInfo";
 import SetReviewList from './SetReview/SetReviewList';
+import SetReviewDisplay from "./SetReview/SetReviewDisplay";
 
 function SetReviewPage() {
 
-    const { sets, setReviews, setSetReviews, selectedSetID, setSelectedSetID, 
-        selectedSetReviewID, setSelectedSetReviewID, loading, error } = useFetchSetInformation();
-  
-    const [selectedSet] = sets.filter(set => set.set_id === selectedSetID);
-    const [selectedSetReview] = setReviews.filter(sr => sr.user_set_id === selectedSetReviewID);
-
-    function handleSetClick(setID) {
-        setSelectedSetID(setID);
-    }
+    const { setReviews, setSetReviews, selectedSetReviewID, setSelectedSetReviewID, loading, error } = useFetchSetReviewInfo();
 
     function handleSetReviewClick(id) { 
         setSelectedSetReviewID(id);
@@ -48,39 +37,23 @@ function SetReviewPage() {
             } else {
                 setSelectedSetReviewID(-1);
             }
-
         } catch (err) {
             console.log(err);
         }
     }
 
-    console.log(setReviews);
-
     //Replace with user-friendly pages 
     if (error) { return <h1>Error!</h1>}; 
     if (loading) { return <h1>Loading!</h1>};
 
+    const [selectedSetReview] = setReviews.filter(sr => sr.user_set_id === selectedSetReviewID);
 
-    const displaySets = sets.map(set => {
-        return(
-            <li key={set.set_id}>
-                <Set handleSetClick={handleSetClick} setData={set}></Set>
-            </li>);
-    });
-
+    console.log(setReviews);
     return (
-        
         <div className={styles.pageWrapper}>
-
-            <Outlet className={styles.addScreen} context={{setReviews, setSetReviews, deleteSetReview, selectedSetReview, selectedSetReviewID, currentImg: selectedSet.set_img, selectedSetID}}/>
-
-            <div className={styles.sideBar}>
-                <p>Available Sets:</p>
-                <ul className={styles.setWrapper}>{displaySets}</ul>
-            </div>
-
+            <SetReviewDisplay selectedSetReviewID={selectedSetReviewID} selectedSetReview={selectedSetReview} deleteSetReview={deleteSetReview}/>
             <SetReviewList setReviews={setReviews} setSetReviews={setSetReviews} handleSetReviewClick={handleSetReviewClick}
-            selectedSetReviewID={selectedSetID}></SetReviewList>
+                           selectedSetReviewID={selectedSetReviewID}/>
         </div>
     );
 }; 

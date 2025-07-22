@@ -16,6 +16,7 @@ import Notes from "./Notes/Notes.jsx";
 import RankWidget from "./RankWidget/RankWidget.jsx";
 import fetchGallery from "../../../queryFunctions/fetchGallery.js";
 import navTools from "../../../utils/cardNavigation.js";
+import ArrowBackIosTwoToneIcon from '@mui/icons-material/ArrowBackIosTwoTone';
 
 function CardPage() {
     let { userSetId, cardId, reviewId } = useParams(); 
@@ -143,7 +144,7 @@ function CardPage() {
             
             <div className={styles.pageWrapper}>
                 <div className={styles.tempWrap}>
-                    <Link to={cardGalleryUrl} className={styles.navButton}> <CollectionsBookmarkIcon/> Card Gallery</Link> 
+                    <Link to={cardGalleryUrl} className={styles.navButton}> <ArrowBackIosTwoToneIcon/> Card Gallery</Link> 
                     <h6 className={styles.mechs}>FILTER: {filter} &gt;&gt;&gt; PARTITION: {partition} &gt;&gt;&gt; SORT: {sort}</h6>
                 </div>
                 <div className={styles.cardWrapper}>

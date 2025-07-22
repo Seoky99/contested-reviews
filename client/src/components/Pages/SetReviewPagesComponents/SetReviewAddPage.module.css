@@ -1,33 +1,36 @@
-.pageWrapper {
-  display: grid;
-  grid-template-columns: 1fr 3fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 2rem;
-}
-
 .sideBar {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  grid-column: 1 / 2; 
-  grid-row: 1 / -1;
   border: 3px solid white;
   border-radius: 20px;
+  margin-top: 2rem;
 
   & p {
     margin-bottom: 1rem;
     font-size: 1.2rem;
     background-color: white;
     color: black;
-    width: 80%;
+    width: 20%;
     border-radius: 0px 0px 20px 20px;
     text-align: center;
+    margin-left: 1rem;
   }
 }
 
 .setWrapper {
   display: flex;
-  flex-direction: column;
+  padding: 0.5rem 2rem 2rem 2rem;
   gap: 2rem;
-  justify-content: center;
+}
+
+.pageWrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.navButton {
+  width: 4rem;
+  height: 4rem;
+  cursor: pointer; 
+  background-color: white;
 }

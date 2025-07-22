@@ -27,6 +27,18 @@ async function postSetReviewCardsEdit(req, res) {
     res.json({success: true});
 }
 
+async function getSetReview(req, res) {
+
+    //implement authentication 
+    const userid = 1; 
+
+    const { setid } = req.params; 
+
+    const rows = await db.getSetReview(userid, setid);
+
+    res.json(rows[0]); 
+}
+
 async function getSetReviews(req, res) {
 
     //implement authentication 
@@ -215,5 +227,5 @@ async function getSetReviewStatsColors(req, res) {
 }
  
 
-export { getSetReviewCardsEdit, postSetReviewCardsEdit, getSetReviews, createSetReview, deleteSetReview, getSetReviewCards, getCardPageInformation, 
+export { getSetReview, getSetReviewCardsEdit, postSetReviewCardsEdit, getSetReviews, createSetReview, deleteSetReview, getSetReviewCards, getCardPageInformation, 
     patchCardFromSetReview, getSetReviewTags, getSetReviewTrophies, putSetReviewTrophies, getSetReviewStatsColors } ; 
