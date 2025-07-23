@@ -105,7 +105,7 @@ function applyMechanisms(reviewData, filter, partition, sort) {
         case 'cmc':
             sortFunction = sortUtils.sortingByCMC;
             break;
-        case 'rating':
+        case 'rank':
             sortFunction = sortUtils.sortingByRating; 
             break;
         case 'rarity':

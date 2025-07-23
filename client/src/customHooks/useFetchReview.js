@@ -41,6 +41,7 @@ function useFetchReview(reviewId) {
             setSetTags(setTags);
             setSelectedTags(new Set(reviewTags.map(tag => tag.tagId)));
             setTrophies(trophies);
+         
             } catch (err) {
                 setError(err); 
                 console.log(err);

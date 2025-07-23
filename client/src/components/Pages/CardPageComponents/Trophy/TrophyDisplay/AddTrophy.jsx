@@ -18,7 +18,6 @@ function AddTrophy({modalOnClick}) {
         }
     }
 
-
     return (
         <div className={styles.trophyWrapper}>
             <button className={styles.addTrophy} onClick={modalOnClick} onMouseEnter={handleMouseOver} onMouseLeave={handleMouseOut}>

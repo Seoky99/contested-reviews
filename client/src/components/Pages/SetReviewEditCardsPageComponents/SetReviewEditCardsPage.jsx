@@ -1,11 +1,15 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
+import { applyMechanisms } from "../../../utils/applyMechanisms.js";
+import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams, useLocation } from "react-router";
+import styles from "../CardGalleryComponents/CardGalleryPage.module.css";
 import GalleryPartition from "../CardGalleryComponents/GalleryPartition.jsx/GalleryPartition.jsx";
 import EditCard from "./EditCard.jsx";
 import useFetchSetReviewCardsEdit from "../../../customHooks/useFetchSetReviewCardsEdit.js";
-import styles from "./SetReviewEditCardsPage.module.css";
-import { applyMechanisms } from "../../../utils/applyMechanisms.js";
-import { useQueryClient } from '@tanstack/react-query';
+import Mechanisms from "../CardGalleryComponents/Mechanisms/Mechanisms.jsx";
+import MechanismIcons from "../CardGalleryComponents/Mechanisms/MechanismIcons.jsx";
+import SideBar from "../CardGalleryComponents/SideBar/SideBar.jsx";
+import IconBar from "../CardGalleryComponents/IconBar/IconBar.jsx";
 
 function SetReviewEditCardsPage() {
     let { userSetId } = useParams();
@@ -15,6 +19,7 @@ function SetReviewEditCardsPage() {
     let { cards, initiallySelected, setInitiallySelected, selected, setSelected, loading, error } = useFetchSetReviewCardsEdit(userSetId); 
     let location = useLocation(); 
     let navigate = useNavigate();
+    const [sideBarActive, setSideBarActive] = useState(true);
 
     const params = new URLSearchParams(location.search); 
     const filter = params.has('filter') ? params.get('filter') : 'none';
@@ -86,45 +91,17 @@ function SetReviewEditCardsPage() {
     });   
 
     return (
-        <>
-            <div className={styles.mechanisms}>
 
-                <button className={styles.saveButton} onClick={handleSaving}>SAVE CHANGES</button>
-
-                <div>
-                    <label htmlFor="partition">Partition:</label>
-                    <select name="partition" id="sorting" value={partition} onChange={(e) => {
-                        setParams('partition', e.target.value)}}>
-                        <option default value="none">None</option>
-                        <option value="color">By Color</option>
-                        <option value="cmc">By CMC</option>
-                        <option value="rank">By Rating</option>
-                        <option value="rarity">By Rarity</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label htmlFor="sorting">Sort: </label>
-                    <select name="sorting" id="sorting" value={sort} onChange={(e) => { setParams('sort', e.target.value)}}>
-                        <option default value="none">None</option>
-                        <option value="color">By Color</option>
-                        <option value="cmc">By CMC</option>
-                        <option value="rating">By Rating</option>
-                        <option value="rarity">By Rarity</option>
-                    </select>
-                </div>
-                
-                <div>
-                    <label htmlFor="filtering">Filter: </label>
-                    <select name="fitering" id="filtering" value={filter}  onChange={(e) => { setParams('filter', e.target.value)}}>
-                        <option default value="none">None</option>
-                        <option value="color">By Red</option>
-                    </select>
-                </div>
+            <div className={styles.pageWrapper}>
+                {sideBarActive ? <SideBar shrinkBar={() => setSideBarActive(!sideBarActive)} editMode={true}>
+                                    <Mechanisms filter={filter} sort={sort} partition={partition} setParams={setParams}/>
+                                    <button className={styles.saveButton} onClick={handleSaving}>SAVE CHANGES</button>
+                                </SideBar> : 
+                                <IconBar expandBar={() => setSideBarActive(!sideBarActive)}>
+                                    <MechanismIcons filter={filter} sort={sort} partition={partition}/>
+                                 </IconBar> }
+                <div className={styles.partitionContainer}>{displayReviews}</div>
             </div>
-
-            {<div className={styles.partitionContainer}>{displayReviews}</div>}
-        </>
     );
 }
 

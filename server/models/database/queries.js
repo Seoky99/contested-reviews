@@ -408,7 +408,8 @@ async function getReviewPageInformation(reviewId, userId) {
                         FROM trophies
                         LEFT JOIN reviews ON reviews.review_id = trophies.review_id
                         LEFT JOIN faces ON faces.card_id = reviews.card_id AND faces.face_index = 0
-                        WHERE trophies.user_set_id = (SELECT user_set_id FROM reviews WHERE review_id = $1);`
+                        WHERE trophies.user_set_id = (SELECT user_set_id FROM reviews WHERE review_id = $1)
+                        ORDER BY trophies.trophy_id;`
 
     const trophyDataArray = [reviewId];
 

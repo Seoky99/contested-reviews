@@ -2,16 +2,16 @@ import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useParams, useLocation, Link } from "react-router";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { applyMechanisms } from "../../../utils/applyMechanisms.js"
+import styles from "./CardGalleryPage.module.css";
 import GalleryPartition from "./GalleryPartition.jsx/GalleryPartition";
 import GalleryCard from "./GalleryCard/GalleryCard.jsx";
 import fetchGallery from "../../../queryFunctions/fetchGallery.js";
 import EditButton from "./EditButton/EditButton.jsx";
-import styles from "./CardGalleryPage.module.css";
 import isEqual from 'lodash/isEqual';
 import Mechanisms from "./Mechanisms/Mechanisms.jsx";
 import MechanismIcons from "./Mechanisms/MechanismIcons.jsx";
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import SideBar from "./SideBar/SideBar.jsx";
+import IconBar from "./IconBar/IconBar.jsx";
 
 function CardGalleryPage() {
     let { userSetId } = useParams();
@@ -76,26 +76,16 @@ function CardGalleryPage() {
     });   
 
     return (
-            sideBarActive ? (<div className={styles.pageWrapper}>
-                                <div className={styles.sideBar}>
-                                    <div className={styles.paddedContent}>
-                                        <Mechanisms filter={filter} sort={sort} partition={partition} setParams={setParams}/>
-                                        <EditButton userSetId={userSetId} params={params}/>
-                                    </div>
-                                    <button className={styles.leftButton} onClick={() => setSideBarActive(!sideBarActive)}><ArrowBackIosIcon/></button>
-                                </div>
-                                <div className={styles.partitionContainer}>{displayReviews}</div>
-                            </div>) : 
-                            
-                            <div className={styles.pageWrapper}>
-                                <div className={styles.sideBarAlternate}>
-                                    <div className={styles.moreContent}>
-                                        <MechanismIcons filter={filter} sort={sort} partition={partition}/>
-                                    </div>
-                                    <button className={styles.rightButton} onClick={() => setSideBarActive(!sideBarActive)}><ArrowForwardIosIcon/></button>
-                                </div>
-                                <div className={styles.partitionContainer}>{displayReviews}</div>
-                            </div>
+            <div className={styles.pageWrapper}>
+                {sideBarActive ? <SideBar shrinkBar={() => setSideBarActive(!sideBarActive)}>
+                                    <Mechanisms filter={filter} sort={sort} partition={partition} setParams={setParams}/>
+                                    <EditButton userSetId={userSetId} params={params}/>
+                                </SideBar> : 
+                                <IconBar expandBar={() => setSideBarActive(!sideBarActive)}>
+                                    <MechanismIcons filter={filter} sort={sort} partition={partition}/>
+                                 </IconBar> }
+                <div className={styles.partitionContainer}>{displayReviews}</div>
+            </div>
     );
 }
 

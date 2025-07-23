@@ -2,16 +2,15 @@ import { __unsafe_useEmotionCache } from "@emotion/react";
 import styles from "./TrophyModal.module.css";
 import ModalSelect from "./ModalSelect";
 
+/* Three states of a trophy: 
+  -assignedThis
+  -assignedOther 
+  -unassigned 
+*/
 export default function TrophyModal({ isOpen, onClose, trophies, setTrophies, reviewData }) {
   if (!isOpen) return null;
 
   const { review_id, card_name, image_normal } = reviewData;
-
-  /* Three states of a trophy: 
-        -assignedThis
-        -assignedOther 
-        -unassigned 
-  */
 
   function handleTrophyClick(selectedId) {
     let trophyCopy = [...trophies]; 
@@ -33,7 +32,6 @@ export default function TrophyModal({ isOpen, onClose, trophies, setTrophies, re
 
 
   const displayTrophies = trophies.map(trophy => {
-
     let displayStyle = ``;
 
     if (trophy.review_id === null) {

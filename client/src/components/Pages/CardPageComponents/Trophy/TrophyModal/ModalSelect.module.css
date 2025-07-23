@@ -1,4 +1,3 @@
-
 .trophy {
     color: black;
     display: flex; 
@@ -13,4 +12,8 @@
     gap: 1rem;
     text-align: center;
     cursor: pointer;
+
+    & img {
+        margin: 0;
+    }
 }
