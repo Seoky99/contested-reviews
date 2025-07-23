@@ -87,7 +87,6 @@ async function deleteSetReview(req, res) {
  * Takes in the user's set id from the url and returns the appropiate user set 
  */
 async function getSetReviewCards(req, res) {
-
     //implement authentication 
     const userid = 1; 
 

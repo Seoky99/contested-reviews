@@ -36,6 +36,6 @@
             tagName: row.tag_name
         })}
     }
-
-    return Array.from(cardMap.values());
+    const sorted = Array.from(cardMap.values()).sort((a, b) => a.collectorNumber - b.collectorNumber);
+    return sorted;
 }

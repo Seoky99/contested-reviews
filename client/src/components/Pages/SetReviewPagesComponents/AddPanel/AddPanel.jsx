@@ -2,7 +2,7 @@ import styles from "./AddPanel.module.css";
 import SetReviewForm from "../SetReviewForm/SetReviewForm";
 import { useNavigate } from "react-router";
 
-function AddPanel({currentImg, selectedSetID}) {
+function AddPanel({selectedSet, selectedSetID}) {
 
     const navigate = useNavigate(); 
 
@@ -36,9 +36,9 @@ function AddPanel({currentImg, selectedSetID}) {
     return (
     <div className={styles.addPanel}>
         <div className={styles.imageWrapper}>
-            <img src={currentImg} className={styles.image}></img>
+            <img src={selectedSet.set_img} className={styles.image}></img>
         </div>
-        <SetReviewForm selectedSetID={selectedSetID} createSetReview={createSetReview}/>
+        <SetReviewForm selectedSetID={selectedSetID} name={selectedSet.name} createSetReview={createSetReview}/>
     </div>
     );
 }

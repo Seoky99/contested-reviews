@@ -20,6 +20,11 @@ function RankWidget({rank, handleRankChange}) {
     }
 
     function handleModifierButton(newModifier) {
+
+        if (base === 'NR') {
+            return; 
+        }
+
         if (newModifier === modifier) {
             newModifier = null; 
         }     

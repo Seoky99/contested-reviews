@@ -232,7 +232,8 @@ async function getReviewsWithCards(userSetId) {
                    JOIN faces ON cards.card_id = faces.card_id 
                    LEFT JOIN review_tags ON reviews.review_id = review_tags.review_id
                    LEFT JOIN tags ON tags.tag_id = review_tags.tag_id
-                   WHERE reviews.user_set_id = $1;`;
+                   WHERE reviews.user_set_id = $1
+                   ORDER BY cards.collector_number;`;
     try {
         const { rows } = await pool.query(query, [userSetId]);
         return rows; 

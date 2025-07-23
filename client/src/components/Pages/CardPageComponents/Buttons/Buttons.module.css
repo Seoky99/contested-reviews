@@ -1,0 +1,25 @@
+.saveButton {
+    background-color: green;
+    font-size: 1.2rem;
+    text-align: center;
+    width: 6rem;
+    margin-left: auto;
+    padding: 0.8rem 1.4rem;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+
+.hideRatingsButton {
+    width: 8rem;
+    height: 2rem;
+    padding: 0.2rem;
+}
+
+.addTagButton {
+    color: black;
+    padding: 5px;
+    background-color: white;
+    border-radius: 5px;
+    width: 30%;
+}

@@ -3,9 +3,6 @@ import { useParams, useLocation, Link } from "react-router";
 import { applyMechanisms } from "../../../utils/applyMechanisms.js";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
 import styles from "./CardPage.module.css";
 import useFetchReview from "../../../customHooks/useFetchReview.js";
 import ReviewTagList from "./Tag/ReviewTagList.jsx";
@@ -16,7 +13,9 @@ import Notes from "./Notes/Notes.jsx";
 import RankWidget from "./RankWidget/RankWidget.jsx";
 import fetchGallery from "../../../queryFunctions/fetchGallery.js";
 import navTools from "../../../utils/cardNavigation.js";
+import ReviewCard from "./ReviewCard/ReviewCard.jsx";
 import ArrowBackIosTwoToneIcon from '@mui/icons-material/ArrowBackIosTwoTone';
+import { SaveButton, HideRatingsButton, TagPanelButton } from "./Buttons/Buttons.jsx";
 
 function CardPage() {
     let { userSetId, cardId, reviewId } = useParams(); 
@@ -36,6 +35,7 @@ function CardPage() {
     const [ showPanel, setShowPanel ] = useState(false);
     const [ saving, setSaving ] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [showRatings, setShowRatings] = useState(true);
     
     const queryClient = useQueryClient(); 
 
@@ -133,52 +133,41 @@ function CardPage() {
 
     function handleRankChange(rank) { setCardDetails({...cardDetails, rank: rank}); }
     function handleNotesChange(e) { setCardDetails({...cardDetails, notes: e.target.value}); }
-    function openModal() {setIsModalOpen(true);}
-    function closeModal() {setIsModalOpen(false);}
-
+  
     const reviewTags = setTags.filter(tag => selectedTags.has(tag.tagId));
     const reviewData = {review_id: cardDetails.reviewId, card_name: cardDetails.faces[0].name, image_normal: cardDetails.faces[0].imageNormal};
     const displayTrophies = trophies.filter(trophy => trophy.review_id === reviewId);
 
     return (
-            
             <div className={styles.pageWrapper}>
-                <div className={styles.tempWrap}>
+                <div className={styles.backWrap}>
                     <Link to={cardGalleryUrl} className={styles.navButton}> <ArrowBackIosTwoToneIcon/> Card Gallery</Link> 
-                    <h6 className={styles.mechs}>FILTER: {filter} &gt;&gt;&gt; PARTITION: {partition} &gt;&gt;&gt; SORT: {sort}</h6>
+                    <h6 className={styles.mechs}>FILTER: {filter} | PARTITION: {partition} | SORT: {sort}</h6>
                 </div>
                 <div className={styles.cardWrapper}>
-
-                    <div className={styles.cardRank}>
-                        <img className={styles.cardImage} src={cardDetails.faces[0].borderCrop}></img>
-                        <h1>{cardDetails.rank === null ? "NR" : cardDetails.rank}</h1> 
-
-                        <div className={styles.navButtonWrapper}>
-                            <Link to={prevUrl} className={styles.navButton}><ArrowBackIcon/></Link> 
-                            <h4>{myIndex+1}/{sortOrder.length}</h4>
-                            <Link to={nextUrl} className={styles.navButton}><ArrowForwardIcon/></Link>
-                        </div>
-                    </div>
+                    <ReviewCard imageUrl={cardDetails.faces[0].borderCrop} rank={cardDetails.rank}
+                                prevUrl={prevUrl} nextUrl={nextUrl} myIndex={myIndex} total={sortOrder.length}
+                                showRatings={showRatings}/>
 
                     <div className={styles.cardInformation}>
                         <div className={styles.header}>
                             <h1>{cardDetails.faces[0].name}</h1>
-                            <TrophyDisplay displayTrophies={displayTrophies} modalOnClick={openModal}></TrophyDisplay>
-                            <button type="submit" onClick={handleSaveClick} className={styles.saveButton}>Save</button>
-                            <TrophyModal isOpen={isModalOpen} onClose={closeModal} trophies={trophies} setTrophies={setTrophies} reviewData={reviewData}/>
+                            <TrophyDisplay displayTrophies={displayTrophies} modalOnClick={() => setIsModalOpen(true)}></TrophyDisplay>
+                            <SaveButton handleSaveClick={handleSaveClick}/>
+                            <TrophyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} 
+                                         trophies={trophies} setTrophies={setTrophies} reviewData={reviewData}/>
                         </div>
-
                         <RankWidget rank={cardDetails.rank} handleRankChange={handleRankChange}/> 
+                        <HideRatingsButton showRatings={showRatings} setShowRatings={setShowRatings}/>
                         <Notes notesValue={cardDetails.notes} handleNotesChange={handleNotesChange}/>
-                
                         <ReviewTagList reviewTags={reviewTags} handleDelete={handleDelete} selectedTags={selectedTags}
-                                    toggleTag={toggleTag} reviewId={reviewId} showPanel={showPanel}/>
-                    
-                        <button className={styles.addTagButton} onClick={() => setShowPanel(!showPanel)}>Manage Tags {showPanel ? `▲` : `▼`}</button>
-
-                        {showPanel && <TagPanel selectedTags={selectedTags} setSelectedTags={setSelectedTags}
-                                                setTags={setTags} setSetTags={setSetTags} userSetId={cardDetails.userSetId}
-                                                toggleTag={toggleTag}/>}
+                                       toggleTag={toggleTag} reviewId={reviewId} showPanel={showPanel}/>
+                        <div>
+                            <TagPanelButton showPanel={showPanel} setShowPanel={setShowPanel}/>
+                            {showPanel && <TagPanel selectedTags={selectedTags} setSelectedTags={setSelectedTags}
+                                                    setTags={setTags} setSetTags={setSetTags} userSetId={cardDetails.userSetId}
+                                                    toggleTag={toggleTag}/>}
+                        </div>
                         
                         {saving && <h4>Saving!</h4>}
                     </div>

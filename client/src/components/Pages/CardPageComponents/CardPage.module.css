@@ -13,54 +13,14 @@
     gap: 1.2rem;
 }
 
-.cardRank {
-    display: inline-block; 
-    padding: 0;
-    gap: 0.5rem;
-    position: relative;
-
-    & h1 {
-        position: absolute;
-        top: 1.6rem;
-        left: 1.6rem;
-        text-shadow: 2px 2px 2px black;
-        font-size: 5rem;
-    }
-}
-
 .pageWrapper {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
 
-.cardImage {
-    width: 350px; 
-    height: auto;
-}
-
 textarea {
     padding: 5px;
-}
-
-.saveButton {
-    background-color: green;
-    font-size: 1.2rem;
-    text-align: center;
-    width: 6rem;
-    margin-left: auto;
-    padding: 0.8rem 1.4rem;
-    cursor: pointer;
-    border: 1px solid transparent;
-    border-radius: 5px;
-}
-
-.addTagButton {
-    color: black;
-    padding: 5px;
-    background-color: white;
-    border-radius: 5px;
-    width: 30%;
 }
 
 .addTrophyButton {
@@ -75,25 +35,7 @@ textarea {
     padding-bottom: 1rem;
 }
 
-.navButton {
-    padding: 10px;
-    display: flex;
-
-    background-color: white;
-    text-decoration: none;
-    color: black;
-    font-weight: 500;
-    box-shadow: 5px 5px 5px black;
-}
-
-.navButtonWrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 0.2rem;
-}
-
-.tempWrap {
+.backWrap {
     display: flex;
     align-items: center;
     gap: 0.4rem;
@@ -105,4 +47,15 @@ textarea {
     padding: 3px;
     margin-bottom: auto;
     border-bottom: 3px solid yellow;
+}
+
+.navButton {
+    padding: 10px;
+    display: flex;
+
+    background-color: white;
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+    box-shadow: 5px 5px 5px black;
 }

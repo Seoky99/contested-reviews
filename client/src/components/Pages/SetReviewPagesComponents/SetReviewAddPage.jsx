@@ -20,6 +20,8 @@ function SetReviewAddPage() {
     if (error) { return <h1>Error!</h1>}; 
     if (loading) { return <h1>Loading!</h1>};
 
+    console.log(sets);
+
     const displaySets = sets.map(set => {
         return(
             <li key={set.set_id}>
@@ -31,12 +33,10 @@ function SetReviewAddPage() {
         navigate("/setreviews");
     }
 
-    const currentImg = selectedSet.set_img;
-
     return (
             <div className={styles.pageWrapper}>
                 <button className={styles.navButton} onClick={navBack}><ArrowBackIcon fontSize="large"/></button>
-                <AddPanel currentImg={currentImg} selectedSetID={selectedSetID}/>
+                <AddPanel selectedSet={selectedSet} selectedSetID={selectedSetID}/>
                 <div className={styles.sideBar}>
                     <p>Available Sets:</p>
                     <ul className={styles.setWrapper}>

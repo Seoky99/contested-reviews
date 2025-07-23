@@ -1,7 +1,7 @@
 import styles from "./GalleryCard.module.css"
 import { Link, useLocation } from "react-router";
 
-function GalleryCard({cardData, userSetId, reviewId}) {
+function GalleryCard({cardData, userSetId, reviewId, showRatings}) {
 
     let location = useLocation(); 
     const params = new URLSearchParams(location.search); 
@@ -14,7 +14,7 @@ function GalleryCard({cardData, userSetId, reviewId}) {
             <Link className={styles.cardButton} style={{backgroundImage: `url(${cardData.faces[0].borderCrop})`}} 
                   to={url}> 
             </Link>
-            <h1>{cardData.rank}</h1>
+            <h1>{showRatings && cardData.rank}</h1>
         </div>
     );
 }

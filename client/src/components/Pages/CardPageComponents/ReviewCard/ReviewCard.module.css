@@ -1,0 +1,37 @@
+.cardRank {
+    display: inline-block; 
+    padding: 0;
+    gap: 0.5rem;
+    position: relative;
+
+    & h1 {
+        position: absolute;
+        top: 1.6rem;
+        left: 1.6rem;
+        text-shadow: 2px 2px 2px black;
+        font-size: 5rem;
+    }
+}
+
+.cardImage {
+    width: 350px; 
+    height: auto;
+}
+
+.navButton {
+    padding: 10px;
+    display: flex;
+
+    background-color: white;
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+    box-shadow: 5px 5px 5px black;
+}
+
+.navButtonWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.2rem;
+}
