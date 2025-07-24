@@ -13,7 +13,7 @@ import RegisterPage from "./components/Pages/RegisterPageComponents/RegisterPage
 import CardPage from "./components/Pages/CardPageComponents/CardPage.jsx";
 import TagPanel from "./components/Pages/CardPageComponents/Tag/TagPanel.jsx";
 import NotFoundPage from './components/Pages/ErrorHandling/NotFoundPage.jsx';
-
+import LoginPage from './components/Pages/LoginPage/LoginPage.jsx';
 
 const queryClient = new QueryClient(); 
 
@@ -26,6 +26,10 @@ const router = createBrowserRouter([
         path: "register",
         Component: RegisterPage,
       }, 
+      {
+        path: "login",
+        Component: LoginPage
+      },
       {
         path: "setreviews",
         Component: SetReviewPage,

@@ -13,7 +13,7 @@ async function loginUser(req, res) {
     const findUserRows = await db.findUserFromUsername(username);
 
     if (findUserRows.length !== 1) {
-        return res.sendStatus(401);
+        return res.status(401).json({'message': 'Invalid user credentials'});
     }
 
     const foundUser = findUserRows[0];
@@ -46,7 +46,7 @@ async function loginUser(req, res) {
         res.json({accessToken});
 
     } else {
-        res.sendStatus(401);
+        return res.status(401).json({'message': 'Invalid user credentials'});
     }
 }
 
