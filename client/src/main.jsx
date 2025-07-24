@@ -9,6 +9,7 @@ import CardGalleryPage from './components/Pages/CardGalleryComponents/CardGaller
 import SetReviewViewPage from "./components/Pages/SetReviewViewPageComponents/SetReviewViewPage.jsx";
 import SetReviewEditCardsPage from "./components/Pages/SetReviewEditCardsPageComponents/SetReviewEditCardsPage.jsx";
 import SetReviewAddPage from './components/Pages/SetReviewPagesComponents/SetReviewAddPage.jsx';
+import RegisterPage from "./components/Pages/RegisterPageComponents/RegisterPage.jsx";
 import CardPage from "./components/Pages/CardPageComponents/CardPage.jsx";
 import TagPanel from "./components/Pages/CardPageComponents/Tag/TagPanel.jsx";
 import NotFoundPage from './components/Pages/ErrorHandling/NotFoundPage.jsx';
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
     path: "/",
     Component: Root,
     children: [
+      {
+        path: "register",
+        Component: RegisterPage,
+      }, 
       {
         path: "setreviews",
         Component: SetReviewPage,

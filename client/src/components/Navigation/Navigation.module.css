@@ -42,3 +42,23 @@ img {
 .searchWrapper {
     margin-right: auto;
 }
+
+.login {
+    border-radius: 5px;
+    background-color: aqua;
+    text-decoration: none;
+    padding: 0.5rem 1.4rem;
+    color: black;
+}
+
+.register {
+    border-radius: 5px;
+    background-color: aquamarine;
+    text-decoration: none;
+    padding: 0.5rem 1.4rem;
+    color: black;
+}
+
+.searchBar {
+    padding: 0.3rem;
+}

@@ -5,18 +5,18 @@ async function registerUser(req, res) {
     const { username, email, password } = req.body; 
 
     if (!username || !email || !password) {
-        return res.status(400).json({'message': 'Username and password are required.'});
+        return res.status(400).json({ field: "all", message : 'Username and password are required.'});
     }
 
     const checkConflictRows = await db.checkDuplicateUser(username, email);
 
     if (checkConflictRows.length >= 1) {
         if (checkConflictRows.some(u => u.username === username)) {
-            return res.status(409).json({ message: 'Username already taken.' });
+            return res.status(409).json({ field: "username", message: 'Username already taken.' });
         }
 
         if (checkConflictRows.some(u => u.email === email)) {
-            return res.status(409).json({ message: 'Email already registered.' });
+            return res.status(409).json({ field: "email", message: 'Email already registered.' });
         }
     }
 
