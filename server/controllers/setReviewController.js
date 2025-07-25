@@ -2,15 +2,57 @@ import db from "../models/database/queries.js";
 import statsdb from "../models/database/statsQueries.js";
 import extractCardFromRows from "./utils/extractCardFromRows.js";
 import ratingsNumericMap from "./utils/ratingsNumericMap.js";
+import verifyAccessToUserSet from "./utils/verifyAccessToUserSet.js";
 
+/**
+ * Returns all set review information belonging to the user
+ */
 async function getSetReviews(req, res) {
-
-    //implement authentication 
     const userId = req.userId; 
-
     const rows = await db.getAllSetReviews(userId);
-
     res.json(rows); 
+}
+
+/**
+ * Creates a set review instance for a user, taking in a POST body of: 
+ *  setid {number} - id of set 
+ *  name {string} - user's choice to name the set instance 
+ *  defaultApplied {boolean} - Applies default ratings according to defaultRatings object (ex. C for commons)
+ *  bonusAdded {boolean} - Add the bonus sheets / other draft legal variations to the set review
+ *  makeShard {boolean} - Creates a set review skeleton that has zero reviews in it 
+ */
+async function createSetReview(req, res) {
+    const userId = req.userId; 
+    const { sr_name, setid } = req.body; 
+    
+    //sent via checkbox in the form 
+    const defaultApplied = 'defaultApplied' in req.body; 
+    const bonusAdded = 'bonusAdded' in req.body; 
+    const makeShard = 'makeShard' in req.body; 
+
+    const {user_set_img, name, user_set_id } = await db.createSetReview(userId, setid, sr_name, defaultApplied, bonusAdded, makeShard);
+    res.json({user_set_img, name, user_set_id});
+}
+
+/**
+ * Takes in the userSetId from params, returns an array of elements that contain card and review info
+ * Return format: array of objects containing card info { cmc, collectorNumber, etc... }. Notably, it contains fields 
+ * {...tags: [userTags], faces: [faceSpecificInfo]}
+ * Faces contain card images, names, and more. 
+ */
+async function getSetReviewCards(req, res) {
+    //implement authentication 
+    const userId = req.userId;
+    const { setid } = req.params;
+
+    if (!(await verifyAccessToUserSet(userId, setid))) {
+        return res.status(403).json({message: "Forbidden: You don't have access to this set review."})
+    }
+
+    const rows = await db.getReviewsWithCards(setid);
+    const cards = extractCardFromRows(rows); 
+
+    res.json(cards);
 }
 
 async function getSetReviewCardsEdit(req, res) {
@@ -49,30 +91,6 @@ async function getSetReview(req, res) {
     res.json(rows[0]); 
 }
 
-
-/**
- * Creates a set review instance for a user, taking in a POST body of: 
- *  setid {number} - id of set 
- *  name {string} - user's choice to name the set instance 
- *  defaultApplied {boolean} - Applies default ratings according to defaultRatings object (ex. C for commons)
- *  bonusAdded {boolean} - Add the bonus sheets / other draft legal variations to the set review
- */
-async function createSetReview(req, res) {
-
-    //implement authentication 
-    const userid = 1; 
-
-    const { sr_name, setid } = req.body; 
-    
-    //sent via checkbox in the form 
-    const defaultApplied = 'defaultApplied' in req.body; 
-    const bonusAdded = 'bonusAdded' in req.body; 
-    const makeShard = 'makeShard' in req.body; 
-
-    const {user_set_img, name, user_set_id } = await db.createSetReview(userid, setid, sr_name, defaultApplied, bonusAdded, makeShard);
-    res.json({user_set_img, name, user_set_id});
-}
-
 async function deleteSetReview(req, res) {
     
     //implement authentication - check if user id matches 
@@ -82,21 +100,6 @@ async function deleteSetReview(req, res) {
 
     await db.deleteSetReview(setid); 
     res.status(204).send(); 
-}
-
-/**
- * Takes in the user's set id from the url and returns the appropiate user set 
- */
-async function getSetReviewCards(req, res) {
-    //implement authentication 
-    const userid = 1; 
-
-    const { setid } = req.params;
-
-    const rows = await db.getReviewsWithCards(setid);
-    const cards = extractCardFromRows(rows); 
-
-    res.json(cards);
 }
 
 async function getSetReviewTags(req, res) {
@@ -227,5 +230,6 @@ async function getSetReviewStatsColors(req, res) {
 }
  
 
-export { getSetReview, getSetReviewCardsEdit, postSetReviewCardsEdit, getSetReviews, createSetReview, deleteSetReview, getSetReviewCards, getCardPageInformation, 
-    patchCardFromSetReview, getSetReviewTags, getSetReviewTrophies, putSetReviewTrophies, getSetReviewStatsColors } ; 
+export { getSetReview, getSetReviewCardsEdit, postSetReviewCardsEdit, getSetReviews, createSetReview, 
+         deleteSetReview, getSetReviewCards, getCardPageInformation, patchCardFromSetReview, 
+         getSetReviewTags, getSetReviewTrophies, putSetReviewTrophies, getSetReviewStatsColors } ; 

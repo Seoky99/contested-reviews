@@ -134,15 +134,14 @@ async function getSetReview(userid, userSetId) {
  * @param {boolean} defaultApplied - Ranking specified by defaultRatings object 
  * @param {boolean} bonusAdded - Bonus draft legal cards also make it into the set, populates bonus_links
  */
-
-//refactor to do one transaction 
 async function createSetReview(userid, setid, sr_name, defaultApplied, bonusAdded, makeShard) {
 
     const extractSetImgQuery = `SELECT set_img FROM sets WHERE set_id = $1`; 
     const insertIntoReviewsQuery = `INSERT INTO user_sets(user_id, set_id, name, default_applied, includes_bonus, user_set_img)
                    VALUES ($1, $2, $3, $4, $5, $6)
                    RETURNING user_set_id, name, user_set_img`;
-    const getCardsToInsertQuery = `SELECT * FROM cards WHERE set_id = $1${bonusAdded ? ` OR set_id IN 
+    const getCardsToInsertQuery = `SELECT * FROM cards 
+                                    WHERE set_id = $1${bonusAdded ? ` OR set_id IN 
                                    (SELECT bonus_set_id FROM bonus_links WHERE main_set_id = $1)`: ``}`;
     let insertCardsToReviewInitialQuery = `INSERT INTO reviews(user_set_id, card_id, rank) VALUES `;
     const initialTrophyQuery = `INSERT INTO trophies(user_set_id, name, description, trophy_img_url) VALUES `;

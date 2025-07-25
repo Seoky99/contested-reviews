@@ -1,19 +1,21 @@
-import { cardClasses } from "@mui/material/Card";
+import axiosPrivate from "../customHooks/store/useAxiosPrivate";
 
 async function fetchGallery(userSetId) {
-    const url = `http://localhost:8080/api/setreviews/${userSetId}/cards`;      
+    const url = `setreviews/${userSetId}/cards`;      
     try {
-        const response = await fetch(url);
-
-        if (!response.ok) {
-            throw new Error("Server error" + response.status);
-        }
-
-        const cards = await response.json();
-        console.log(cards); 
+        const {data: cards} = await axiosPrivate.get(url);
         return cards; 
         
     } catch (err) {
+
+        console.log(err);
+
+        if (err.response) {
+            const status = err.response.status;
+            const message = err.response.data?.message || 'Unknown error';
+            throw new Error(`(${status}) ${message}`);
+        }
+
         throw new Error("Fetching error " + err);
     } 
 } 

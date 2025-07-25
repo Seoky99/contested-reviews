@@ -26,19 +26,19 @@ async function loginUser(req, res) {
         const accessToken = jwt.sign(
             { "userId": foundUser.user_id },
             process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: "15s" }
+            { expiresIn: "15m" }
         );
 
         const refreshToken = jwt.sign(
             { "userId": foundUser.user_id },
             process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: "30s" }
+            { expiresIn: "7d" }
         );
 
 
         //TODO: extend length of refreshToken by storing in db too
         
-        //add Secure: process.env.NODE_ENV ==='production'?
+        //add Secure: process.env.NODE_ENV ==='production'? when in production 
         res.cookie('jwt', refreshToken, {
             httpOnly: true, 
             sameSite: "Strict",

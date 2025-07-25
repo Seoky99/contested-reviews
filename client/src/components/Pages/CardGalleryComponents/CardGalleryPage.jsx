@@ -12,6 +12,7 @@ import Mechanisms from "./Mechanisms/Mechanisms.jsx";
 import MechanismIcons from "./Mechanisms/MechanismIcons.jsx";
 import SideBar from "./SideBar/SideBar.jsx";
 import IconBar from "./IconBar/IconBar.jsx";
+import ErrorPage from "../ErrorHandling/ErrorPage.jsx";
 
 function CardGalleryPage() {
     let { userSetId } = useParams();
@@ -63,11 +64,12 @@ function CardGalleryPage() {
         }
     }, [transformedReviews, queryClient, userSetId, sort, filter, partition]);
 
-    //create hide ratings button?
-    if (error) {return <h1>error!</h1>}
-    if (isLoading) { return <h1>Loading!</h1>}
 
     console.log(transformedReviews);
+
+    //create hide ratings button?
+    if (error) {return <ErrorPage error={error}/>}
+    if (isLoading) { return <h1>Loading!</h1>}
 
     const renderChild = (review, userSetId) => {
         return <GalleryCard key={review.reviewId} reviewId={review.reviewId} 

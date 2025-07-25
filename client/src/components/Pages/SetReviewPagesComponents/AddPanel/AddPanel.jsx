@@ -1,6 +1,7 @@
 import styles from "./AddPanel.module.css";
 import SetReviewForm from "../SetReviewForm/SetReviewForm";
 import { useNavigate } from "react-router";
+import axiosPrivate from "../../../../customHooks/store/useAxiosPrivate";
 
 function AddPanel({selectedSet, selectedSetID}) {
 
@@ -11,7 +12,7 @@ function AddPanel({selectedSet, selectedSetID}) {
         const form = new FormData(e.target);
         const formData = Object.fromEntries(form.entries());
 
-        const url = `http://localhost:8080/api/setreviews`;      
+        /*const url = `http://localhost:8080/api/setreviews`;      
         try {
             const response = await fetch(url, {
                 method: "POST",
@@ -25,7 +26,14 @@ function AddPanel({selectedSet, selectedSetID}) {
                 throw new Error("Server error" + response.status);
             }
 
-            await response.json();  
+            await response.json();   */
+        try {
+
+            const url = '/setreviews'; 
+            const options = {headers: {"Content-Type": "application/json"}};
+
+            await axiosPrivate.post(url, formData, options);
+
             navigate("/setreviews");
                         
         } catch (err) {

@@ -34,4 +34,15 @@ async function findUserFromUsername(username) {
     }
 }
 
-export default { checkDuplicateUser, registerUser, findUserFromUsername };
+async function verifyAccessToUserSet(userId, userSetId) {
+    const query =  `SELECT * FROM user_sets WHERE user_id = $1 AND user_set_id = $2`;
+
+    try {
+        const { rows } = await pool.query(query, [userId, userSetId]);
+        return rows; 
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export default { checkDuplicateUser, registerUser, findUserFromUsername, verifyAccessToUserSet };

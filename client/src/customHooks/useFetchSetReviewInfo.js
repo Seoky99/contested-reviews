@@ -6,7 +6,7 @@ function useFetchSetReviewInfo() {
     const [setReviews, setSetReviews] = useState([]);
     const [selectedSetReviewID, setSelectedSetReviewID] = useState();
 
-    const [loading, setLoading] = useState(true);
+    const [ loading, setLoading ] = useState(true);
     const [ error, setError ] = useState(null);
 
     useEffect( () => {

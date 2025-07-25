@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import axiosPrivate from "../customHooks/store/useAxiosPrivate.js";
 
  function useFetchSetInfo() {
 
@@ -10,16 +11,10 @@ import { useState, useEffect } from 'react';
 
     useEffect( () => {
         async function fetchPageInformation() {
-            const url = ['http://localhost:8080/api/sets'];
+            const url = 'sets';
 
             try {
-                const response = await fetch(url); 
-
-                if (!response.ok) { 
-                    throw new Error("server error");
-                }
-
-                const setData = await response.json(); 
+                const {data : setData} = await axiosPrivate.get(url); 
 
                 if (setData.length < 1) {
                     throw new Error("No sets available.");
