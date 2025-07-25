@@ -5,7 +5,6 @@ import { useNavigate } from "react-router";
 import styles from "./RegisterPage.module.css";
 import axiosInstance from "../../../utils/axiosInstance";
 
-
 function RegisterPage() {
 
     const navigate = useNavigate();

@@ -3,6 +3,25 @@ import rarityMap from "../defaultRatings.js";
 import queryGenerator from "../config/queryGenerator.js";
 import trophyData from "../config/trophyData.js";
 
+/**
+ * Returns all a user's set reviews and associated set information 
+ * @param {number} userid 
+ * @returns An array of objects containing set_review_name, set_code, set_name, user_set_id, user_set_img
+ */
+async function getAllSetReviews(userid) {
+    const query = `SELECT user_sets.*, sets.name AS set_name, set_code, set_img
+                    FROM user_sets 
+                    JOIN sets ON user_sets.set_id = sets.set_id 
+                    WHERE user_id = $1`;
+    try {
+        const { rows } = await pool.query(query, [userid]);
+        return rows; 
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+
 async function getSetReviewCardsEdit(userSetId) {
 
     let transaction; 
@@ -91,24 +110,6 @@ async function postSetReviewCardsEdit(userSetId, added, removed) {
 
 }
 
-
-/**
- * Returns all a user's set reviews and associated set information 
- * @param {number} userid 
- * @returns An array of objects containing set_review_name, set_code, set_name, user_set_id, user_set_img
- */
-async function getAllSetReviews(userid) {
-    const query = `SELECT user_sets.*, sets.name AS set_name, set_code, set_img
-                    FROM user_sets 
-                    JOIN sets ON user_sets.set_id = sets.set_id 
-                    WHERE user_id = $1`;
-    try {
-        const { rows } = await pool.query(query, [userid]);
-        return rows; 
-    } catch (err) {
-        console.log(err);
-    }
-}
 
 async function getSetReview(userid, userSetId) {
     const query = `SELECT user_sets.*, sets.name AS set_name, set_code, set_img

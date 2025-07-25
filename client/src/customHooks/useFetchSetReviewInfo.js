@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import axiosPrivate from './store/useAxiosPrivate';
 
 function useFetchSetReviewInfo() {
 
@@ -10,15 +11,11 @@ function useFetchSetReviewInfo() {
 
     useEffect( () => {
         async function fetchSetReviewInfo() {
-            const url = ['http://localhost:8080/api/setreviews'];
 
+            const url = '/setreviews';
+    
             try {
-                const response = await fetch(url);
-
-                if (!response.ok) {
-                    throw new Error("server error");
-                }
-                const setReviewData = await response.json();
+                const { data: setReviewData } = await axiosPrivate.get(url);
 
                 setSetReviews(setReviewData);
                 setSelectedSetReviewID(setReviewData.length > 0 ? setReviewData[0].user_set_id : -1); 

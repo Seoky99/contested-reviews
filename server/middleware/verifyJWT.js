@@ -15,7 +15,7 @@ function verifyJWT(req, res, next) {
         next();
     } catch (err) {
         //Invalid, tampered with token 
-        return res.sendStatus(403);
+        return res.sendStatus(401);
     }
 }
 

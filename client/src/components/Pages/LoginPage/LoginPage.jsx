@@ -1,8 +1,9 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate, useLocation } from "react-router";
 import styles from "./LoginPage.module.css";
-import axiosInstance from "../../../utils/axiosInstance";
+import useAuthStore from "../../../customHooks/store/useAuthStore";
 
 function LoginPage() {
 
@@ -15,12 +16,16 @@ function LoginPage() {
         resolver: zodResolver(schema)
     });
 
-    async function loginUser(data) {
+    const login = useAuthStore(state => state.login);
+    const navigate = useNavigate(); 
+    const location = useLocation(); 
+    const from = location.state?.from?.pathname || "/";
 
+    async function loginUser(data) {
         try {
-            const response = await axiosInstance.post("/auth", data);
-            console.log(response);
-            //use jwt somehow 
+            await login(data);
+            navigate(from, {replace: true});
+
         } catch (err) {
 
             const response = err.response; 
@@ -34,7 +39,7 @@ function LoginPage() {
                 if (err.message === "Network Error") {
                     setError("root", { type: "server", message: "Cannot connect to the server. Please try again later." });
                 } else {
-                      setError("root", { type: "server", message: "Unexpected error. Please try again.", });
+                    setError("root", { type: "server", message: "Unexpected error. Please try again.", });
                 }
             }
         }

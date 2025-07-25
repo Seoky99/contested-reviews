@@ -14,6 +14,7 @@ import CardPage from "./components/Pages/CardPageComponents/CardPage.jsx";
 import TagPanel from "./components/Pages/CardPageComponents/Tag/TagPanel.jsx";
 import NotFoundPage from './components/Pages/ErrorHandling/NotFoundPage.jsx';
 import LoginPage from './components/Pages/LoginPage/LoginPage.jsx';
+import AuthGuard from './components/Pages/AuthGuard/AuthGuard.jsx';
 
 const queryClient = new QueryClient(); 
 
@@ -31,13 +32,18 @@ const router = createBrowserRouter([
         Component: LoginPage
       },
       {
-        path: "setreviews",
-        Component: SetReviewPage,
+        Component: AuthGuard, 
+        children: [
+          {
+            path: "setreviews",
+            Component: SetReviewPage,
+          },
+          {
+            path: "setreviews/create",
+            Component: SetReviewAddPage,
+          },
+        ]
       }, 
-      {
-        path: "setreviews/create",
-        Component: SetReviewAddPage,
-      },
       {
         path: "setreviews/:userSetId",
         Component: SetReviewViewPage,

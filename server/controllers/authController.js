@@ -26,14 +26,15 @@ async function loginUser(req, res) {
         const accessToken = jwt.sign(
             { "userId": foundUser.user_id },
             process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: "15m" }
+            { expiresIn: "15s" }
         );
 
         const refreshToken = jwt.sign(
             { "userId": foundUser.user_id },
             process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: "7d" }
+            { expiresIn: "30s" }
         );
+
 
         //TODO: extend length of refreshToken by storing in db too
         
@@ -43,6 +44,7 @@ async function loginUser(req, res) {
             sameSite: "Strict",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
+
         res.json({accessToken});
 
     } else {

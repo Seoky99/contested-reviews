@@ -3,6 +3,16 @@ import statsdb from "../models/database/statsQueries.js";
 import extractCardFromRows from "./utils/extractCardFromRows.js";
 import ratingsNumericMap from "./utils/ratingsNumericMap.js";
 
+async function getSetReviews(req, res) {
+
+    //implement authentication 
+    const userId = req.userId; 
+
+    const rows = await db.getAllSetReviews(userId);
+
+    res.json(rows); 
+}
+
 async function getSetReviewCardsEdit(req, res) {
     //implement authentication 
     const userid = 1; 
@@ -39,15 +49,6 @@ async function getSetReview(req, res) {
     res.json(rows[0]); 
 }
 
-async function getSetReviews(req, res) {
-
-    //implement authentication 
-    const userid = 1; 
-
-    const rows = await db.getAllSetReviews(userid);
-
-    res.json(rows); 
-}
 
 /**
  * Creates a set review instance for a user, taking in a POST body of: 

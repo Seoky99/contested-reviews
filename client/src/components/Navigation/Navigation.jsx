@@ -1,11 +1,15 @@
-import styles from "./Navigation.module.css";
 import { Link } from "react-router"; 
+import styles from "./Navigation.module.css";
+import LogoutButton from "./LogoutButton";
 import SearchIcon from "@mui/icons-material/Search";
-
+import useAuthStore from "../../customHooks/store/useAuthStore";
 
 function Navigation() {
 
-     return (
+    const token = useAuthStore(state => state.accessToken);
+    const loggedIn = !!token; 
+
+    return (
         <nav className={styles.navBar}>
             <Link to="/" className={styles.homeButton}>
                 <img src="/logo4.png" height="50" width="135"></img>
@@ -16,11 +20,14 @@ function Navigation() {
             </div>
             <Link to="/setreviews" className={styles.link}>My Set Reviews</Link>
             <Link className={styles.link}>Pods (Coming Soon!)</Link>
-            <Link to="/login" className={styles.login}>Login</Link>
-            <Link to="/register" className={styles.register}>Register</Link>
+            { !loggedIn ? 
+                <>
+                    <Link to="/login" className={styles.login}>Login</Link>
+                    <Link to="/register" className={styles.register}>Register</Link>
+                </> :
+                    <LogoutButton/>}
         </nav>
     )
-
 }
 
 export default Navigation;

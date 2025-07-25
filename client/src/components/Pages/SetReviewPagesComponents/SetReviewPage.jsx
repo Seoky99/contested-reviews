@@ -2,10 +2,18 @@ import styles from "./SetReviewPage.module.css";
 import useFetchSetReviewInfo from "../../../customHooks/useFetchSetReviewInfo";
 import SetReviewList from './SetReview/SetReviewList';
 import SetReviewDisplay from "./SetReview/SetReviewDisplay";
+import axiosPrivate from "../../../customHooks/store/useAxiosPrivate";
+import useAuthStore from "../../../customHooks/store/useAuthStore";
 
 function SetReviewPage() {
 
     const { setReviews, setSetReviews, selectedSetReviewID, setSelectedSetReviewID, loading, error } = useFetchSetReviewInfo();
+
+    const userId = useAuthStore(state => state.userId);
+    const accessToken = useAuthStore(state => state.accessToken);
+
+    console.log(userId);
+    console.log(accessToken);
 
     function handleSetReviewClick(id) { 
         setSelectedSetReviewID(id);
@@ -19,16 +27,11 @@ function SetReviewPage() {
             return;
         }
 
-        const url = `http://localhost:8080/api/setreviews/${userSetId}`;
-        try {
-            const response = await fetch(url, {
-                method: 'DELETE',
-            });
-            
-            if (!response.ok) {
-                throw new Error(`Server error: ${response.status}`);
-            }
+        const url = `setreviews/${userSetId}`;
 
+        try {
+            await axiosPrivate.delete(url);
+        
             const newSetReviews = [...setReviews].filter(setReview => setReview.user_set_id !== userSetId); 
             setSetReviews(newSetReviews);
 
@@ -55,7 +58,7 @@ function SetReviewPage() {
             <SetReviewList setReviews={setReviews} setSetReviews={setSetReviews} handleSetReviewClick={handleSetReviewClick}
                            selectedSetReviewID={selectedSetReviewID}/>
         </div>
-    );
+    ); 
 }; 
 
 export default SetReviewPage;
