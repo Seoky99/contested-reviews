@@ -33,4 +33,10 @@
 .absolute {
     position: absolute;
     bottom: -20px;
+    background-color: white;
+    color: black;
+    width: 5rem;
+    padding: 0.2rem;
+    z-index: -100;
+    border-radius: 5px;
 }

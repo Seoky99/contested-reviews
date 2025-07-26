@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"; 
+import axiosPrivate from "../customHooks/store/useAxiosPrivate";
 
 function useFetchSetReviewCardsEdit(userSetId) {
 
@@ -14,11 +15,10 @@ function useFetchSetReviewCardsEdit(userSetId) {
     useEffect( () => {
         async function fetchPageInfo() {
 
-            const url = `http://localhost:8080/api/setreviews/${userSetId}/cards/edit`;      
+            const url = `setreviews/${userSetId}/cards/edit`;      
 
             try {
-                const response = await fetch(url);
-                const { allCards } = await response.json();     
+                const allCards = (await axiosPrivate.get(url)).data;
 
                 setCards(allCards); 
 

@@ -10,6 +10,7 @@ import Mechanisms from "../CardGalleryComponents/Mechanisms/Mechanisms.jsx";
 import MechanismIcons from "../CardGalleryComponents/Mechanisms/MechanismIcons.jsx";
 import SideBar from "../CardGalleryComponents/SideBar/SideBar.jsx";
 import IconBar from "../CardGalleryComponents/IconBar/IconBar.jsx";
+import axiosPrivate from "../../../customHooks/store/useAxiosPrivate.js";
 
 function SetReviewEditCardsPage() {
     let { userSetId } = useParams();
@@ -63,17 +64,14 @@ function SetReviewEditCardsPage() {
         const removed = [...initiallySelected].filter(id => !selected.has(id));
 
         try {
-            const url = `http://localhost:8080/api/setreviews/${userSetId}/cards/edit`;
-            const response = await fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ added, removed}),
+            const url = `setreviews/${userSetId}/cards/edit`;
+            await axiosPrivate.post(url, { added, removed }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
 
-            if (!response.ok) {
-                throw new Error("server error" + response.status);
-            }
-
+            //before returning to card gallery, update changes made
             await queryClient.invalidateQueries(['cards', userSetId]);
             navigate(`/setreviews/${userSetId}/cards`);
 

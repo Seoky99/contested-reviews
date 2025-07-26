@@ -4,7 +4,6 @@ import axiosPrivate from "./store/useAxiosPrivate";
 /**
  * Fetches all the information the "card page" requires for a review
  * Card details (ranks, notes), user tags 
- * TODO: Consider refactoring all under one endpoint 
  * @param {*} userSetId 
  * @param {*} cardId 
  * @returns 
@@ -29,14 +28,6 @@ function useFetchReview(reviewId) {
                 const url = `reviews/${reviewId}`;
                 const {cardDetails, reviewTags, setTags, trophies} = (await axiosPrivate.get(url)).data;
       
-                console.log(cardDetails); 
-                                console.log(reviewTags);
-                                                console.log(setTags);
-                                                                console.log(trophies); 
- 
- 
-
-
                 if (cardDetails.notes === null) {
                     cardDetails.notes = '';
                 }
