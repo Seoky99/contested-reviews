@@ -4,7 +4,7 @@
     text-align: center;
     width: 6rem;
     margin-left: auto;
-    padding: 0.8rem 1.4rem;
+    padding: 0.4rem 0.7rem;
     cursor: pointer;
     border: 1px solid transparent;
     border-radius: 5px;
@@ -14,6 +14,7 @@
     width: 8rem;
     height: 2rem;
     padding: 0.2rem;
+    cursor: pointer;
 }
 
 .addTagButton {
@@ -22,4 +23,14 @@
     background-color: white;
     border-radius: 5px;
     width: 30%;
+    cursor: pointer;
+    display: flex;
+
+    & span {
+        margin-left: auto;
+    }
+}
+
+.errorSaving {
+    background-color: crimson;
 }

@@ -1,4 +1,40 @@
 import db from "../models/database/tagQueries.js";
+import { verifyAccessToUserSet, verifyAccessToTag } from "./utils/verify.js";
+
+/**
+ * Creates a tag with tagName in the specified set review with userSetId
+ * @returns Object to reconstruct tag: {userSetId: int, tagName: string, userId : int, tagId: int}
+ */
+async function createTag(req, res) {
+    const userId = req.userId; 
+
+    const { userSetId, tagName } = req.body;  
+    if (!(await verifyAccessToUserSet(userId, userSetId))) {
+        return res.status(403).json({message: "Forbidden: You don't have access to this user set."})
+    }
+
+    const rows = await db.createTag(userId, userSetId, tagName); 
+    const tagId = rows[0].tag_id;
+    res.json({userSetId, tagName, userId, tagId});
+}
+
+/**
+ * Deletes the tag with tagId from userId  
+ * @param {} req 
+ * @param {*} res 
+ */
+async function deleteTag(req, res) {
+    const userId = req.userId; 
+
+    const { tagid } = req.params; 
+    if (!(await verifyAccessToTag(userId, tagid))) {
+        return res.status(403).json({message: "Forbidden: You don't have access to this tag."})
+    }
+
+    await db.deleteTag(userId, tagid); 
+
+    res.sendStatus(204);
+}
 
 async function getAllUserTags (req, res) {
 
@@ -19,17 +55,6 @@ async function getAllUserTags (req, res) {
     res.json(camelCaseChange);
 }
 
-async function createTag(req, res) {
-    //implement authentication 
-    const userId = 1; 
-
-    const { userSetId, tagName } = req.body;  
-
-    const rows = await db.createTag(userId, userSetId, tagName); 
-    const tagId = rows[0].tag_id;
-    res.json({userSetId, tagName, userId, tagId});
-}
-
 async function patchTag(req, res) {
     //implement authentication 
     const userId = 1; 
@@ -40,18 +65,6 @@ async function patchTag(req, res) {
     await db.patchTag(userId, tagid, tagName); 
     
     res.json({tagid, tagName});
-}
-
-async function deleteTag(req, res) {
-
-    //implement authentication 
-    const userId = 1; 
-
-    const { tagid } = req.params; 
-
-    await db.deleteTag(userId, tagid); 
-
-    res.status(204).send()
 }
 
 export { getAllUserTags, createTag, patchTag, deleteTag };

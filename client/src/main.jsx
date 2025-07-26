@@ -42,30 +42,31 @@ const router = createBrowserRouter([
             path: "setreviews/create",
             Component: SetReviewAddPage,
           },
+          {
+            path: "setreviews/:userSetId",
+            Component: SetReviewViewPage,
+          },
+          {
+            path: "setreviews/:userSetId/cards",
+            Component: CardGalleryPage,
+          },
+          {
+            path: "setreviews/:userSetId/cards/edit",
+            Component: SetReviewEditCardsPage,
+          },
+          {
+            path: "setreviews/:userSetId/reviews/:reviewId/cards/:cardId",
+            Component: CardPage, 
+            children: [
+              {
+                path: "tags/create",
+                Component: TagPanel
+              }
+            ]
+          },
         ]
       }, 
       {
-        path: "setreviews/:userSetId",
-        Component: SetReviewViewPage,
-      },
-      {
-        path: "setreviews/:userSetId/cards",
-        Component: CardGalleryPage,
-      },
-      {
-        path: "setreviews/:userSetId/cards/edit",
-        Component: SetReviewEditCardsPage,
-      },
-      {
-        path: "setreviews/:userSetId/reviews/:reviewId/cards/:cardId",
-        Component: CardPage, 
-        children: [
-          {
-            path: "tags/create",
-            Component: TagPanel
-          }
-        ]
-      }, {
         path: "*",
         Component: NotFoundPage
       }

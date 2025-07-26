@@ -1,7 +1,7 @@
 import Tag from "./Tag";
 import styles from "./TagList.module.css";
 
-function TagList({setTags, handleDelete,selectedTags, toggleTag}) {
+function TagList({setTags, handleDelete, selectedTags, toggleTag}) {
     
     const tagList = setTags.map(tag => {
         return <Tag key={tag.tagId} tagName={tag.tagName} handleDelete={() => handleDelete(tag.tagId)} 

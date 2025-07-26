@@ -5,13 +5,30 @@ function HideRatingsButton({showRatings, setShowRatings}) {
         <button className={styles.hideRatingsButton} onClick={() => setShowRatings(!showRatings)}>{showRatings?'Hide Ratings':'Show Ratings'}</button>);
 }
 
-function SaveButton({handleSaveClick}) {
-    return (<button type="submit" onClick={handleSaveClick} className={styles.saveButton}>Save</button>);
+function SaveButton({handleSaveClick, saving}) {
+
+    let message = 'Save'; 
+    let errorStyle = ``;
+
+    if (saving === 'error') {
+        message = 'Error!'; 
+        errorStyle = `${styles.errorSaving}`;
+    } else if (saving === 'success') {
+        message = 'Saved!';
+    }
+
+    return (<button type="submit" onClick={handleSaveClick} className={`${styles.saveButton} ${errorStyle}`}>{message}</button>);
 }
 
-function TagPanelButton({showPanel, setShowPanel}) {
+function TagPanelButton({showPanel, setShowPanel, noTags}) {
+
+    console.log(noTags);
+    const label = noTags ? 'Add a Tag!' : 'Manage Tags';
+
     return (
-        <button className={styles.addTagButton} onClick={() => setShowPanel(!showPanel)}>Manage Tags {showPanel ? `▲` : `▼`}</button>
+        <button className={styles.addTagButton} onClick={() => setShowPanel(!showPanel)}>
+            {label} <span>{showPanel ? `▲` : `▼`}</span>
+        </button>
     );
 }
 

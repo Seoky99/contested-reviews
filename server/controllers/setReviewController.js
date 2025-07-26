@@ -2,7 +2,7 @@ import db from "../models/database/queries.js";
 import statsdb from "../models/database/statsQueries.js";
 import extractCardFromRows from "./utils/extractCardFromRows.js";
 import ratingsNumericMap from "./utils/ratingsNumericMap.js";
-import verifyAccessToUserSet from "./utils/verifyAccessToUserSet.js";
+import {verifyAccessToUserSet} from "./utils/verify.js";
 
 /**
  * Returns all set review information belonging to the user

@@ -439,6 +439,7 @@ async function getReviewPageInformation(reviewId, userId) {
 async function performPageUpdate(pageInformation) {
 
     const {reviewId, rank, notes, selectedTags, trophies, userSetId} = pageInformation;
+
     const transaction = await pool.connect();  
 
     let patchCardQuery = `UPDATE reviews SET rank = $1, notes = $2 WHERE review_id = $3`;
@@ -486,6 +487,7 @@ async function performPageUpdate(pageInformation) {
     } catch (err) {
 
         await transaction.query("ROLLBACK");
+        throw err; 
 
     } finally {
         transaction.release();

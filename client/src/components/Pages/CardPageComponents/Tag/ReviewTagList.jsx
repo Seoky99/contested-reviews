@@ -3,7 +3,7 @@ import styles from "./ReviewTagList.module.css";
 
 function TagList({reviewTags, handleDelete, selectedTags, toggleTag, reviewId, showPanel}) {
     
-    const tagsDisplay = reviewTags.length === 0 ? <h4>~No tags</h4> : 
+    const tagsDisplay =  
         reviewTags.map(tag => {
             return <Tag key={tag.tagId} tagName={tag.tagName}
             tagId={tag.tagId} handleDelete={() => handleDelete(reviewId, tag.tagId)} isSelected={selectedTags.has(tag.tagId)}

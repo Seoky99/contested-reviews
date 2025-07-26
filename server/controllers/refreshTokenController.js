@@ -12,7 +12,6 @@ async function refreshToken(req, res) {
     try { 
         const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
   
-
         //create JWT 
         const accessToken = jwt.sign(
             { "userId": decoded.userId },

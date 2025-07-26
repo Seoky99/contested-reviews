@@ -1,6 +1,59 @@
 import db from "../models/database/tagQueries.js";
 import ndb from "../models/database/queries.js";
 import extractCardFromRows from "./utils/extractCardFromRows.js";
+import { verifyAccessToReview } from "./utils/verify.js";
+
+/**
+ * Returns all the necessary information to render the page: based on the userId, reviewId, a user's 
+ * tags, trophies, card details - (rank, notes)
+ */
+async function getPageInformation(req, res) {
+    const userId = req.userId; 
+    const { reviewid } = req.params; 
+
+    if (!(await verifyAccessToReview(userId, reviewid))) {
+        return res.status(403).json({message: "Forbidden: You don't have access to this review."})
+    }
+    
+    const { cardDetails, reviewTags, allTags, trophies } = await ndb.getReviewPageInformation(reviewid, userId);
+
+    function camelCaseChange(rows) {
+    const camelCase = rows.map(row => {
+        return {
+            userId: row.user_id,
+            tagName: row.name, 
+            userSetId: row.user_set_id,
+            tagId: row.tag_id
+        }});
+        return camelCase;     
+    }
+
+    const transformedCardDetails = extractCardFromRows(cardDetails)[0];
+    const ccReviewTags = camelCaseChange(reviewTags); 
+    const ccAllTags = camelCaseChange(allTags);
+
+    res.json({cardDetails: transformedCardDetails, reviewTags: ccReviewTags, setTags: ccAllTags, trophies});
+}
+
+/**
+ * "One shot" transaction update of the page information (rank, notes, tags, trophies). If any individual parts fail, it will be rollbacked. 
+ */
+async function updatePageInformation(req, res) {
+    const userId = req.userId; 
+
+    const { reviewid } = req.params;
+    let { rank, notes, selectedTags, trophies, userSetId } = req.body;  
+
+    if (!(await verifyAccessToReview(userId, reviewid))) {
+        return res.status(403).json({message: "Forbidden: You don't have access to this review."})
+    }
+
+    trophies = trophies.map(trophy => ({ trophy_id: trophy.trophy_id, review_id: trophy.review_id})); 
+
+    await ndb.performPageUpdate({reviewId: reviewid, rank, notes, selectedTags, trophies, userSetId});
+
+    res.json({rank, notes, selectedTags, trophies});
+}
 
 async function assignTagToReview(req, res) {
 
@@ -85,46 +138,5 @@ async function deleteTagsFromReview(req, res) {
     res.status(204).send();
 }
 
-async function getPageInformation(req, res) {
-
-    //implement authentication 
-    const userid = 1; 
-
-    const { reviewid } = req.params; 
-    
-    const { cardDetails, reviewTags, allTags, trophies } = await ndb.getReviewPageInformation(reviewid, userid);
-
-    function camelCaseChange(rows) {
-    const camelCase = rows.map(row => {
-        return {
-            userId: row.user_id,
-            tagName: row.name, 
-            userSetId: row.user_set_id,
-            tagId: row.tag_id
-        }});
-        return camelCase;     
-    }
-
-    const transformedCardDetails = extractCardFromRows(cardDetails)[0];
-    const ccReviewTags = camelCaseChange(reviewTags); 
-    const ccAllTags = camelCaseChange(allTags);
-
-    res.json({cardDetails: transformedCardDetails, reviewTags: ccReviewTags, setTags: ccAllTags, trophies});
-}
-
-async function updatePageInformation(req, res) {
-
-    //implement authentication 
-    const userid = 1; 
-
-    const { reviewid } = req.params;
-    let { rank, notes, selectedTags, trophies, userSetId } = req.body;  
-
-    trophies = trophies.map(trophy => ({ trophy_id: trophy.trophy_id, review_id: trophy.review_id})); 
-
-    await ndb.performPageUpdate({reviewId: reviewid, rank, notes, selectedTags, trophies, userSetId});
-
-    res.json({rank, notes, selectedTags});
-}
 
 export { assignTagToReview, getTagsFromReview, deleteTagsFromReview, getPageInformation, updatePageInformation, getTrophiesFromReview, assignTrophiesToReview }

@@ -59,3 +59,7 @@ textarea {
     font-weight: 500;
     box-shadow: 5px 5px 5px black;
 }
+
+.deleteTagError {
+    color: red;
+}

@@ -9,7 +9,6 @@ import tagRouter from "./routes/tagRouter.js";
 import trophyRouter from "./routes/trophyRouter.js";
 import registerRouter from './routes/registerRouter.js';
 import authRouter from './routes/authRouter.js';
-import verifyJWT from "./middleware/verifyJWT.js";
 import cookieParser from "cookie-parser";
 import refreshRouter from './routes/refreshRouter.js';
 import logoutRouter from './routes/logoutRouter.js';
@@ -32,12 +31,16 @@ app.use('/api/refresh', refreshRouter);
 app.use("/api/logout", logoutRouter)
 
 //If developing pages below for non-logged-in viewing, use per-router
-app.use('/api', verifyJWT);
-app.use('/api/trophies', trophyRouter); 
+//app.use('/api/trophies', trophyRouter); 
 app.use('/api/tags', tagRouter);
 app.use('/api/reviews', reviewRouter);
 app.use('/api/setreviews', setReviewRouter);
 app.use('/api/sets', setsRouter);
+
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err);
+  res.status(500).json({ error: 'Internal server error' });
+});
 
 app.listen('8080', () => {
   console.log('Server running!');

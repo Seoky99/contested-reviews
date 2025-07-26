@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import axiosPrivate from "./store/useAxiosPrivate";
 
 /**
  * Fetches all the information the "card page" requires for a review
@@ -25,26 +26,28 @@ function useFetchReview(reviewId) {
 
             try { 
 
-            const url = [`http://localhost:8080/api/reviews/${reviewId}`];
-            const response = await fetch(url);
+                const url = `reviews/${reviewId}`;
+                const {cardDetails, reviewTags, setTags, trophies} = (await axiosPrivate.get(url)).data;
       
-            if (!response.ok) {
-                throw new Error("Trophies fetch failure" + response.status);
-            }
-            const {cardDetails, reviewTags, setTags, trophies} = await response.json();
+                console.log(cardDetails); 
+                                console.log(reviewTags);
+                                                console.log(setTags);
+                                                                console.log(trophies); 
+ 
+ 
 
-            if (cardDetails.notes === null) {
-                cardDetails.notes = '';
-            }
 
-            setCardDetails(cardDetails);
-            setSetTags(setTags);
-            setSelectedTags(new Set(reviewTags.map(tag => tag.tagId)));
-            setTrophies(trophies);
-         
+                if (cardDetails.notes === null) {
+                    cardDetails.notes = '';
+                }
+
+                setCardDetails(cardDetails);
+                setSetTags(setTags);
+                setSelectedTags(new Set(reviewTags.map(tag => tag.tagId)));
+                setTrophies(trophies);
+            
             } catch (err) {
                 setError(err); 
-                console.log(err);
             } finally {
                 setLoading(false);
             }

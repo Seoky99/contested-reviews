@@ -29,7 +29,7 @@ async function refreshToken(set) {
 
 async function logoutUser(set) {
     await axiosInstance.get("/logout");
-    set({accessToken: null, userId: null});
+    set({accessToken: null, userId: null, hasTriedRefresh: true});
 }
 
 function configureAuthStore(set) {

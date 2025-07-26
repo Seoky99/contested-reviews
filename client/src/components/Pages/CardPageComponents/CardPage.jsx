@@ -4,6 +4,8 @@ import { applyMechanisms } from "../../../utils/applyMechanisms.js";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 
 import styles from "./CardPage.module.css";
+import { SaveButton, HideRatingsButton, TagPanelButton } from "./Buttons/Buttons.jsx";
+import axiosPrivate from "../../../customHooks/store/useAxiosPrivate.js";
 import useFetchReview from "../../../customHooks/useFetchReview.js";
 import ReviewTagList from "./Tag/ReviewTagList.jsx";
 import TagPanel from "./Tag/TagPanel.jsx";
@@ -15,10 +17,10 @@ import fetchGallery from "../../../queryFunctions/fetchGallery.js";
 import navTools from "../../../utils/cardNavigation.js";
 import ReviewCard from "./ReviewCard/ReviewCard.jsx";
 import ArrowBackIosTwoToneIcon from '@mui/icons-material/ArrowBackIosTwoTone';
-import { SaveButton, HideRatingsButton, TagPanelButton } from "./Buttons/Buttons.jsx";
+import ErrorPage from "../ErrorHandling/ErrorPage.jsx";
 
 function CardPage() {
-    let { userSetId, cardId, reviewId } = useParams(); 
+    let { userSetId, /*cardId,*/ reviewId } = useParams(); 
 
     const location = useLocation();
     const params = new URLSearchParams(location.search);
@@ -33,9 +35,13 @@ function CardPage() {
             trophies, setTrophies,
             loading, error } = useFetchReview(reviewId); 
     const [ showPanel, setShowPanel ] = useState(false);
-    const [ saving, setSaving ] = useState(false);
+    const [ deleteTagError, setDeleteTagError ] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showRatings, setShowRatings] = useState(true);
+
+    //Save States: 'idle', 'saving', 'success', 'error' 
+    const [ saving, setSaving ] = useState('idle');
+
     
     const queryClient = useQueryClient(); 
 
@@ -79,7 +85,7 @@ function CardPage() {
     const { myIndex, nextUrl, prevUrl, cardGalleryUrl } = navTools(sortOrder, reviewId, userSetId, params);
 
     if (loading) { return <h1>Loading</h1> }
-    if (error) { return <h1>Error</h1>} 
+    if (error) { return <ErrorPage error={error}/>} 
 
     function toggleTag(tagId) {
         if (selectedTags.has(tagId)) {
@@ -92,44 +98,47 @@ function CardPage() {
     }
     
     async function handleSaveClick() {
-        setSaving(true);
-        try {
-            const url = `http://localhost:8080/api/reviews/${reviewId}`;
-            const response = await fetch(url, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                }, 
-                body: JSON.stringify({rank: cardDetails.rank, notes: cardDetails.notes, selectedTags: Array.from(selectedTags), 
-                                      userSetId: cardDetails.userSetId, trophies: trophies
-                }),
-            });
 
-            const success = await response.json(); 
+        if (saving === 'saving') { return; }
+
+        setSaving('saving');
+
+        try {
+            const url = `reviews/${reviewId}`;
+            const body = {rank: cardDetails.rank, notes: cardDetails.notes, selectedTags: Array.from(selectedTags), 
+                                      userSetId: cardDetails.userSetId, trophies: trophies}; 
+
+            await axiosPrivate.put(url, body, { headers: { 'Content-Type': 'application/json'}});
             await queryClient.invalidateQueries(['cards', userSetId]);
             const cacheKey = ['sortOrder', userSetId, filter, partition, sort];
             await queryClient.invalidateQueries(cacheKey);
-            console.log(success); 
+
+            setSaving('success');
+            setTimeout(() => setSaving('idle'), 1000);
+
         } catch (err) {
+            setSaving('error');
+            setTimeout(() => setSaving('idle'), 1000);
             console.log(err); 
-        } finally {
-            setSaving(false); 
+        } 
+    }
+
+    async function handleDeleteTag(tagId) {
+        try {
+            const url = `tags/${tagId}`;
+            await axiosPrivate.delete(url);
+
+            setSetTags([...setTags].filter(tag => tag.tagId !== tagId));
+            const newSet = new Set(selectedTags);
+            newSet.delete(tagId);
+            setSelectedTags(newSet);
+
+        } catch (err) {
+            setDeleteTagError("Error in deleting tag");
+            console.log(err); 
         }
     }
 
-    async function handleDelete(reviewId, tagId) {
-        try {
-            const url = `http://localhost:8080/api/reviews/${reviewId}/tags/${tagId}`;
-            const response = await fetch(url, {
-                method: 'DELETE',
-            });
-            if (!response.ok) {
-                throw new Error("server error" + response.status);
-            }
-        } catch (err) {
-            console.log(err); 
-        }
-    }
 
     function handleRankChange(rank) { setCardDetails({...cardDetails, rank: rank}); }
     function handleNotesChange(e) { setCardDetails({...cardDetails, notes: e.target.value}); }
@@ -137,6 +146,7 @@ function CardPage() {
     const reviewTags = setTags.filter(tag => selectedTags.has(tag.tagId));
     const reviewData = {review_id: cardDetails.reviewId, card_name: cardDetails.faces[0].name, image_normal: cardDetails.faces[0].imageNormal};
     const displayTrophies = trophies.filter(trophy => trophy.review_id === reviewId);
+    const noTags = selectedTags.size === 0;
 
     return (
             <div className={styles.pageWrapper}>
@@ -153,23 +163,26 @@ function CardPage() {
                         <div className={styles.header}>
                             <h1>{cardDetails.faces[0].name}</h1>
                             <TrophyDisplay displayTrophies={displayTrophies} modalOnClick={() => setIsModalOpen(true)}></TrophyDisplay>
-                            <SaveButton handleSaveClick={handleSaveClick}/>
+                            <SaveButton handleSaveClick={handleSaveClick} saving={saving}/>
                             <TrophyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} 
                                          trophies={trophies} setTrophies={setTrophies} reviewData={reviewData}/>
                         </div>
                         <RankWidget rank={cardDetails.rank} handleRankChange={handleRankChange}/> 
                         <HideRatingsButton showRatings={showRatings} setShowRatings={setShowRatings}/>
                         <Notes notesValue={cardDetails.notes} handleNotesChange={handleNotesChange}/>
-                        <ReviewTagList reviewTags={reviewTags} handleDelete={handleDelete} selectedTags={selectedTags}
+                        <ReviewTagList reviewTags={reviewTags} handleDelete={handleDeleteTag} selectedTags={selectedTags}
                                        toggleTag={toggleTag} reviewId={reviewId} showPanel={showPanel}/>
                         <div>
-                            <TagPanelButton showPanel={showPanel} setShowPanel={setShowPanel}/>
-                            {showPanel && <TagPanel selectedTags={selectedTags} setSelectedTags={setSelectedTags}
+                            <TagPanelButton showPanel={showPanel} setShowPanel={setShowPanel} noTags={noTags}/>
+                            {showPanel && 
+                                            <>
+                                           <TagPanel selectedTags={selectedTags} setSelectedTags={setSelectedTags}
                                                     setTags={setTags} setSetTags={setSetTags} userSetId={cardDetails.userSetId}
-                                                    toggleTag={toggleTag}/>}
+                                                    toggleTag={toggleTag} handleDeleteTag={handleDeleteTag}/>
+                                            {deleteTagError && <p className={styles.deleteTagError}>{deleteTagError}</p>}
+                                            </>
+                            }
                         </div>
-                        
-                        {saving && <h4>Saving!</h4>}
                     </div>
                 </div>
             </div>

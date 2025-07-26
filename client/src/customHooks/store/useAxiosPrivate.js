@@ -33,6 +33,7 @@ axiosPrivate.interceptors.response.use(
             }
 
             //could logout on failed request
+            useAuthStore.getState().logout();
         }
 
         return Promise.reject(error);
