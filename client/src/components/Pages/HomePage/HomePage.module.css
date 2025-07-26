@@ -1,0 +1,55 @@
+.pageWrapper {
+    display: flex;
+    justify-content: space-around;
+    flex: 1;
+    height: 100vh;
+}
+
+.center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: 5%;
+
+    & .link {
+        width: 200px;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        background-color: white; 
+        border-radius: 5px; 
+        text-align: center;
+        text-decoration: none;
+        color: black;
+    }
+
+    & div {
+        display: flex;
+        gap: 1rem;
+        margin-top: 5rem;
+    }
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    font-size: 4.3rem;
+}
+
+.up {
+    display: inline-block;
+    position: relative;
+    top: -1rem;
+    transform: rotate(-3deg)
+}
+
+.down {
+    position: relative;
+    top: 1rem;
+    display: inline-block;
+    transform: rotate(2deg)
+
+}

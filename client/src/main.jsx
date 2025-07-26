@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css';
 import Root from './Root.jsx';
+import HomePage from './components/Pages/HomePage/HomePage.jsx';
 import SetReviewPage from "./components/Pages/SetReviewPagesComponents/SetReviewPage.jsx";
 import CardGalleryPage from './components/Pages/CardGalleryComponents/CardGalleryPage.jsx';
 import SetReviewViewPage from "./components/Pages/SetReviewViewPageComponents/SetReviewViewPage.jsx";
@@ -15,6 +16,7 @@ import TagPanel from "./components/Pages/CardPageComponents/Tag/TagPanel.jsx";
 import NotFoundPage from './components/Pages/ErrorHandling/NotFoundPage.jsx';
 import LoginPage from './components/Pages/LoginPage/LoginPage.jsx';
 import AuthGuard from './components/Pages/AuthGuard/AuthGuard.jsx';
+import PodPage from './components/Pages/PodPage/PodPage.jsx';
 
 const queryClient = new QueryClient(); 
 
@@ -23,6 +25,10 @@ const router = createBrowserRouter([
     path: "/",
     Component: Root,
     children: [
+      {
+        index: true,
+        Component: HomePage,
+      },
       {
         path: "register",
         Component: RegisterPage,
@@ -64,6 +70,10 @@ const router = createBrowserRouter([
               }
             ]
           },
+          {
+            path: "pods",
+            Component: PodPage
+          }
         ]
       }, 
       {

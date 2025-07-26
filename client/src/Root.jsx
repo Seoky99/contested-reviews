@@ -13,15 +13,16 @@ function Root() {
     const location = useLocation();
 
     return (
-        <div className={styles.pageWrapper}>
-            <Navigation/>
-            
-            <div className={styles.contentWrapper}>
-                <ErrorBoundary fallback={<ErrorFallbackPage/>} resetKeys={[location.pathname]}>
-                    <Outlet/>
-                </ErrorBoundary>
+        <div className={styles.rootWrapper}>
+            <div className={styles.viewWrapper}>
+                <Navigation/>
+                <div className={styles.contentWrapper}>
+                    <ErrorBoundary fallback={<ErrorFallbackPage/>} resetKeys={[location.pathname]}>
+                        <Outlet/>
+                    </ErrorBoundary>
+                </div>
             </div>
-            <Footer/>
+        <Footer/>
         </div> 
     );
 }

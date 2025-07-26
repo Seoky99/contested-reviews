@@ -1,0 +1,55 @@
+.cardWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    animation: 10s infinite alternate waterfall;
+}
+
+.image {
+    width: 300px;
+    height: auto;
+    margin: 0;
+}
+
+.card {
+    position: relative;
+    animation: 5s infinite ease-in-out alternate rotation;
+
+
+    & h1 {
+        position: absolute;
+        top: 1.4rem;
+        left: 1.4rem;
+        text-shadow: 2px 2px 2px black;
+        font-size: 4rem;
+    }
+}
+
+@keyframes waterfall {
+    0% {
+        opacity: 0%;
+    } 
+    10% {
+        opacity: 100%;
+    }
+    90% {
+        opacity: 100%;
+    }
+    100% {
+        opacity: 0%;
+    }
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(3deg);
+    }
+    50% {
+        transform: rotate(-3deg);
+    }
+    100% {
+        transform: rotate(3deg);
+    }
+}
