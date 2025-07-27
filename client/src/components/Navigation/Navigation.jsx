@@ -12,7 +12,7 @@ function Navigation() {
     return (
         <nav className={styles.navBar}>
             <Link to="/" className={styles.homeButton}>
-                <img src="/logo4.png" height="50" width="135"></img>
+                <img src="/logo5.png" height="50" width="135"></img>
             </Link>
             <div className={styles.searchWrapper}>
                 <input className={styles.searchBar} type="search" placeholder="Under Construction!"></input>
