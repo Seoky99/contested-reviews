@@ -38,4 +38,5 @@ function makeKeyRarity(review) {
     return review.rarity; 
 }
 
+
 export default { makeKeyNone, makeKeyColor, makeKeyCMC, makeKeyRank, makeKeyRarity}; 

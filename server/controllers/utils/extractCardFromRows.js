@@ -15,6 +15,7 @@
                 reviewId: row.review_id,
                 notes: row.notes, 
                 rank: row.rank,
+                isBonus: row.is_bonus,
                 faces: [],
                 tags: [],
             });

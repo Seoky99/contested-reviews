@@ -138,8 +138,7 @@ function CardPage() {
             console.log(err); 
         }
     }
-
-
+    
     function handleRankChange(rank) { setCardDetails({...cardDetails, rank: rank}); }
     function handleNotesChange(e) { setCardDetails({...cardDetails, notes: e.target.value}); }
   

@@ -1,7 +1,7 @@
 import styles from "./GalleryPartition.module.css";
 
 function GalleryPartition({userSetId, reviewArray, renderChild}) {
-    const { key: name, items } = reviewArray;
+    let { key: name, items } = reviewArray;
     
     const display = items.map(review => {
         return renderChild(review, userSetId);

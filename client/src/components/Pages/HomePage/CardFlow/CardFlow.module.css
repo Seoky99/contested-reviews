@@ -17,7 +17,6 @@
     position: relative;
     animation: 5s infinite ease-in-out alternate rotation;
 
-
     & h1 {
         position: absolute;
         top: 1.4rem;

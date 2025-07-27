@@ -7,7 +7,16 @@ function Mechanisms({partition, sort, filter, setParams}) {
                     <label htmlFor="filtering">Filter: </label>
                     <select name="fitering" id="filtering" value={filter}  onChange={(e) => { setParams('filter', e.target.value)}}>
                         <option default value="none">None</option>
-                        <option value="color">By Red</option>
+                        <option value="white">By White</option>
+                        <option value="blue">By Blue</option>
+                        <option value="black">By Black</option>
+                        <option value="red">By Red</option>
+                        <option value="green">By Green</option>
+                        <option value="multicolor">By Multicolor</option>
+                        <option value="hasTag">Has Tag</option>
+                        <option value="mainset">From Main Set</option>
+                        <option value="bonus">From Bonus</option>
+                        <option disabled>Advanced Filters</option>
                     </select>
                 </div>
                 

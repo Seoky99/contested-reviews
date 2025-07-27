@@ -4,5 +4,6 @@
 
     & select {
         padding: 0.4rem 0.2rem;
+        cursor: pointer;
     }
 }

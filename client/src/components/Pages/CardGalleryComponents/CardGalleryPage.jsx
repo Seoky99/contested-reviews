@@ -85,7 +85,7 @@ function CardGalleryPage() {
                 {sideBarActive ? <SideBar shrinkBar={() => setSideBarActive(!sideBarActive)}>
                                     <Mechanisms filter={filter} sort={sort} partition={partition} setParams={setParams}/>
                                     <EditButton userSetId={userSetId} params={params}/>
-                                    <button onClick={() => setShowRatings(!showRatings)}>{showRatings?'Hide Ratings':'Show Ratings'}</button>
+                                    <button className={styles.ratingsButton} onClick={() => setShowRatings(!showRatings)}>{showRatings?'Hide Ratings':'Show Ratings'}</button>
                                 </SideBar> : 
                                 <IconBar expandBar={() => setSideBarActive(!sideBarActive)}>
                                     <MechanismIcons filter={filter} sort={sort} partition={partition}/>

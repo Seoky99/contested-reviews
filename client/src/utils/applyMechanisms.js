@@ -1,6 +1,7 @@
 import PK from "./partitionKeys";
 import PO from "./partitionOrders";
 import sortUtils from "./sortingUtils";
+import filterUtils from "./filterUtils";
 
 function partitionReviews(reviews, makeKey, orderKeys) {
     const partitionMap = new Map(); 
@@ -48,10 +49,6 @@ function sortReviews(reviews, sortFunction) {
     return sorted; 
 }
 
-function filterRed(review) {
-    return review.faces[0].colors.includes('R');
-}
-
 function applyMechanisms(reviewData, filter, partition, sort) {
     //apply partition first 
     let makeKey; 
@@ -63,8 +60,32 @@ function applyMechanisms(reviewData, filter, partition, sort) {
         case 'none':
             filterFunction = (review) => review;
             break; 
-        case 'color':
-            filterFunction = filterRed; 
+        case 'white':
+            filterFunction = (review) => filterUtils.filterByMonocolor(review, 'W'); 
+            break;       
+        case 'blue':
+            filterFunction = (review) => filterUtils.filterByMonocolor(review, 'U'); 
+            break;       
+        case 'black':
+            filterFunction = (review) => filterUtils.filterByMonocolor(review, 'B'); 
+            break;       
+        case 'red':
+            filterFunction = (review) => filterUtils.filterByMonocolor(review, 'R'); 
+            break;
+        case 'green':
+            filterFunction = (review) => filterUtils.filterByMonocolor(review, 'G'); 
+            break;
+        case 'multicolor':
+            filterFunction = (review) => filterUtils.filterByMulticolor(review); 
+            break;
+        case 'hasTag':
+            filterFunction = (review) => filterUtils.filterByTagExists(review); 
+            break;
+        case 'mainset':
+            filterFunction = (review) => filterUtils.filterByMainSet(review); 
+            break;
+        case 'bonus':
+            filterFunction = (review) => filterUtils.filterByBonus(review); 
             break;
         default: 
             throw new Error("filter function fall through");

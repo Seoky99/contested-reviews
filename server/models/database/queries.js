@@ -227,8 +227,9 @@ async function getSets(isBonus=false) {
  * @returns 
  */
 async function getReviewsWithCards(userSetId) {
-    const query = `SELECT cards.*, faces.*, reviews.*, tags.name AS tag_name FROM reviews 
+    const query = `SELECT cards.*, faces.*, reviews.*, sets.is_bonus, tags.name AS tag_name FROM reviews 
                    JOIN cards ON cards.card_id = reviews.card_id 
+                   JOIN sets ON cards.set_id = sets.set_id
                    JOIN faces ON cards.card_id = faces.card_id 
                    LEFT JOIN review_tags ON reviews.review_id = review_tags.review_id
                    LEFT JOIN tags ON tags.tag_id = review_tags.tag_id
