@@ -87,6 +87,9 @@ function applyMechanisms(reviewData, filter, partition, sort) {
         case 'bonus':
             filterFunction = (review) => filterUtils.filterByBonus(review); 
             break;
+        case 'tag': 
+            filterFunction = (review) => filterUtils.filterByTag(review); 
+            break;
         default: 
             throw new Error("filter function fall through");
     }

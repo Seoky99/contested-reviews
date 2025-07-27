@@ -23,7 +23,8 @@ async function getPageInformation(req, res) {
             userId: row.user_id,
             tagName: row.name, 
             userSetId: row.user_set_id,
-            tagId: row.tag_id
+            tagId: row.tag_id,
+            tagCount: Number(row.count)
         }});
         return camelCase;     
     }

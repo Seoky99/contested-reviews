@@ -3,6 +3,8 @@ import { getSetReview, getSetReviewCardsEdit, postSetReviewCardsEdit, createSetR
     putSetReviewTrophies, getCardPageInformation, patchCardFromSetReview, deleteSetReview, getSetReviewStatsColors } from "../controllers/setReviewController.js";
 import verifyJWT from "../middleware/verifyJWT.js";
 import asyncHandler from "express-async-handler";
+import { setReviewSchema } from "../controllers/schemas/setReviewSchemas.js";
+import validateRequest from "../middleware/validateRequest.js";
 
 const setReviewRouter = express.Router(); 
 
@@ -25,7 +27,7 @@ setReviewRouter.get("/:setid/cards", asyncHandler(getSetReviewCards));
 setReviewRouter.delete("/:setid", asyncHandler(deleteSetReview));
 setReviewRouter.get("/:setid", asyncHandler(getSetReview));
 
-setReviewRouter.post("/", asyncHandler(createSetReview));
+setReviewRouter.post("/", validateRequest(setReviewSchema), asyncHandler(createSetReview));
 setReviewRouter.get("/", asyncHandler(getSetReviews));
 
 export default setReviewRouter; 

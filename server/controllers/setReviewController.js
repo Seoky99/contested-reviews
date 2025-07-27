@@ -26,9 +26,7 @@ async function createSetReview(req, res) {
     const { sr_name, setid } = req.body; 
     
     //sent via checkbox in the form 
-    const defaultApplied = 'defaultApplied' in req.body; 
-    const bonusAdded = 'bonusAdded' in req.body; 
-    const makeShard = 'makeShard' in req.body; 
+    const { defaultApplied, bonusAdded, makeShard } = req.body; 
 
     const {user_set_img, name, user_set_id } = await db.createSetReview(userId, setid, sr_name, defaultApplied, bonusAdded, makeShard);
     res.json({user_set_img, name, user_set_id});

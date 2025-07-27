@@ -20,7 +20,6 @@ function SetReviewAddPage() {
     if (error) { return <h1>Error!</h1>}; 
     if (loading) { return <h1>Loading!</h1>};
 
-    console.log(sets);
 
     const displaySets = sets.map(set => {
         return(

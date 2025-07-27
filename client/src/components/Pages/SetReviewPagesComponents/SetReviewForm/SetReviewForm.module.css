@@ -23,8 +23,13 @@
     width: 10rem;
     margin-left: auto;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 .checkBox {
   transform: scale(1.5);
+}
+
+.errorStyle {
+  color: red;
 }

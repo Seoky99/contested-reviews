@@ -9,18 +9,19 @@ import EditIcon from '@mui/icons-material/Edit';
  * @param {boolean} props.isSelected - The tag is now associated with this review.                                                     
  * @returns 
  */
-function Tag({tagName, handleDelete, toggleTag, viewTaggedCards, tagId, isSelected, isManageMode}) {
+function Tag({tag, handleDelete, toggleTag, viewTaggedCards, isSelected, isManageMode}) {
 
+    const {tagCount, tagName} = tag;
     const onClickHandler = isManageMode ? toggleTag : viewTaggedCards; 
     const selectStyle = isSelected && isManageMode ? styles.isSelected : ``;
 
     return (
             <div className={`${styles.tagStyles} ${selectStyle}`} onClick={onClickHandler}>
-                <p>{tagName}</p>
+                <p>{tagName} <span><i>({tagCount})</i></span></p>
                 <div className={styles.tagButtons}>
                     { isManageMode && 
                         <>
-                            <button onClick={() => console.log("implement editing!")}><EditIcon className={styles.icon}/></button>
+                            {/*<button onClick={() => console.log("implement editing!")}><EditIcon className={styles.icon}/></button> */}
                             <button onClick={handleDelete}><DeleteIcon className={styles.icon}/></button>
                         </>
                      }

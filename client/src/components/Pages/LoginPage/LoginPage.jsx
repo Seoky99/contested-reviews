@@ -27,7 +27,6 @@ function LoginPage() {
             navigate(from, {replace: true});
 
         } catch (err) {
-
             const response = err.response; 
 
             if (response) {

@@ -25,6 +25,9 @@ function CardGalleryPage() {
 
     userSetId = Number(userSetId);
 
+    //TODO: Support multi-filtering by breaking up filter to (tag=tagName, color=colorValue instead)
+    //This will require a cache redesign ... make it one key? 
+
     const params = new URLSearchParams(location.search); 
     const filter = params.has('filter') ? params.get('filter') : 'none';
     const sort = params.has('sort') ? params.get('sort') : 'none';

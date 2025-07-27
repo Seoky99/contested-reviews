@@ -3,9 +3,7 @@ import styles from "./TagPanel.module.css";
 import TagList from "./TagList";
 import axiosPrivate from "../../../../customHooks/store/useAxiosPrivate";
 
-//delete tags if you can- check if setId
 function TagPanel({selectedTags, setSelectedTags, setTags, setSetTags, userSetId, toggleTag, handleDeleteTag}) {
-
     const [newTagName, setNewTagName] = useState('');
     const [tagCreationError, setTagCreationError] = useState(null);
     const noTags = setTags.length === 0; 
@@ -16,6 +14,8 @@ function TagPanel({selectedTags, setSelectedTags, setTags, setSetTags, userSetId
             const successTag = (await axiosPrivate.post(url, {tagName: newTagName, userSetId}, {
                 headers: {'Content-Type': 'application/json'},
             })).data;
+
+            successTag.tagCount = 1;
 
             const newSet = new Set(selectedTags); 
             newSet.add(successTag.tagId);

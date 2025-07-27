@@ -37,12 +37,15 @@ async function getSetReviewCardsEdit(userSetId) {
         const allCardsQuery = `SELECT
                                 cards.*,
                                 faces.*,
+                                sets.is_bonus, 
                                 reviews.review_id,
                                 reviews.rank,
                                 tags.name AS tag_name
                             FROM cards
                             LEFT JOIN reviews
                                 ON cards.card_id = reviews.card_id AND reviews.user_set_id = $1
+                            LEFT JOIN sets 
+                                ON sets.set_id = cards.set_id
                             LEFT JOIN faces
                                 ON cards.card_id = faces.card_id
                             LEFT JOIN review_tags
@@ -50,7 +53,8 @@ async function getSetReviewCardsEdit(userSetId) {
                             LEFT JOIN tags
                                 ON tags.tag_id = review_tags.tag_id
                             WHERE cards.set_id = $2${includes_bonus ? ` OR cards.set_id IN 
-                                   (SELECT bonus_set_id FROM bonus_links WHERE main_set_id = $2)`: ``}`;
+                                   (SELECT bonus_set_id FROM bonus_links WHERE main_set_id = $2)`: ``}
+                            ORDER BY cards.collector_number`;
     
         const { rows: allCards } = await transaction.query(allCardsQuery, [userSetId, set_id]);
 
@@ -386,14 +390,18 @@ async function getReviewPageInformation(reviewId, userId) {
 
     //remember to call extract cards from rows  
 
-    //extracting tags 
+    //extracting tags that belong to that review 
     const reviewTagQuery = `SELECT * FROM review_tags 
                     JOIN tags ON tags.tag_id = review_tags.tag_id 
                     WHERE user_id = $1 AND review_id = $2`;
     
     const reviewTagDataArray = [userId, reviewId]; 
 
-    const allTagsQuery = `SELECT * FROM tags WHERE user_set_id = (SELECT user_set_id FROM reviews WHERE review_id = $1)`;
+    //extracting tags that belong to the user set - including count of tag instances 
+    const allTagsQuery = `SELECT COUNT(review_tags.tag_id), tags.* from tags 
+                          LEFT JOIN review_tags ON tags.tag_id = review_tags.tag_id 
+                          WHERE tags.user_set_id = (SELECT user_set_id FROM reviews WHERE review_id = $1) 
+                          GROUP BY tags.tag_id;`
 
     const allTagsDataArray = [reviewId]; 
 

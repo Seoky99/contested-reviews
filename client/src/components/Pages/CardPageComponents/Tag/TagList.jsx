@@ -4,8 +4,10 @@ import styles from "./TagList.module.css";
 function TagList({setTags, handleDelete, selectedTags, toggleTag}) {
     
     const tagList = setTags.map(tag => {
-        return <Tag key={tag.tagId} tagName={tag.tagName} handleDelete={() => handleDelete(tag.tagId)} 
-                    tagId={tag.tagId} isSelected={selectedTags.has(tag.tagId)}
+
+        console.log(tag);
+        return <Tag key={tag.tagId} tag={tag} handleDelete={() => handleDelete(tag.tagId)} 
+                    isSelected={selectedTags.has(tag.tagId)}
                     isManageMode={true} toggleTag={() => toggleTag(tag.tagId)}/>
     });
 

@@ -5,8 +5,7 @@ function TagList({reviewTags, handleDelete, selectedTags, toggleTag, reviewId, s
     
     const tagsDisplay =  
         reviewTags.map(tag => {
-            return <Tag key={tag.tagId} tagName={tag.tagName}
-            tagId={tag.tagId} handleDelete={() => handleDelete(reviewId, tag.tagId)} isSelected={selectedTags.has(tag.tagId)}
+            return <Tag key={tag.tagId} tag={tag} handleDelete={() => handleDelete(reviewId, tag.tagId)} isSelected={selectedTags.has(tag.tagId)}
             isManageMode={showPanel} toggleTag={() => toggleTag(tag.tagId)} viewTaggedCards={() => console.log("Implement me!")}></Tag>
         })
 

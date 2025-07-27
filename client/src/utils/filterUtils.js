@@ -18,4 +18,8 @@ function filterByBonus(review) {
     return review.isBonus; 
 }
 
-export default { filterByMonocolor, filterByMulticolor, filterByTagExists, filterByMainSet, filterByBonus };
+function filterByTag(review, tagValue) {
+    return review.tags.includes(tagValue);
+}
+
+export default { filterByMonocolor, filterByMulticolor, filterByTagExists, filterByMainSet, filterByBonus, filterByTag };
