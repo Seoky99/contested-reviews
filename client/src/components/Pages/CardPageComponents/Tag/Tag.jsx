@@ -1,7 +1,7 @@
 import styles from "./Tag.module.css";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-
+import VisibilityIcon from '@mui/icons-material/Visibility';
 /**
  * 
  * @param {Object} props
@@ -11,20 +11,32 @@ import EditIcon from '@mui/icons-material/Edit';
  */
 function Tag({tag, handleDelete, toggleTag, viewTaggedCards, isSelected, isManageMode}) {
 
-    const {tagCount, tagName} = tag;
-    const onClickHandler = isManageMode ? toggleTag : viewTaggedCards; 
+    const {tagCount, tagName, tagId} = tag;
+    /*const onClickHandler = isManageMode ? toggleTag : viewTaggedCards; */
     const selectStyle = isSelected && isManageMode ? styles.isSelected : ``;
+    const toggleOnManage = isManageMode ? toggleTag : undefined; 
+
+    function viewStopProp(e) {
+        e.stopPropagation();
+        viewTaggedCards(tagId);  
+    }
+
+    function deleteStopProp(e) {
+        e.stopPropagation(); 
+        handleDelete(tagId);
+    }
 
     return (
-            <div className={`${styles.tagStyles} ${selectStyle}`} onClick={onClickHandler}>
+            <div className={`${styles.tagStyles} ${selectStyle}`} onClick={() => toggleOnManage(tagId)}>
                 <p>{tagName} <span><i>({tagCount})</i></span></p>
                 <div className={styles.tagButtons}>
-                    { isManageMode && 
+                    <button onClick={viewStopProp}> <VisibilityIcon fontSize="small"/></button>
+                    { isManageMode &&
                         <>
                             {/*<button onClick={() => console.log("implement editing!")}><EditIcon className={styles.icon}/></button> */}
-                            <button onClick={handleDelete}><DeleteIcon className={styles.icon}/></button>
+                            <button onClick={deleteStopProp}><DeleteIcon className={styles.icon}/></button>
                         </>
-                     }
+                    }
                 </div>
             </div>
     )

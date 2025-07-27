@@ -19,7 +19,12 @@ function filterByBonus(review) {
 }
 
 function filterByTag(review, tagValue) {
-    return review.tags.includes(tagValue);
+
+    const hasId = review.tags.filter(tag => {
+        return Number(tag.tagId) === Number(tagValue)
+    });
+    
+    return hasId.length >=1;
 }
 
 export default { filterByMonocolor, filterByMulticolor, filterByTagExists, filterByMainSet, filterByBonus, filterByTag };

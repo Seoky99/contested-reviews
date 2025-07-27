@@ -1,14 +1,14 @@
 import Tag from "./Tag";
 import styles from "./TagList.module.css";
 
-function TagList({setTags, handleDelete, selectedTags, toggleTag}) {
+function TagList({setTags, handleDelete, selectedTags, toggleTag, viewTaggedCards}) {
     
     const tagList = setTags.map(tag => {
 
-        console.log(tag);
-        return <Tag key={tag.tagId} tag={tag} handleDelete={() => handleDelete(tag.tagId)} 
+        return <Tag key={tag.tagId} tag={tag} handleDelete={handleDelete} 
                     isSelected={selectedTags.has(tag.tagId)}
-                    isManageMode={true} toggleTag={() => toggleTag(tag.tagId)}/>
+                    isManageMode={true} toggleTag={toggleTag}
+                    viewTaggedCards={viewTaggedCards}/>
     });
 
     return (

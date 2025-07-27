@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { useParams, useLocation, Link } from "react-router";
+import { useParams, useLocation, Link, useNavigate } from "react-router";
 import { applyMechanisms } from "../../../utils/applyMechanisms.js";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 
@@ -18,7 +18,6 @@ import navTools from "../../../utils/cardNavigation.js";
 import ReviewCard from "./ReviewCard/ReviewCard.jsx";
 import ArrowBackIosTwoToneIcon from '@mui/icons-material/ArrowBackIosTwoTone';
 import ErrorPage from "../ErrorHandling/ErrorPage.jsx";
-import { set } from "zod";
 
 function CardPage() {
     let { userSetId, /*cardId,*/ reviewId } = useParams(); 
@@ -46,6 +45,7 @@ function CardPage() {
     const [ saving, setSaving ] = useState('idle');
 
     const queryClient = useQueryClient(); 
+    const navigate = useNavigate();
 
     userSetId = Number(userSetId);
     reviewId = Number(reviewId);
@@ -107,7 +107,6 @@ function CardPage() {
     }
 
     function toggleTag(tagId) {
-
         const removeTag = selectedTags.has(tagId);
 
         if (removeTag) {
@@ -141,6 +140,10 @@ function CardPage() {
             setTimeout(() => setSaving('idle'), 1000);
             console.log(err); 
         } 
+    }
+
+    function viewTaggedCards(tagId) {
+        navigate(`/setreviews/${userSetId}/cards?filter=tag:${tagId}`);
     }
 
     async function handleDeleteTag(tagId) {
@@ -196,14 +199,14 @@ function CardPage() {
                         <HideRatingsButton showRatings={showRatings} setShowRatings={setShowRatings}/>
                         <Notes notesValue={cardDetails.notes} handleNotesChange={handleNotesChange}/>
                         <ReviewTagList reviewTags={reviewTags} handleDelete={handleDeleteTag} selectedTags={selectedTags}
-                                       toggleTag={toggleTag} reviewId={reviewId} showPanel={showPanel}/>
+                                       toggleTag={toggleTag} reviewId={reviewId} showPanel={showPanel} viewTaggedCards={viewTaggedCards}/>
                         <div>
                             <TagPanelButton showPanel={showPanel} setShowPanel={setShowPanel} noTags={noTags}/>
                             {showPanel && 
                                 <>
                                     <TagPanel selectedTags={selectedTags} setSelectedTags={setSelectedTags}
                                             setTags={setTags} setSetTags={setSetTags} userSetId={cardDetails.userSetId}
-                                            toggleTag={toggleTag} handleDeleteTag={handleDeleteTag}/>
+                                            toggleTag={toggleTag} handleDeleteTag={handleDeleteTag} viewTaggedCards={viewTaggedCards}/>
                                     {deleteTagError && <p className={styles.deleteTagError}>{deleteTagError}</p>}
                                 </>
                             }

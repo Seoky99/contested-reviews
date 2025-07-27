@@ -5,7 +5,7 @@
 }
 
 .contentWrapper {
-    padding: 2rem;
+    padding: 1.5rem;
     flex: 1;
     display: flex;
     flex-direction: column; 

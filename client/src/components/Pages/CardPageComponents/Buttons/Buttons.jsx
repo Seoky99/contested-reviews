@@ -22,7 +22,6 @@ function SaveButton({handleSaveClick, saving}) {
 
 function TagPanelButton({showPanel, setShowPanel, noTags}) {
 
-    console.log(noTags);
     const label = noTags ? 'Add a Tag!' : 'Manage Tags';
 
     return (

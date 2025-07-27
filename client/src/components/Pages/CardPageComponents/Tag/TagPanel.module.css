@@ -10,7 +10,11 @@
 .createTag {
     display: flex;
     gap: 1rem;
-    align-self: center;
+}
+
+.formWrapper {
+  display: flex;
+  justify-content: center;
 }
 
 .createInput {
@@ -50,7 +54,7 @@
   padding: 0.2rem;
 }
 
-.tagError {
+.error {
   color: red;
 }
 

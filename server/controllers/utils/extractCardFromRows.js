@@ -34,7 +34,8 @@
         });
 
         if (row.tag_name !== null) {cardMap.get(row.card_id).tags.push({
-            tagName: row.tag_name
+            tagName: row.tag_name,
+            tagId: row.tag_id
         })}
     }
     const sorted = Array.from(cardMap.values()).sort((a, b) => a.collectorNumber - b.collectorNumber);
