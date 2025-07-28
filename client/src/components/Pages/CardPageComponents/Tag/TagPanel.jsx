@@ -7,9 +7,11 @@ import axiosPrivate from "../../../../customHooks/store/useAxiosPrivate";
 
 function TagPanel({selectedTags, setSelectedTags, setTags, setSetTags, userSetId, toggleTag, handleDeleteTag, viewTaggedCards}) {
     const noTags = setTags.length === 0; 
+    userSetId = Number(userSetId);
 
      async function handleCreatingTag(data) {
         const body = {...data, userSetId};
+        console.log(body);
 
         try {
             const url = `tags`;
@@ -26,7 +28,6 @@ function TagPanel({selectedTags, setSelectedTags, setTags, setSetTags, userSetId
             setSetTags([...setTags, successTag]);
 
         } catch (err) {
-            setTagCreationError('Failed to create tag');
             console.log(err); 
         }
     }

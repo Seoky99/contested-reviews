@@ -9,6 +9,7 @@ async function createTag(req, res) {
     const userId = req.userId; 
 
     const { userSetId, tagName } = req.body;  
+
     if (!(await verifyAccessToUserSet(userId, userSetId))) {
         return res.status(403).json({message: "Forbidden: You don't have access to this user set."})
     }
@@ -26,18 +27,17 @@ async function createTag(req, res) {
 async function deleteTag(req, res) {
     const userId = req.userId; 
 
-    const { tagid } = req.params; 
-    if (!(await verifyAccessToTag(userId, tagid))) {
+    const { tagId } = req.params; 
+    if (!(await verifyAccessToTag(userId, tagId))) {
         return res.status(403).json({message: "Forbidden: You don't have access to this tag."})
     }
 
-    await db.deleteTag(userId, tagid); 
+    await db.deleteTag(userId, tagId); 
 
     res.sendStatus(204);
 }
 
-async function getAllUserTags (req, res) {
-
+/*async function getAllUserTags (req, res) {
     //implement authentication 
     const userId = 1; 
 
@@ -53,7 +53,7 @@ async function getAllUserTags (req, res) {
     })
 
     res.json(camelCaseChange);
-}
+} */
 
 async function patchTag(req, res) {
     //implement authentication 
@@ -67,4 +67,4 @@ async function patchTag(req, res) {
     res.json({tagid, tagName});
 }
 
-export { getAllUserTags, createTag, patchTag, deleteTag };
+export { createTag, patchTag, deleteTag };
