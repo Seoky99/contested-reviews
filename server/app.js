@@ -17,12 +17,11 @@ import logoutRouter from './routes/logoutRouter.js';
 const app = express();
 
 const corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: ['https://contested-reviews.vercel.app/'],
   credentials: true
 }
 
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
-
 
 app.use(cors(corsOptions));
 app.use(express.json()); 

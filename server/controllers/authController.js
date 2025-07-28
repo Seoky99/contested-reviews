@@ -35,14 +35,13 @@ async function loginUser(req, res) {
             process.env.REFRESH_TOKEN_SECRET,
             { expiresIn: "7d" }
         );
-
-
         //TODO: extend length of refreshToken by storing in db too
         
         //add Secure: process.env.NODE_ENV ==='production'? when in production 
         res.cookie('jwt', refreshToken, {
             httpOnly: true, 
             sameSite: "Strict",
+            secure: process.env.NODE_ENV === 'production',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
