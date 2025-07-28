@@ -3,7 +3,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router";
 import styles from "./RegisterPage.module.css";
-import axiosPrivate from "../../../customHooks/store/useAxiosPrivate.js";
+import axiosInstance from "../../../customHooks/store/axiosInstance.js";
 
 function RegisterPage() {
 
@@ -31,7 +31,7 @@ function RegisterPage() {
 
     async function registerUser(data) {
         try {
-            const response = await axiosPrivate.post("/register", data);
+            const response = await axiosInstance.post("/register", data);
             //TODO: implement redirection here!
             navigate("/login");
         } catch (err) {

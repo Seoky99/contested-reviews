@@ -1,8 +1,8 @@
 import { create } from "zustand";
-import axiosPrivate from "../store/useAxiosPrivate.js";
+import axiosInstance from "./axiosInstance.js"
 
 async function loginUser(data, set) {
-    const response = await axiosPrivate.post("/auth", data);
+    const response = await axiosInstance.post("/auth", data);
     const accessToken = response.data.accessToken;
     const payload = JSON.parse(atob(accessToken.split(".")[1]));
     const userId = payload.userId;
@@ -12,7 +12,7 @@ async function loginUser(data, set) {
 
 async function refreshToken(set) {
     try {
-        const response = await axiosPrivate.get("/refresh");
+        const response = await axiosInstance.get("/refresh");
         const accessToken = response.data.accessToken; 
         const payload = JSON.parse(atob(accessToken.split(".")[1]));
         const userId = payload.userId;
@@ -26,7 +26,7 @@ async function refreshToken(set) {
 }
 
 async function logoutUser(set) {
-    await axiosPrivate.get("/logout");
+    await axiosInstance.get("/logout");
     set({accessToken: null, userId: null, hasTriedRefresh: true});
 }
 

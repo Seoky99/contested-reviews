@@ -18,8 +18,10 @@ const app = express();
 
 const corsOptions = {
   origin: ['https://contested-reviews.vercel.app'],
+  //origin: ['http://localhost:5173'],
   credentials: true
 }
+
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
 
 app.use(cors(corsOptions));
@@ -28,7 +30,6 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(limiter);
 app.use(helmet());
-
 
 app.use('/api/register', registerRouter);
 app.use('/api/auth', authRouter);
