@@ -1,4 +1,3 @@
-
 /**
  * Generates a query ($1, $2, .... $colCount), ($colCount + 1...) for each card  
  * @param {*} initialQuery 
