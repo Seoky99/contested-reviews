@@ -1,5 +1,5 @@
 import express from "express";
-import { createTag, patchTag, deleteTag } from "../controllers/tagController.js";
+import { createTag, deleteTag } from "../controllers/tagController.js";
 import { tagCreationSchema, tagIdSchema } from "../controllers/schemas/tagSchemas.js";
 import verifyJWT from "../middleware/verifyJWT.js";
 import asyncHandler from "express-async-handler";

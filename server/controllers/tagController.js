@@ -55,7 +55,7 @@ async function deleteTag(req, res) {
     res.json(camelCaseChange);
 } */
 
-async function patchTag(req, res) {
+/*async function patchTag(req, res) {
     //implement authentication 
     const userId = 1; 
 
@@ -65,6 +65,6 @@ async function patchTag(req, res) {
     await db.patchTag(userId, tagid, tagName); 
     
     res.json({tagid, tagName});
-}
+} */
 
-export { createTag, patchTag, deleteTag };
+export { createTag, deleteTag };

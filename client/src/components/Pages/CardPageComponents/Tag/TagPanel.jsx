@@ -11,8 +11,7 @@ function TagPanel({selectedTags, setSelectedTags, setTags, setSetTags, userSetId
 
      async function handleCreatingTag(data) {
         const body = {...data, userSetId};
-        console.log(body);
-
+        
         try {
             const url = `tags`;
             const successTag = (await axiosPrivate.post(url, body, {

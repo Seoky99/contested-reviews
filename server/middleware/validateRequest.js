@@ -5,6 +5,7 @@ export function validateRequest({bodySchema, paramsSchema}) {
         if (bodySchema) {
 
             console.log("body parsing!");
+            console.log(req.body);
 
             const result = bodySchema.safeParse(req.body);
 
@@ -12,17 +13,20 @@ export function validateRequest({bodySchema, paramsSchema}) {
                 return res.status(400).json({source: "body", errors: result.error.flatten()});
             }
 
+
             req.body = result.data;
         }
 
         if (paramsSchema) {
 
-            console.log("params parsing!");
-
             const result = paramsSchema.safeParse(req.params);
+            
             if (!result.success) {
                 return res.status(400).json({ source: "params", errors: result.error.flatten() });
             }
+
+            console.log(result.data);
+
 
             req.params = result.data;
         }

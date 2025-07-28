@@ -1,4 +1,4 @@
-const RANK_ORDER = ['S+', 'S', 'S-', 'A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F+', 'F', 'F-', 'NR'];
+const RANK_ORDER = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F+', 'F', 'F-', 'NR'];
 const RARITY_ORDER = ['common', 'uncommon', 'rare', 'mythic']; 
 
 const COLOR_NAMES_ARRAY = [

@@ -32,7 +32,7 @@ function RankWidget({rank, handleRankChange}) {
         handleRankChange(base + (newModifier === null ? `` : newModifier));
     }
 
-    const AVAILABLE_RANKS = [ 'S', 'A', 'B', 'C', 'D', 'F']; 
+    const AVAILABLE_RANKS = [ 'A', 'B', 'C', 'D', 'F']; 
     const displayButtons = AVAILABLE_RANKS.map(availableRank => {
         return <LetterButton key={availableRank} displayRank={availableRank} base={base} handleClick={() => handleLetterButton(availableRank)}/>
     })

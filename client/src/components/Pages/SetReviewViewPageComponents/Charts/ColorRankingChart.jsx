@@ -36,13 +36,13 @@ function TempColorRankingChart({ averages }) {
 
 
     const scoreToRank = [
-        'F-', 'F', 'D-', 'D', 'D+', 'C-', 'C', 'C+',
-        'B-', 'B', 'B+', 'A-', 'A', 'A+', 'S', 'S+'
+        'F-', 'F', 'F+', 'D-', 'D', 'D+', 'C-', 'C', 'C+',
+        'B-', 'B', 'B+', 'A-', 'A', 'A+'
     ];
 
     function getRankFromScore(score) {
-    const index = Math.round((score / 10) * 15);
-    return scoreToRank[Math.min(index, 15)];
+        const index = Math.round((score / 10) * 15);
+        return scoreToRank[Math.min(index, 15)];
     }
 
 
@@ -70,7 +70,7 @@ function TempColorRankingChart({ averages }) {
             min: 0,
             max: 10,
             ticks: {
-            stepSize: 0.6667,
+            stepSize: 0.7143,
             callback: (value) => {
                 const rank = getRankFromScore(value);
                 return rank;

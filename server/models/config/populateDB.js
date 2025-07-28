@@ -303,7 +303,7 @@ async function updateSetReviews(setCode) {
       WHEN cards.rarity = 'common' THEN 'C'
       WHEN cards.rarity = 'uncommon' THEN 'B'
       WHEN cards.rarity = 'rare' THEN 'A'
-      WHEN cards.rarity = 'mythic' THEN 'S'
+      WHEN cards.rarity = 'mythic' THEN 'A+'
       ELSE 'C'
     END
     FROM user_sets, cards 

@@ -9,13 +9,13 @@ import { verifyAccessToReview } from "./utils/verify.js";
  */
 async function getPageInformation(req, res) {
     const userId = req.userId; 
-    const { reviewid } = req.params; 
+    const { reviewId } = req.params; 
 
-    if (!(await verifyAccessToReview(userId, reviewid))) {
+    if (!(await verifyAccessToReview(userId, reviewId))) {
         return res.status(403).json({message: "Forbidden: You don't have access to this review."})
     }
     
-    const { cardDetails, reviewTags, allTags, trophies } = await ndb.getReviewPageInformation(reviewid, userId);
+    const { cardDetails, reviewTags, allTags, trophies } = await ndb.getReviewPageInformation(reviewId, userId);
 
     function camelCaseChange(rows) {
     const camelCase = rows.map(row => {
@@ -42,29 +42,31 @@ async function getPageInformation(req, res) {
 async function updatePageInformation(req, res) {
     const userId = req.userId; 
 
-    const { reviewid } = req.params;
+    const { reviewId } = req.params;
     let { rank, notes, selectedTags, trophies, userSetId } = req.body;  
 
-    if (!(await verifyAccessToReview(userId, reviewid))) {
+    console.log(rank, notes, selectedTags, trophies, userSetId  );
+
+    if (!(await verifyAccessToReview(userId, reviewId))) {
         return res.status(403).json({message: "Forbidden: You don't have access to this review."})
     }
 
     trophies = trophies.map(trophy => ({ trophy_id: trophy.trophy_id, review_id: trophy.review_id})); 
 
-    await ndb.performPageUpdate({reviewId: reviewid, rank, notes, selectedTags, trophies, userSetId});
+    await ndb.performPageUpdate({reviewId: reviewId, rank, notes, selectedTags, trophies, userSetId});
 
     res.json({rank, notes, selectedTags, trophies});
 }
 
-async function assignTagToReview(req, res) {
+/*async function assignTagToReview(req, res) {
 
     //implement authentication 
     const userId = 1; 
 
-    const { reviewid } = req.params; 
+    const { reviewId } = req.params; 
     const { tagIds } = req.body; 
 
-    const rows = await db.assignTagToReview(reviewid, tagIds); 
+    const rows = await db.assignTagToReview(reviewId, tagIds); 
 
     const camelCaseChange = rows.map(row => {
         return {
@@ -73,16 +75,16 @@ async function assignTagToReview(req, res) {
         }    
     })
     res.json(camelCaseChange);
-}
+} */
 
-async function getTagsFromReview(req, res) {
+/*async function getTagsFromReview(req, res) {
 
     //implement authentication 
     const userId = 1; 
 
-    const { reviewid } = req.params; 
+    const { reviewId } = req.params; 
 
-    const rows = await db.getTagsFromReview(userId, reviewid); 
+    const rows = await db.getTagsFromReview(userId, reviewId); 
     const camelCaseChange = rows.map(row => {
         return {
             userId: row.user_id,
@@ -92,16 +94,16 @@ async function getTagsFromReview(req, res) {
         }    
     })
     res.json(camelCaseChange);
-}
+} */
 
-async function getTrophiesFromReview(req, res) {
+/*async function getTrophiesFromReview(req, res) {
     
     //implement authentication 
     const userId = 1; 
 
-    const { reviewid } = req.params; 
+    const { reviewId } = req.params; 
 
-    const rows = await ndb.getTrophiesFromReview(reviewid); 
+    const rows = await ndb.getTrophiesFromReview(reviewId); 
 
     res.json(rows);
 }
@@ -111,33 +113,33 @@ async function assignTrophiesToReview(req, res) {
     //implement authentication 
     const userId = 1; 
 
-    const { reviewid } = req.params; 
+    const { reviewId } = req.params; 
     const { trophyIds } = req.body; 
 
-    await ndb.assignTrophiesToReview(reviewid, trophyIds); 
+    await ndb.assignTrophiesToReview(reviewId, trophyIds); 
 
     res.json(trophyIds);
-}
+} */
 
 
-async function deleteTagsFromReview(req, res) {
+/*async function deleteTagsFromReview(req, res) {
 
     const userId = 1; 
 
-    const { reviewid, tagid } = req.params; 
+    const { reviewId, tagid } = req.params; 
 
-    await db.deleteTagsFromReview(reviewid, tagid); 
-    /*const camelCaseChange = rows.map(row => {
+    await db.deleteTagsFromReview(reviewId, tagid); 
+    const camelCaseChange = rows.map(row => {
         return {
             userId: row.user_id,
             tagName: row.name, 
             setId: row.set_id,
             tagId: row.tag_id
         }    
-    }) */
+    }) 
    
     res.status(204).send();
-}
+} */
 
 
-export { assignTagToReview, getTagsFromReview, deleteTagsFromReview, getPageInformation, updatePageInformation, getTrophiesFromReview, assignTrophiesToReview }
+export { getPageInformation, updatePageInformation }

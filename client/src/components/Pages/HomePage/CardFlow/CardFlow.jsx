@@ -9,7 +9,7 @@ function CardFlow() {
     const [ cardIndex, setCardIndex ] = useState(() => pickRandomIndex(HomePageData));
 
     let { imgSrc, description, id } = HomePageData[cardIndex]
-    const rank = 'S';
+    const rank = 'A+';
     imgSrc = `/cardflow/${imgSrc}`;
 
     useEffect(() => {

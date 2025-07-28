@@ -1,23 +1,27 @@
 import express from 'express';
-import { assignTagToReview, getTagsFromReview, deleteTagsFromReview, getPageInformation, updatePageInformation,
-         assignTrophiesToReview, getTrophiesFromReview } from "../controllers/reviewController.js"
+import { getPageInformation, updatePageInformation } from "../controllers/reviewController.js"
+import { reviewIdSchema, pageInformationSchema } from '../controllers/schemas/reviewSchemas.js';
+import validateRequest from "../middleware/validateRequest.js";
 import verifyJWT from "../middleware/verifyJWT.js";
 import asyncHandler from "express-async-handler";
-
 
 const reviewRouter = express.Router(); 
 
 reviewRouter.use(verifyJWT);
 
-reviewRouter.delete("/:reviewid/tags/:tagid", asyncHandler(deleteTagsFromReview));
+reviewRouter.get("/:reviewId", validateRequest({paramsSchema: reviewIdSchema}), asyncHandler(getPageInformation));
+reviewRouter.put("/:reviewId", validateRequest({paramsSchema: reviewIdSchema, bodySchema: pageInformationSchema}), asyncHandler(updatePageInformation));
 
-reviewRouter.post("/:reviewid/trophies", asyncHandler(assignTrophiesToReview));
-reviewRouter.get("/:reviewid/trophies", asyncHandler(getTrophiesFromReview));
+/*
+    These routes were for originally sending a server call for each page information bit. Can open up for use later, check authentication tho 
+*/
 
-reviewRouter.post("/:reviewid/tags/", asyncHandler(assignTagToReview));
-reviewRouter.get("/:reviewid/tags", asyncHandler(getTagsFromReview));
+//reviewRouter.delete("/:reviewId/tags/:tagid", asyncHandler(deleteTagsFromReview));
 
-reviewRouter.get("/:reviewid", asyncHandler(getPageInformation));
-reviewRouter.put("/:reviewid", asyncHandler(updatePageInformation));
+//reviewRouter.post("/:reviewId/trophies", asyncHandler(assignTrophiesToReview));
+//reviewRouter.get("/:reviewId/trophies", asyncHandler(getTrophiesFromReview));
+
+//reviewRouter.post("/:reviewId/tags/", asyncHandler(assignTagToReview));
+//reviewRouter.get("/:reviewId/tags", asyncHandler(getTagsFromReview));
 
 export default reviewRouter; 
