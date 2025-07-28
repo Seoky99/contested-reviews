@@ -39,8 +39,6 @@ function CardPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showRatings, setShowRatings] = useState(true);
 
-    console.log(selectedTags);
-
     //Save States: 'idle', 'saving', 'success', 'error' 
     const [ saving, setSaving ] = useState('idle');
 

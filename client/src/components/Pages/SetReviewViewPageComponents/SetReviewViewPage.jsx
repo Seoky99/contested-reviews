@@ -44,8 +44,6 @@ function SetReviewDisplayPage() {
         navigate("/setreviews");
     }
 
-    console.log(stats);
-
     return (
         <div className={styles.setReviewWrapper}>
             <button className={styles.navButton} onClick={navBack}><ArrowBackIcon fontSize="large"/></button>

@@ -31,12 +31,11 @@ function useFetchSetReview(userSetId) {
         async function fetchStats() {
         const url = `/setreviews/${userSetId}/stats/colors`;
             const stats = (await axiosPrivate.get(url)).data;
-
+            console.log(stats);
             setStats(stats);
         }
 
         async function fetchSetReviewInfo() {
-            console.log("?");
             const url = `setreviews/${userSetId}`;
             const setReviewData = (await axiosPrivate.get(url)).data;
             

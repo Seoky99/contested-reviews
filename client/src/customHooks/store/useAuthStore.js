@@ -17,8 +17,6 @@ async function refreshToken(set) {
         const payload = JSON.parse(atob(accessToken.split(".")[1]));
         const userId = payload.userId;
         
-        console.log("refreshing!");
-
         set({accessToken, userId, hasTriedRefresh: true});
         return true;
     } catch {

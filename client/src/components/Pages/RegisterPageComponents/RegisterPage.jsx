@@ -34,8 +34,6 @@ function RegisterPage() {
             const response = await axiosInstance.post("/register", data);
             //TODO: implement redirection here!
             navigate("/login");
-            console.log(response);
-
         } catch (err) {
 
             let field = "root";

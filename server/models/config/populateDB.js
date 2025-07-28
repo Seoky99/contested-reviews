@@ -360,7 +360,6 @@ async function populateSet(setCode, addBonus=false) {
     }
 
     const bonusCodes = bonusCodeConfig[setCode];
-    console.log(bonusCodes);
 
     try {
       await client.connect();

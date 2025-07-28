@@ -45,8 +45,6 @@ async function updatePageInformation(req, res) {
     const { reviewId } = req.params;
     let { rank, notes, selectedTags, trophies, userSetId } = req.body;  
 
-    console.log(rank, notes, selectedTags, trophies, userSetId  );
-
     if (!(await verifyAccessToReview(userId, reviewId))) {
         return res.status(403).json({message: "Forbidden: You don't have access to this review."})
     }

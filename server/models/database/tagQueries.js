@@ -28,17 +28,12 @@ async function assignTagToReview(reviewId, tagIds) {
     const initialQuery = `INSERT INTO review_tags(review_id, tag_id) VALUES `;
 
     const query = `${queryGenerator(initialQuery, tagIds.length, 2)} ON CONFLICT DO NOTHING RETURNING review_id, tag_id`;
-    console.log(tagIds);
     let dataArray = [];
 
     tagIds.forEach(tagId => dataArray.push(reviewId, tagId));
 
-    console.log(query);
-    console.log(dataArray);
-
     try {
         const { rows } = await pool.query(query, dataArray);
-        console.log(rows);
         return rows; 
     } catch (err) {
         console.log(err);

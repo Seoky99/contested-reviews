@@ -3,17 +3,10 @@ import useFetchSetReviewInfo from "../../../customHooks/useFetchSetReviewInfo";
 import SetReviewList from './SetReview/SetReviewList';
 import SetReviewDisplay from "./SetReview/SetReviewDisplay";
 import axiosPrivate from "../../../customHooks/store/useAxiosPrivate";
-import useAuthStore from "../../../customHooks/store/useAuthStore";
 
 function SetReviewPage() {
 
     const { setReviews, setSetReviews, selectedSetReviewID, setSelectedSetReviewID, loading, error } = useFetchSetReviewInfo();
-
-    const userId = useAuthStore(state => state.userId);
-    const accessToken = useAuthStore(state => state.accessToken);
-
-    console.log(userId);
-    console.log(accessToken);
 
     function handleSetReviewClick(id) { 
         setSelectedSetReviewID(id);
@@ -51,7 +44,6 @@ function SetReviewPage() {
 
     const [selectedSetReview] = setReviews.filter(sr => sr.user_set_id === selectedSetReviewID);
 
-    console.log(setReviews);
     return (
         <div className={styles.pageWrapper}>
             <SetReviewDisplay selectedSetReviewID={selectedSetReviewID} selectedSetReview={selectedSetReview} deleteSetReview={deleteSetReview}/>

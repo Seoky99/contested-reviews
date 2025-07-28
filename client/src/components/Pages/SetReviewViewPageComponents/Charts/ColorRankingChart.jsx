@@ -14,8 +14,10 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 function TempColorRankingChart({ averages }) {
 
+    //everything written here is a travesty. plz fix this ungodly code later 
+
     const sortedEntries = Object.entries(averages)
-        .filter(([key]) => !(key.includes(",") || key.includes("L")))
+        .filter(([key]) => !(key.includes(",") || key.includes("L") || key.includes("C")))
         .sort((a, b) => sortingUtils.tempSort(a, b));
  
     const colorToHex = {
@@ -26,14 +28,46 @@ function TempColorRankingChart({ averages }) {
         G: '#228B22' 
     };
 
-    const backgroundColors = sortedEntries.map(([key]) => {
-    const colorCode = key.split(' - ')[0];
-        return colorToHex[colorCode] || '#AAAAAA';
-    });
+    function backgroundColors(sortedEntries) { 
+        const colors = sortedEntries.map(([key]) => {
+            const colorCode = key.split(' - ')[0];
+            return colorToHex[colorCode] || '#AAAAAA';
+        });
 
+        const values = [];
 
-    console.log(sortedEntries);
+        for (let i = 0; i < colors.length; i++) {
+            if (i !== 0 && i % 5 === 0) {
+                values.push(null); 
+            }
+            values.push(colors[i]);
+        }
+        return values;
+    }
 
+    function introduceSpacing(data) {
+        const values = [];
+
+        for (let i = 0; i < data.length; i++) {
+            if (i !== 0 && i % 5 === 0) {
+                values.push(null); 
+            }
+            values.push(data[i][1]);
+        }
+        return values;
+    }
+
+    function spacedLabels(data) {
+        const labels = [];
+
+        for (let i = 0; i < data.length; i++) {
+            if (i !== 0 && i % 5 === 0) {
+                labels.push('');
+            }
+            labels.push(data[i][0]);
+        }
+        return labels;
+    }
 
     const scoreToRank = [
         'F-', 'F', 'F+', 'D-', 'D', 'D+', 'C-', 'C', 'C+',
@@ -41,20 +75,21 @@ function TempColorRankingChart({ averages }) {
     ];
 
     function getRankFromScore(score) {
-        const index = Math.round((score / 10) * 15);
-        return scoreToRank[Math.min(index, 15)];
+        const index = Math.round((score / 10) * 14);
+        return scoreToRank[Math.min(index, 14)];
     }
 
+    const spacedData = introduceSpacing(sortedEntries);
 
     const data = {
-        labels: sortedEntries.map(([key]) => key),
+        labels: spacedLabels(sortedEntries),
         datasets: [
         {
             label: 'Average Rating',
-            data: sortedEntries.map(([_, value]) => value),
-            backgroundColor: backgroundColors,
+            data: spacedData,
+            backgroundColor: backgroundColors(sortedEntries),
             borderColor: 'black',
-            borderWidth: 5
+            borderWidth: 2
         }
         ]
     };
@@ -70,11 +105,11 @@ function TempColorRankingChart({ averages }) {
             min: 0,
             max: 10,
             ticks: {
-            stepSize: 0.7143,
-            callback: (value) => {
-                const rank = getRankFromScore(value);
-                return rank;
-            }
+                stepSize: 0.714,
+                callback: (value) => {
+                    const rank = getRankFromScore(value);
+                    return rank;
+                }
             }
         }
         }

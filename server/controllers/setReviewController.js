@@ -154,7 +154,11 @@ async function getSetReviewStatsColors(req, res) {
             colorMap.set(colorKey, []);
         }
 
-        colorMap.get(colorKey).push(ratingsNumericMap[row.rank]);
+        if (row.rank) {
+            if (row.rank != 'NR') {
+                colorMap.get(colorKey).push(ratingsNumericMap[row.rank]);
+            }
+        }
     })
 
     const raw = Array.from(colorMap);

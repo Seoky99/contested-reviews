@@ -67,9 +67,6 @@ function CardGalleryPage() {
         }
     }, [transformedReviews, queryClient, userSetId, sort, filter, partition]);
 
-
-    console.log(transformedReviews);
-
     //create hide ratings button?
     if (error) {return <ErrorPage error={error}/>}
     if (isLoading) { return <h1>Loading!</h1>}
