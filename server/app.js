@@ -1,6 +1,9 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import cookieParser from "cookie-parser";
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
 
 import reviewRouter from './routes/reviewRouter.js';
 import setReviewRouter from './routes/setReviewRouter.js';
@@ -8,11 +11,8 @@ import setsRouter from "./routes/setsRouter.js";
 import tagRouter from "./routes/tagRouter.js";
 import registerRouter from './routes/registerRouter.js';
 import authRouter from './routes/authRouter.js';
-import cookieParser from "cookie-parser";
 import refreshRouter from './routes/refreshRouter.js';
 import logoutRouter from './routes/logoutRouter.js';
-import rateLimit from 'express-rate-limit';
-import helmet from 'helmet';
 
 const app = express();
 
