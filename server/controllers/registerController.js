@@ -4,9 +4,10 @@ import db from "../models/database/authQueries.js";
 async function registerUser(req, res) {
     const { username, email, password } = req.body; 
 
-    if (!username || !email || !password) {
+    //Replaced with validateRequest middleware 
+    /*if (!username || !email || !password) {
         return res.status(400).json({ field: "all", message : 'Username and password are required.'});
-    }
+    } */
 
     const checkConflictRows = await db.checkDuplicateUser(username, email);
 

@@ -36,6 +36,7 @@ function useFetchSetReview(userSetId) {
         }
 
         async function fetchSetReviewInfo() {
+            console.log("?");
             const url = `setreviews/${userSetId}`;
             const setReviewData = (await axiosPrivate.get(url)).data;
             

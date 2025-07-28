@@ -70,7 +70,7 @@ function RegisterPage() {
             <div className={styles.pageWrapper}>
                 <div className={styles.cardOne}>
                     <img className={styles.cgb} src={"/cgb.png"}/>
-                    <h1>S?</h1>
+                    <h1>A+?</h1>
                 </div>
                 <form className={styles.form} onSubmit={handleSubmit(registerUser)}>
 

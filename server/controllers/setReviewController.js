@@ -15,7 +15,7 @@ async function getSetReviews(req, res) {
 
 /**
  * Creates a set review instance for a user, taking in a POST body of: 
- *  setid {number} - id of set 
+ *  userSetId {number} - id of set 
  *  name {string} - user's choice to name the set instance 
  *  defaultApplied {boolean} - Applies default ratings according to defaultRatings object (ex. C for commons)
  *  bonusAdded {boolean} - Add the bonus sheets / other draft legal variations to the set review
@@ -23,12 +23,9 @@ async function getSetReviews(req, res) {
  */
 async function createSetReview(req, res) {
     const userId = req.userId; 
-    const { sr_name, setid } = req.body; 
-    
-    //sent via checkbox in the form 
-    const { defaultApplied, bonusAdded, makeShard } = req.body; 
+    const { setReviewName, setId, defaultApplied, bonusAdded, makeShard } = req.body; 
 
-    const {user_set_img, name, user_set_id } = await db.createSetReview(userId, setid, sr_name, defaultApplied, bonusAdded, makeShard);
+    const {user_set_img, name, user_set_id } = await db.createSetReview(userId, setId, setReviewName, defaultApplied, bonusAdded, makeShard);
     res.json({user_set_img, name, user_set_id});
 }
 
@@ -41,13 +38,13 @@ async function createSetReview(req, res) {
 async function getSetReviewCards(req, res) {
     //implement authentication 
     const userId = req.userId;
-    const { setid } = req.params;
+    const { userSetId } = req.params;
 
-    if (!(await verifyAccessToUserSet(userId, setid))) {
+    if (!(await verifyAccessToUserSet(userId, userSetId))) {
         return res.status(403).json({message: "Forbidden: You don't have access to this set review."})
     }
 
-    const rows = await db.getReviewsWithCards(setid);
+    const rows = await db.getReviewsWithCards(userSetId);
     const cards = extractCardFromRows(rows); 
 
     res.json(cards);
@@ -56,17 +53,16 @@ async function getSetReviewCards(req, res) {
 /**
  * Returns all the cards available in a set: based on the user set's options (bonusAdded or not)
  * The information of all the already reviewed cards comes along with the cards (rank, tags), for non-reviewed cards, it is null 
- * @returns 
  */
 async function getSetReviewCardsEdit(req, res) {
     const userId = req.userId; 
 
-    const { setid } = req.params; 
-    if (!(await verifyAccessToUserSet(userId, setid))) {
+    const { userSetId } = req.params; 
+    if (!(await verifyAccessToUserSet(userId, userSetId))) {
         return res.status(403).json({message: "Forbidden: You don't have access to this set review."})
     }
 
-    const { allCards: cards } = await db.getSetReviewCardsEdit(setid);
+    const { allCards: cards } = await db.getSetReviewCardsEdit(userSetId);
     const allCards = extractCardFromRows(cards); 
 
     return res.json(allCards);
@@ -79,13 +75,13 @@ async function getSetReviewCardsEdit(req, res) {
 async function postSetReviewCardsEdit(req, res) {
     const userId = req.userId;  
 
-    const { setid } = req.params; 
-    if (!(await verifyAccessToUserSet(userId, setid))) {
+    const { userSetId } = req.params; 
+    if (!(await verifyAccessToUserSet(userId, userSetId))) {
         return res.status(403).json({message: "Forbidden: You don't have access to this set review."})
     }
     const { added, removed } = req.body; 
 
-    await db.postSetReviewCardsEdit(setid, added, removed);
+    await db.postSetReviewCardsEdit(userSetId, added, removed);
 
     res.json({success: true});
 }
@@ -97,12 +93,12 @@ async function postSetReviewCardsEdit(req, res) {
 async function deleteSetReview(req, res) {    
     const userId = req.userId; 
 
-    const { setid } = req.params; 
-    if (!(await verifyAccessToUserSet(userId, setid))) {
+    const { userSetId } = req.params; 
+    if (!(await verifyAccessToUserSet(userId, userSetId))) {
         return res.status(403).json({message: "Forbidden: You don't have permissions to delete this set review."})
     }
 
-    await db.deleteSetReview(setid); 
+    await db.deleteSetReview(userSetId); 
     res.sendStatus(204); 
 }
 
@@ -112,12 +108,12 @@ async function deleteSetReview(req, res) {
 async function getSetReviewTrophies(req, res) {
     const userId = req.userId; 
 
-    const { setid } = req.params; 
+    const { userSetId } = req.params; 
 
-    if (!(await verifyAccessToUserSet(userId, setid))) {
+    if (!(await verifyAccessToUserSet(userId, userSetId))) {
         return res.status(403).json({message: "Forbidden: You don't have access to these trophies."})
     }    
-    const rows = await db.getSetReviewTrophies(setid);
+    const rows = await db.getSetReviewTrophies(userSetId);
     res.json(rows); 
 }
 
@@ -128,13 +124,13 @@ async function getSetReviewTrophies(req, res) {
 async function getSetReviewStatsColors(req, res) {
     const userId = req.userId; 
 
-    const { setid } = req.params; 
+    const { userSetId } = req.params; 
 
-    if (!(await verifyAccessToUserSet(userId, setid))) {
+    if (!(await verifyAccessToUserSet(userId, userSetId))) {
         return res.status(403).json({message: "Forbidden: You don't have access to these stats."})
     }
 
-    const rows = await statsdb.getRatedReviews(setid); 
+    const rows = await statsdb.getRatedReviews(userSetId); 
 
     const colorMap = new Map(); 
 
@@ -182,24 +178,53 @@ async function getSetReviewStatsColors(req, res) {
 async function getSetReview(req, res) {
     const userId = req.userId; 
 
-    const { setid } = req.params; 
-    if (!(await verifyAccessToUserSet(userId, setid))) {
+    const { userSetId } = req.params; 
+    if (!(await verifyAccessToUserSet(userId, userSetId))) {
         return res.status(403).json({message: "Forbidden: You don't have access to the set review."})
     }
 
-    const rows = await db.getSetReview(userId, setid);
+    const rows = await db.getSetReview(userId, userSetId);
 
     res.json(rows[0]); 
 }
 
+/**
+ * Takes in the appropiate set id, card id from the url and updates the card based on the
+ * PATCH body of: rank {string}, notes {string} 
+async function patchCardFromSetReview(req, res) {
 
+    //implement authentication 
+    const userid = 1; 
+
+    const { userSetId, cardid } = req.params;
+    const { rank, notes } = req.body; 
+
+    await db.patchCardFromSetReview(userSetId, cardid, rank, notes);
+
+    //there should be only one row ideally 
+    res.json(JSON.stringify({rank, notes}));
+} */
+
+/*async function putSetReviewTrophies(req, res) {
+    
+    //implement authentication 
+    const userid = 1; 
+
+    const { userSetId } = req.params; 
+    const trophies = req.body; 
+
+    await db.putSetReviewTrophies(userSetId, trophies); 
+    res.json(trophies); 
+} */
+
+/*
 async function getSetReviewTags(req, res) {
     //implement authentication 
     const userid = 1; 
 
-    const { setid } = req.params;
+    const { userSetId } = req.params;
 
-    const rows = await db.getSetReviewTags(setid);
+    const rows = await db.getSetReviewTags(userSetId);
 
     const camelCaseChange = rows.map(row => {
         return {
@@ -211,56 +236,24 @@ async function getSetReviewTags(req, res) {
     })
 
     res.json(camelCaseChange);
-}
-
-
-async function putSetReviewTrophies(req, res) {
-    
-    //implement authentication 
-    const userid = 1; 
-
-    const { setid } = req.params; 
-    const trophies = req.body; 
-
-    await db.putSetReviewTrophies(setid, trophies); 
-    res.json(trophies); 
-}
+} */
 
 /**
  * Takes in the user's set id and card id from the url and returns the appropiate card 
- */
+ 
 async function getCardPageInformation(req, res) {
 
     //implement authentication 
     const userid = 1; 
 
-    const { setid, cardid } = req.params; 
+    const { userSetId, cardid } = req.params; 
 
-    const rows = await db.getCardFromSetReview(setid, cardid);
+    const rows = await db.getCardFromSetReview(userSetId, cardid);
     const card = extractCardFromRows(rows)[0];
 
     res.json(card);
-}
-
-/**
- * Takes in the appropiate set id, card id from the url and updates the card based on the
- * PATCH body of: rank {string}, notes {string} 
- */
-async function patchCardFromSetReview(req, res) {
-
-    //implement authentication 
-    const userid = 1; 
-
-    const { setid, cardid } = req.params;
-    const { rank, notes } = req.body; 
-
-    await db.patchCardFromSetReview(setid, cardid, rank, notes);
-
-    //there should be only one row ideally 
-    res.json(JSON.stringify({rank, notes}));
-}
+} */
 
 
 export { getSetReview, getSetReviewCardsEdit, postSetReviewCardsEdit, getSetReviews, createSetReview, 
-         deleteSetReview, getSetReviewCards, getCardPageInformation, patchCardFromSetReview, 
-         getSetReviewTags, getSetReviewTrophies, putSetReviewTrophies, getSetReviewStatsColors } ; 
+         deleteSetReview, getSetReviewCards, getSetReviewTrophies, getSetReviewStatsColors } ; 

@@ -6,9 +6,10 @@ async function loginUser(req, res) {
 
     const { username, password } = req.body;
 
-    if (!username || !password) {
+    //Replaced with validateRequest 
+    /*if (!username || !password) {
         return res.status(400).json({'message': 'Username and password are required.'});
-    }
+    }*/
 
     const findUserRows = await db.findUserFromUsername(username);
 

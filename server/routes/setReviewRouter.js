@@ -1,33 +1,35 @@
 import express from "express"; 
-import { getSetReview, getSetReviewCardsEdit, postSetReviewCardsEdit, createSetReview, getSetReviews, getSetReviewCards, getSetReviewTags, getSetReviewTrophies, 
-    putSetReviewTrophies, getCardPageInformation, patchCardFromSetReview, deleteSetReview, getSetReviewStatsColors } from "../controllers/setReviewController.js";
+import { getSetReview, getSetReviewCardsEdit, postSetReviewCardsEdit, createSetReview, getSetReviews, getSetReviewCards, getSetReviewTrophies, 
+    deleteSetReview, getSetReviewStatsColors } from "../controllers/setReviewController.js";
 import verifyJWT from "../middleware/verifyJWT.js";
 import asyncHandler from "express-async-handler";
-import { setReviewSchema } from "../controllers/schemas/setReviewSchemas.js";
+import { setReviewSchema, userSetIdSchema } from "../controllers/schemas/setReviewSchemas.js";
 import validateRequest from "../middleware/validateRequest.js";
 
 const setReviewRouter = express.Router(); 
 
 setReviewRouter.use(verifyJWT);
 
-setReviewRouter.get("/:setid/stats/colors", asyncHandler(getSetReviewStatsColors));
+setReviewRouter.get("/:userSetId/stats/colors",validateRequest({paramsSchema: userSetIdSchema}), asyncHandler(getSetReviewStatsColors));
 
-setReviewRouter.post("/:setid/cards/edit", asyncHandler(postSetReviewCardsEdit));
-setReviewRouter.get("/:setid/cards/edit", asyncHandler(getSetReviewCardsEdit));
-setReviewRouter.patch("/:setid/cards/:cardid", asyncHandler(patchCardFromSetReview));
-setReviewRouter.get("/:setid/cards/:cardid", asyncHandler(getCardPageInformation));
+setReviewRouter.post("/:userSetId/cards/edit", validateRequest({paramsSchema: userSetIdSchema}), asyncHandler(postSetReviewCardsEdit));
+setReviewRouter.get("/:userSetId/cards/edit", validateRequest({paramsSchema: userSetIdSchema}), asyncHandler(getSetReviewCardsEdit));
 
-setReviewRouter.get("/:setid/tags", asyncHandler(getSetReviewTags));
+setReviewRouter.get("/:userSetId/trophies", validateRequest({paramsSchema: userSetIdSchema}), asyncHandler(getSetReviewTrophies));
 
-setReviewRouter.put("/:setid/trophies", asyncHandler(putSetReviewTrophies));
-setReviewRouter.get("/:setid/trophies", asyncHandler(getSetReviewTrophies));
+setReviewRouter.get("/:userSetId/cards", validateRequest({paramsSchema: userSetIdSchema}), asyncHandler(getSetReviewCards));
 
-setReviewRouter.get("/:setid/cards", asyncHandler(getSetReviewCards));
+setReviewRouter.delete("/:userSetId", validateRequest({paramsSchema: userSetIdSchema}), asyncHandler(deleteSetReview));
+setReviewRouter.get("/:userSetId", validateRequest({paramsSchema: userSetIdSchema}), asyncHandler(getSetReview));
 
-setReviewRouter.delete("/:setid", asyncHandler(deleteSetReview));
-setReviewRouter.get("/:setid", asyncHandler(getSetReview));
-
-setReviewRouter.post("/", validateRequest(setReviewSchema), asyncHandler(createSetReview));
+setReviewRouter.post("/", validateRequest({bodySchema: setReviewSchema}), asyncHandler(createSetReview));
 setReviewRouter.get("/", asyncHandler(getSetReviews));
+
+//setReviewRouter.patch("/:userSetId/cards/:cardid", asyncHandler(patchCardFromSetReview));
+//setReviewRouter.get("/:userSetId/cards/:cardid", asyncHandler(getCardPageInformation));
+
+//setReviewRouter.get("/:userSetId/tags", asyncHandler(getSetReviewTags));
+
+//setReviewRouter.put("/:userSetId/trophies", asyncHandler(putSetReviewTrophies)); 
 
 export default setReviewRouter; 

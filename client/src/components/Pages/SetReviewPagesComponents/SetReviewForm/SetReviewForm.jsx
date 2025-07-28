@@ -9,9 +9,9 @@ import z from "zod";
 function SetReviewForm({selectedSetID, name}) {
 
     const setReviewSchema = z.object({
-            sr_name: z.string().trim().min(1, "Set review name cannot be empty").max(50)
+            setReviewName: z.string().trim().min(1, "Set review name cannot be empty").max(50)
                       .regex(/^[a-zA-Z0-9 _-]+$/, "Only letters, numbers, spaces, dashes, and underscores are allowed"),
-            setid: z.uuid(),
+            setId: z.uuid(),
             defaultApplied: z.boolean().optional().default(false),
             bonusAdded: z.boolean().optional().default(false),
             makeShard: z.boolean().optional().default(false),
@@ -23,7 +23,7 @@ function SetReviewForm({selectedSetID, name}) {
 
     useEffect(() => {
         if (selectedSetID) {
-            setValue("setid", selectedSetID);
+            setValue("setId", selectedSetID);
         }
     }, [selectedSetID, setValue]);
 
@@ -37,7 +37,6 @@ function SetReviewForm({selectedSetID, name}) {
                 const options = { headers: {"Content-Type": "application/json" }};
     
                 await axiosPrivate.post(url, formData, options);
-    
                 navigate("/setreviews");
                             
             } catch (err) {
@@ -49,12 +48,12 @@ function SetReviewForm({selectedSetID, name}) {
     return (
         <form className={styles.setReviewForm} onSubmit={handleSubmit(createSetReview)}>
             <h4>Selected Set: {name}</h4>
-            <input hidden readOnly {...register("setid")} name="setid" id="setid" type="text"></input>
+            <input hidden readOnly {...register("setId")} name="setId" id="setId" type="text"></input>
             <div className={styles.formSeparator}>
-                <label htmlFor="sr_name">Name your set review:</label>
-                <input {...register("sr_name")} type="text" id="sr_name" name="sr_name"></input>
+                <label htmlFor="setReviewName">Name your set review:</label>
+                <input {...register("setReviewName")} type="text" id="setReviewName" name="setReviewName"></input>
             </div>
-            {errors.sr_name && <p className={styles.errorStyle}>{errors.sr_name.message}</p>}
+            {errors.setReviewName && <p className={styles.errorStyle}>{errors.setReviewName.message}</p>}
             <div className={styles.formSeparator}>
                 <label htmlFor="defaultApplied">Apply default ratings:</label>
                 <input {...register("defaultApplied")} className={styles.checkBox} type="checkbox" id="defaultApplied" name="defaultApplied"></input>
