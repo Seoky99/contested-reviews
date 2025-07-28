@@ -11,6 +11,8 @@ import authRouter from './routes/authRouter.js';
 import cookieParser from "cookie-parser";
 import refreshRouter from './routes/refreshRouter.js';
 import logoutRouter from './routes/logoutRouter.js';
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
 
 const app = express();
 
@@ -19,10 +21,16 @@ const corsOptions = {
   credentials: true
 }
 
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
+
+
 app.use(cors(corsOptions));
 app.use(express.json()); 
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
+app.use(limiter);
+app.use(helmet());
+
 
 app.use('/api/register', registerRouter);
 app.use('/api/auth', authRouter);
