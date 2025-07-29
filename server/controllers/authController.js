@@ -40,7 +40,7 @@ async function loginUser(req, res) {
         //add Secure: process.env.NODE_ENV ==='production'? when in production 
         res.cookie('jwt', refreshToken, {
             httpOnly: true, 
-            sameSite: "Strict",
+            sameSite: 'None',
             secure: process.env.NODE_ENV === 'production',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })

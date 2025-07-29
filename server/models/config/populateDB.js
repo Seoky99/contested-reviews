@@ -385,6 +385,6 @@ async function populateSet(setCode, addBonus=false) {
     }
 }
 
-populateSet("FIN", true); 
+populateSet("EOE", true); 
 //updateSetReviews("EOE");
 //addCards("EOE");
