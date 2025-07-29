@@ -117,6 +117,32 @@ async function initSchema() {
             FOREIGN KEY (review_id) REFERENCES reviews(review_id) ON DELETE SET NULL,
             FOREIGN KEY (user_set_id) REFERENCES user_sets(user_set_id) ON DELETE CASCADE
         );
+
+        CREATE TABLE IF NOT EXISTS pods(
+            pod_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
+            pod_name TEXT NOT NULL,
+            is_private BOOLEAN DEFAULT FALSE
+        );
+
+        CREATE TABLE IF NOT EXISTS pod_user_sets(
+            pod_id INTEGER, 
+            user_set_id INTEGER,
+            FOREIGN KEY (pod_id) REFERENCES pods(pod_id) ON DELETE CASCADE, 
+            FOREIGN KEY (user_set_id) REFERENCES user_sets(user_set_id) ON DELETE CASCADE, 
+            PRIMARY KEY (pod_id, user_set_id)
+        );
+
+        CREATE TABLE IF NOT EXISTS pod_users(
+            pod_id INTEGER, 
+            user_id INTEGER,
+            role TEXT DEFAULT 'Member' NOT NULL, 
+            FOREIGN KEY (pod_id) REFERENCES pods(pod_id) ON DELETE CASCADE, 
+            FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+            PRIMARY KEY (pod_id, user_id)
+        )
+        
+        INSERT INTO pods(pod_name, is_private) VALUES ('Global Pod', FALSE);
+        
         `;
 
   try {

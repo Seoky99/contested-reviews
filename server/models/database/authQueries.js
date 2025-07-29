@@ -12,13 +12,34 @@ async function checkDuplicateUser(username, email) {
 }
 
 async function registerUser(username, email, hashedPassword) {
-    const query = `INSERT INTO users(username, email, password)
-                   VALUES ($1, $2, $3)`;
+    let transaction; 
+    const insertUserQuery = `INSERT INTO users(username, email, password)
+                             VALUES ($1, $2, $3) RETURNING user_id`;
+
+    const insertIntoGlobalPodQuery = `INSERT INTO pod_users(pod_id, user_id) VALUES (1, $1)`;
     
     try {
-        await pool.query(query, [username, email, hashedPassword]);
+        transaction = await pool.connect(); 
+        await transaction.query("BEGIN");
+
+        const { rows } = await transaction.query(insertUserQuery, [username, email, hashedPassword]);
+        const userId = rows[0].user_id; 
+
+        await transaction.query(insertIntoGlobalPodQuery, [userId]);
+
+        await transaction.query("COMMIT");
+
     } catch (err) {
         console.log(err);
+
+        if (transaction) {
+            await transaction.query("ROLLBACK");
+        }
+
+    } finally {
+        if (transaction) {
+            transaction.release(); 
+        }
     }
 }
 

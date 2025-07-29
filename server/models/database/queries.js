@@ -64,9 +64,13 @@ async function getSetReviewCardsEdit(userSetId) {
         return { allCards }; 
     } catch (err) {
         console.log(err);
-        await transaction.query("ROLLBACK");
+        if (transaction) {
+            await transaction.query("ROLLBACK");
+        }
     } finally {
-        transaction.release(); 
+        if (transaction) {
+            transaction.release(); 
+        }
     }
 }
 
@@ -106,11 +110,14 @@ async function postSetReviewCardsEdit(userSetId, added, removed) {
         await transaction.query("COMMIT");
 
       } catch (err) {
-
-        await transaction.query("ROLLBACK");
+        if (transaction) {
+            await transaction.query("ROLLBACK");
+        }
 
       } finally {
-         transaction.release(); 
+        if (transaction) {
+            transaction.release(); 
+        }
       }
 
 }
@@ -192,9 +199,13 @@ async function createSetReview(userid, setid, sr_name, defaultApplied, bonusAdde
         
     } catch (err) {
         console.log(err);
-        await transaction.query("ROLLBACK");
+        if (transaction) {
+            await transaction.query("ROLLBACK");
+        }
     } finally {
-        transaction.release();
+        if (transaction) {
+            transaction.release();
+        }
     }
 }
 
@@ -440,9 +451,13 @@ async function getReviewPageInformation(reviewId, userId) {
         return {cardDetails, reviewTags, allTags, trophies}; 
 
     } catch (err) {
-        await transaction.query("ROLLBACK");
+        if (transaction) {
+            await transaction.query("ROLLBACK");
+        }
     } finally {
-        transaction.release();
+        if (transaction) {
+            transaction.release();
+        }
     }
 }
 
@@ -495,12 +510,15 @@ async function performPageUpdate(pageInformation) {
         await transaction.query("COMMIT");
 
     } catch (err) {
-
-        await transaction.query("ROLLBACK");
+        if (transaction) {
+            await transaction.query("ROLLBACK");
+        }
         throw err; 
 
     } finally {
-        transaction.release();
+        if (transaction) {
+            transaction.release();
+        }
     }
 }
 

@@ -23,6 +23,8 @@ async function registerUser(req, res) {
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
+
+        //Registers user into the database, and in the same transaction, assigns to global pod
         await db.registerUser(username, email, hashedPassword); 
         res.status(201).json({'success': `New user ${username} created`});
 
