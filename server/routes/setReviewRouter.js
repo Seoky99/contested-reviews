@@ -1,9 +1,9 @@
 import express from "express"; 
 import { getSetReview, getSetReviewCardsEdit, postSetReviewCardsEdit, createSetReview, getSetReviews, getSetReviewCards, getSetReviewTrophies, 
-    deleteSetReview, getSetReviewStatsColors } from "../controllers/setReviewController.js";
+         deleteSetReview, getSetReviewStatsColors } from "../controllers/setReviewController.js";
+import { setReviewSchema, userSetIdSchema } from "../controllers/schemas/setReviewSchemas.js";
 import verifyJWT from "../middleware/verifyJWT.js";
 import asyncHandler from "express-async-handler";
-import { setReviewSchema, userSetIdSchema } from "../controllers/schemas/setReviewSchemas.js";
 import validateRequest from "../middleware/validateRequest.js";
 
 const setReviewRouter = express.Router(); 
