@@ -17,8 +17,10 @@ import logoutRouter from './routes/logoutRouter.js';
 const app = express();
 
 const corsOptions = {
-  origin: ['https://contested-reviews.vercel.app'],
-  //origin: ['http://localhost:5173'],
+  origin: ['https://contestedreviews.com',
+           'https://www.contestedreviews.com'
+            //'http://localhost:5173',
+          ],
   credentials: true
 }
 
