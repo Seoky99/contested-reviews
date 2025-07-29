@@ -2,7 +2,7 @@ import db from "../models/database/queries.js";
 import statsdb from "../models/database/statsQueries.js";
 import extractCardFromRows from "./utils/extractCardFromRows.js";
 import ratingsNumericMap from "./utils/ratingsNumericMap.js";
-import {verifyAccessToUserSet} from "./utils/verify.js";
+import { verifyAccessToUserSet, verifyAccessToPods } from "./utils/verify.js";
 
 /**
  * Returns all set review information belonging to the user
@@ -193,6 +193,30 @@ async function getSetReview(req, res) {
 }
 
 /**
+ * 
+ */
+async function assignSetReviewToPods(req, res) {
+    const userId = req.userId; 
+
+    const { userSetId } = req.params; 
+    const { podIds } = req.body; 
+
+    console.log("in assign");
+    if (!(await verifyAccessToUserSet(userId, userSetId))) {
+        return res.status(403).json({message: "Forbidden: You don't have access to the set review."})
+    }
+
+    if (!(await verifyAccessToPods(userId, podIds))) {
+        return res.status(403).json({message: "Forbidden: You are not a member of these pods"})
+    }
+
+    await db.assignSetReviewToPods(userId, podIds); 
+
+    res.json(podIds);
+}
+
+
+/**
  * Takes in the appropiate set id, card id from the url and updates the card based on the
  * PATCH body of: rank {string}, notes {string} 
 async function patchCardFromSetReview(req, res) {
@@ -260,4 +284,4 @@ async function getCardPageInformation(req, res) {
 
 
 export { getSetReview, getSetReviewCardsEdit, postSetReviewCardsEdit, getSetReviews, createSetReview, 
-         deleteSetReview, getSetReviewCards, getSetReviewTrophies, getSetReviewStatsColors } ; 
+         deleteSetReview, getSetReviewCards, getSetReviewTrophies, getSetReviewStatsColors, assignSetReviewToPods } ; 

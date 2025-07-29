@@ -1,4 +1,5 @@
 import pool from "../pool.js"; 
+import queryGenerator from "../config/queryGenerator.js";
 
 async function checkDuplicateUser(username, email) {
     const query = `SELECT * FROM users WHERE username = $1 OR email = $2`;
@@ -90,6 +91,23 @@ async function verifyAccessToTag(userId, tagId) {
     }
 }
 
+async function verifyAccessToPods(userId, podIds) {
+
+    const initialQuery = `SELECT * FROM pod_users WHERE user_id = $1 AND pod_id IN `
+    const podAccessQuery = queryGenerator(initialQuery, 1, podIds.length, 1);
+
+    const dataArray = [userId, ...podIds]; 
+
+    
+    try {
+        const { rows } = await pool.query(podAccessQuery, dataArray); 
+        return rows; 
+    } catch (err) {
+        console.log(err);
+    }
+
+}
+
 export default { checkDuplicateUser, registerUser, findUserFromUsername, verifyAccessToUserSet, verifyAccessToReview, 
-    verifyAccessToTag
+    verifyAccessToTag, verifyAccessToPods
  };

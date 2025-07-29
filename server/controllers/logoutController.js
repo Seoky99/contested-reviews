@@ -4,7 +4,7 @@ async function logoutUser(req, res) {
     //IN production, add secure: true 
     res.clearCookie("jwt", {
         httpOnly: true,
-        sameSite: "Strict"
+        sameSite: "None"
     })
 
     res.sendStatus(204);

@@ -15,4 +15,11 @@ async function verifyAccessToTag(userId, tagId) {
     return accessExists.length === 1; 
 }
 
-export { verifyAccessToUserSet, verifyAccessToReview, verifyAccessToTag } ;
+async function verifyAccessToPods(userId, podIds) {
+    console.log("here!")
+    const accessExists = await db.verifyAccessToPods(userId, podIds);
+    console.log(accessExists);
+    return accessExists.length === podIds.length; 
+}
+
+export { verifyAccessToUserSet, verifyAccessToReview, verifyAccessToTag, verifyAccessToPods } ;

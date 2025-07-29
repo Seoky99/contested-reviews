@@ -522,5 +522,22 @@ async function performPageUpdate(pageInformation) {
     }
 }
 
-export default { getSetReview, getSetReviewCardsEdit, postSetReviewCardsEdit, getAllSetReviews, createSetReview, deleteSetReview, getSets, getReviewsWithCards, getSetReviewTrophies, putSetReviewTrophies, getTrophiesFromReview, assignTrophiesToReview,
-                 getCardFromSetReview, getSetReviewTags, patchCardFromSetReview, patchCardFromSetReviewByReviewId, performPageUpdate, getReviewPageInformation };
+async function assignSetReviewToPods(userSetId, podIds) {
+    const query = `INSERT INTO pod_user_sets(pod_id, user_set_id) VALUES `;
+    const assignUserSetToPodsQuery = queryGenerator(query, podIds.length, 2);
+
+    const dataArray = podIds.flatMap( id => [id, userSetId]);
+
+    try {
+        await pool.query(assignUserSetToPodsQuery, dataArray);
+    } catch (err) {
+        console.log(err);
+        throw err; 
+    }
+}
+
+export default { getSetReview, getSetReviewCardsEdit, postSetReviewCardsEdit, getAllSetReviews, createSetReview, deleteSetReview, 
+                 getSets, getReviewsWithCards, getSetReviewTrophies, putSetReviewTrophies, getTrophiesFromReview, 
+                 assignTrophiesToReview, getCardFromSetReview, getSetReviewTags, patchCardFromSetReview, 
+                 patchCardFromSetReviewByReviewId, performPageUpdate, getReviewPageInformation,
+                 assignSetReviewToPods };
