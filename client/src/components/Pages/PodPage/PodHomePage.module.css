@@ -1,0 +1,18 @@
+.displayWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    flex: 1;
+}
+
+.title {
+    background-color: white;
+    color: black;
+    box-shadow: 5px 5px black;
+    align-self: flex-start;
+    padding: 0.2rem 0.4rem;
+}
+
+.pageWrapper {
+    display: flex;
+}

@@ -1,0 +1,26 @@
+.userSet {
+    display: flex;
+    padding: 1.2rem;
+    border-radius: 10px;
+    border-top: 8px solid white;
+    gap: 2rem;
+}
+
+.image {
+    width: 150px; 
+    height: auto;
+    border-radius: 10px;
+    margin: 0;
+}
+
+.link {
+    width: 8rem;
+    height: 3rem;
+    cursor: pointer;
+}
+
+.buttons {
+    margin-left: auto;
+    display: flex;
+    gap: 1rem;
+}

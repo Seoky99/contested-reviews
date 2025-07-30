@@ -1,0 +1,17 @@
+.pageWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    flex: 3;
+    padding: 2rem;
+}
+
+.image {
+    width: 400px;
+    height: auto;
+    margin: 0;
+    border-radius: 10px;
+}
+

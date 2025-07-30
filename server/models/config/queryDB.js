@@ -10,7 +10,6 @@ async function initSchema() {
   try {
     await client.connect();
     const {rows} = await client.query(query);
-    console.log(rows);
   } catch (err) {
     console.log(err);
   } finally {

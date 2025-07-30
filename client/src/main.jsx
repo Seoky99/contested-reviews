@@ -16,7 +16,9 @@ import TagPanel from "./components/Pages/CardPageComponents/Tag/TagPanel.jsx";
 import NotFoundPage from './components/Pages/ErrorHandling/NotFoundPage.jsx';
 import LoginPage from './components/Pages/LoginPage/LoginPage.jsx';
 import AuthGuard from './components/Pages/AuthGuard/AuthGuard.jsx';
+import PodHomePage from './components/Pages/PodPage/PodHomePage.jsx';
 import PodPage from './components/Pages/PodPage/PodPage.jsx';
+import FallbackPage from './components/Pages/PodPage/FallbackPage.jsx';
 
 const queryClient = new QueryClient(); 
 
@@ -72,13 +74,24 @@ const router = createBrowserRouter([
           },
           {
             path: "pods",
-            Component: PodPage
+            Component: PodHomePage,
+            children: 
+              [ 
+                {
+                  index: true,
+                  Component: FallbackPage,
+                },
+                {
+                  path: ":podId",
+                  Component: PodPage
+                }
+              ]
           }
         ]
       }, 
       {
         path: "*",
-        Component: NotFoundPage
+        Component: NotFoundPage,
       }
     ]
   },

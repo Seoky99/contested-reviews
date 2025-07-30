@@ -1,0 +1,53 @@
+.userSetWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.podWrapper {
+    border-radius: 10px; 
+    display: flex;
+    gap: 1rem;
+}
+
+.podTitle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    vertical-align: middle;
+    width: 80%;
+    background-color: grey;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    padding: 0.2rem 0.4rem;
+
+    & h1 {
+        color: black; 
+    }
+
+    & p{ 
+        color: black;
+    }
+}
+
+.icon {
+    color: black;
+}
+
+.link {
+    border-radius: 10px; 
+    background-color: white;
+    cursor: pointer; 
+    width: 4rem;
+    height: 3rem;
+    text-decoration: none;
+    color: black;
+    padding: 0.2rem 0.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.selectedStyle {
+    background-color: gold;
+}

@@ -1,7 +1,12 @@
 .podWidget {
-    width: 30%;
-    padding: 3rem 6rem;
+    padding: 1rem 1.6rem;
     cursor: pointer;
     border-radius: 10px; 
-    font-size: 3.2rem;   
+    font-size: 1.2rem;   
+}
+
+.buttonWrapper {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 2rem;
 }

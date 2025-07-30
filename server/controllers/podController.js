@@ -1,21 +1,30 @@
 import db from "../models/database/podQueries.js";
-import groupUserSetsByPodId from "./utils/groupUserSetsByPodId.js";
-import { verifyAccessToUserSet, verifyAccessToTag } from "./utils/verify.js";
+import groupMembersByPod from "./utils/groupMembersByPod.js";
+import { verifyAccessToPods  } from "./utils/verify.js";
 
-async function getPodPageInformation(req, res) {
+async function getUsersForPods(req, res) {
     const userId = req.userId; 
 
-    //what kind of verifications might be necessary?
-    /*if (!(await verifyAccessToUserSet(userId, userSetId))) {
-        return res.status(403).json({message: "Forbidden: You don't have access to this user set."})
-    } */
-
-    const rows = await db.getPodPageInformation(userId);
-
-    const rowsGroupedByPodId =  groupUserSetsByPodId(rows);
+    const rows = await db.getUserInfoForPods(userId);
+    const rowsGroupedByPodId = groupMembersByPod(rows);
 
     res.json(rowsGroupedByPodId);
 }
 
+async function getUserSetsForPods(req, res) {
+    const userId = req.userId; 
+    const { podId } = req.params; 
 
-export { getPodPageInformation };
+    if (!(await verifyAccessToPods(userId, [podId]))) {
+        return res.status(403).json({message: "Forbidden: You don't have access to this pod."})
+    } 
+
+    const rows = await db.getUserSetsForPods(podId);
+
+    res.json(rows);
+}
+
+
+
+
+export { getUsersForPods, getUserSetsForPods };

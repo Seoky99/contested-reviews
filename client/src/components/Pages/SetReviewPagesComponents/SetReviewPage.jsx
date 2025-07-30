@@ -8,8 +8,6 @@ function SetReviewPage() {
 
     const { setReviews, setSetReviews, selectedSetReviewID, setSelectedSetReviewID, loading, error } = useFetchSetReviewInfo();
 
-    console.log(setReviews);
-
     function handleSetReviewClick(id) { 
         setSelectedSetReviewID(id);
     }
