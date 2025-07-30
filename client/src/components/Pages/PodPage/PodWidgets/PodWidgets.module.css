@@ -1,0 +1,7 @@
+.podWidget {
+    width: 30%;
+    padding: 3rem 6rem;
+    cursor: pointer;
+    border-radius: 10px; 
+    font-size: 3.2rem;   
+}

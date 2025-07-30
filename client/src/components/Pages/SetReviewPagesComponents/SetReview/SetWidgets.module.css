@@ -6,21 +6,21 @@
     margin-top: 0.5rem;
 }
 
-.panelButton {
+.panelButton, .lockedButton, .lockInButton, .deleteButton {
   display: inline-block;
   text-align: center;
   width: 50%;
-  padding: 0.8rem 1.5rem;
+  padding: 0.6rem 1rem;
   border-radius: 8px;
   border: 3px solid white;
   font-size: 1rem;
   color: #fff;
-  text-shadow: 2px 2px 2px black;
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
   margin-top: 0.2rem;
   text-decoration: none;
+  text-shadow: 1px 1px black;
 }
 
 .panelButton:hover {
@@ -29,4 +29,15 @@
 .panelButton:focus,
 .panelButton:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+.deleteButton {
+  color: red;
+}
+
+.lockedButton {
+  background-color: gold;
+  color: black;
+  text-shadow: none;
+  border-color: black;
 }

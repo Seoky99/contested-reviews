@@ -8,6 +8,8 @@ function SetReviewPage() {
 
     const { setReviews, setSetReviews, selectedSetReviewID, setSelectedSetReviewID, loading, error } = useFetchSetReviewInfo();
 
+    console.log(setReviews);
+
     function handleSetReviewClick(id) { 
         setSelectedSetReviewID(id);
     }
@@ -16,9 +18,7 @@ function SetReviewPage() {
         //TODO: Create modal instead
         const confirmed = window.confirm("Are you sure you want to delete this?");
 
-        if (!confirmed) {
-            return;
-        }
+        if (!confirmed) { return; }
 
         const url = `setreviews/${userSetId}`;
 
@@ -38,6 +38,35 @@ function SetReviewPage() {
         }
     }
 
+    async function lockInSetReview(userSetId) {
+        //TODO: Create modal instead
+        const confirmed = window.confirm("Are you sure you want to lock in this set review to this pod?");
+
+        if (!confirmed) { return; }
+
+        const url = `setreviews/${userSetId}/pods`;
+
+        try {
+            
+            //HARDCODED FOR GLOBAL POD ONLY, CHANGE TO USER CHOOSING PANEL LATER
+            await axiosPrivate.post(url, {podIds: [1]});
+
+            const srCopy = [...setReviews];
+            const transformed = srCopy.map(setReview => {
+                if (setReview.user_set_id === userSetId) {
+                    return {...setReview, pod_id: 1}
+                } else {
+                    return setReview;
+                }
+            })
+            
+            setSetReviews(transformed);
+
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     //Replace with user-friendly pages 
     if (error) { return <h1>Error!</h1>}; 
     if (loading) { return <h1>Loading!</h1>};
@@ -46,7 +75,8 @@ function SetReviewPage() {
 
     return (
         <div className={styles.pageWrapper}>
-            <SetReviewDisplay selectedSetReviewID={selectedSetReviewID} selectedSetReview={selectedSetReview} deleteSetReview={deleteSetReview}/>
+            <SetReviewDisplay selectedSetReviewID={selectedSetReviewID} selectedSetReview={selectedSetReview} deleteSetReview={deleteSetReview}
+                              lockInSetReview={lockInSetReview}/>
             <SetReviewList setReviews={setReviews} setSetReviews={setSetReviews} handleSetReviewClick={handleSetReviewClick}
                            selectedSetReviewID={selectedSetReviewID}/>
         </div>

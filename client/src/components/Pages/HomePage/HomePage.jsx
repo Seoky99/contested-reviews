@@ -14,7 +14,7 @@ function HomePage() {
                 </div>
                 <div>
                     <Link className={styles.link} to="/setreviews">My Set Reviews</Link>
-                    <Link className={styles.link} to="/pods">My Pods</Link>
+                    <Link className={styles.link} to="/pods/">My Pods</Link>
                 </div>
             </div>
         </div>

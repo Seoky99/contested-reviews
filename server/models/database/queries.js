@@ -9,10 +9,11 @@ import trophyData from "../config/trophyData.js";
  * @returns An array of objects containing set_review_name, set_code, set_name, user_set_id, user_set_img
  */
 async function getAllSetReviews(userid) {
-    const query = `SELECT user_sets.*, sets.name AS set_name, set_code, set_img
-                    FROM user_sets 
-                    JOIN sets ON user_sets.set_id = sets.set_id 
-                    WHERE user_id = $1`;
+    const query =  `SELECT user_sets.*, sets.name AS set_name, set_code, set_img, pod_user_sets.pod_id 
+                    FROM user_sets
+                    JOIN sets ON user_sets.set_id = sets.set_id
+                    LEFT JOIN pod_user_sets ON pod_user_sets.user_set_id = user_sets.user_set_id WHERE user_id = $1`;
+
     try {
         const { rows } = await pool.query(query, [userid]);
         return rows; 
@@ -524,7 +525,8 @@ async function performPageUpdate(pageInformation) {
 
 async function assignSetReviewToPods(userSetId, podIds) {
     const query = `INSERT INTO pod_user_sets(pod_id, user_set_id) VALUES `;
-    const assignUserSetToPodsQuery = queryGenerator(query, podIds.length, 2);
+    let assignUserSetToPodsQuery = queryGenerator(query, podIds.length, 2);
+    assignUserSetToPodsQuery += ` ON CONFLICT DO NOTHING`;
 
     const dataArray = podIds.flatMap( id => [id, userSetId]);
 

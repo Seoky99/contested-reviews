@@ -19,7 +19,7 @@ function Navigation() {
                 <SearchIcon className={styles.search}/>
             </div>
             <Link to="/setreviews" className={styles.link}>My Set Reviews</Link>
-            <Link className={styles.link}>Pods (Coming Soon!)</Link>
+            <Link to="/pods" className={styles.link}>Pods</Link>
             { !loggedIn ? 
                 <>
                     <Link to="/login" className={styles.login}>Login</Link>

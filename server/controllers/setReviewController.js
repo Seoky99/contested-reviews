@@ -2,6 +2,7 @@ import db from "../models/database/queries.js";
 import statsdb from "../models/database/statsQueries.js";
 import extractCardFromRows from "./utils/extractCardFromRows.js";
 import ratingsNumericMap from "./utils/ratingsNumericMap.js";
+import extractPodIdsFromRows from "./utils/extractPodIdsFromRows.js";
 import { verifyAccessToUserSet, verifyAccessToPods } from "./utils/verify.js";
 
 /**
@@ -9,8 +10,12 @@ import { verifyAccessToUserSet, verifyAccessToPods } from "./utils/verify.js";
  */
 async function getSetReviews(req, res) {
     const userId = req.userId; 
+
+    //Result contains multiple rows for each different pod id, coalesce to one review contains info of [podid, podid]
     const rows = await db.getAllSetReviews(userId);
-    res.json(rows); 
+    const rowsGrouped = extractPodIdsFromRows(rows);
+
+    res.json(rowsGrouped); 
 }
 
 /**
@@ -201,7 +206,6 @@ async function assignSetReviewToPods(req, res) {
     const { userSetId } = req.params; 
     const { podIds } = req.body; 
 
-    console.log("in assign");
     if (!(await verifyAccessToUserSet(userId, userSetId))) {
         return res.status(403).json({message: "Forbidden: You don't have access to the set review."})
     }
@@ -210,7 +214,7 @@ async function assignSetReviewToPods(req, res) {
         return res.status(403).json({message: "Forbidden: You are not a member of these pods"})
     }
 
-    await db.assignSetReviewToPods(userId, podIds); 
+    await db.assignSetReviewToPods(userSetId, podIds); 
 
     res.json(podIds);
 }

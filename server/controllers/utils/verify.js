@@ -16,7 +16,6 @@ async function verifyAccessToTag(userId, tagId) {
 }
 
 async function verifyAccessToPods(userId, podIds) {
-    console.log("here!")
     const accessExists = await db.verifyAccessToPods(userId, podIds);
     console.log(accessExists);
     return accessExists.length === podIds.length; 
