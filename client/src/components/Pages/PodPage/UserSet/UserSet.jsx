@@ -1,7 +1,9 @@
 import styles from "./UserSet.module.css"
+import { Link, useParams } from "react-router";
 
 function UserSet({userSetData}) {
 
+    const { podId } = useParams(); 
     const {set_name, includes_bonus, user_set_id, user_set_img, username} = userSetData;
 
     return (
@@ -12,8 +14,8 @@ function UserSet({userSetData}) {
                 <p><i>{username}</i></p>
             </div>
             <div className={styles.buttons}>
-                <button className={styles.link}>View Stats Page!</button>
-                <button className={styles.link}>View Reviews!</button>
+                <Link to={`/pods/${podId}/setreviews/${user_set_id}/stats/view`} className={styles.link}>View Stats Page</Link>
+                <Link to={`/pods/${podId}/setreviews/${user_set_id}/cards/view`} className={styles.link}>View Reviews</Link>
             </div>
         </div>
     );

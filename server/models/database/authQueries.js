@@ -92,22 +92,40 @@ async function verifyAccessToTag(userId, tagId) {
 }
 
 async function verifyAccessToPods(userId, podIds) {
-
     const initialQuery = `SELECT * FROM pod_users WHERE user_id = $1 AND pod_id IN `
     const podAccessQuery = queryGenerator(initialQuery, 1, podIds.length, 1);
 
     const dataArray = [userId, ...podIds]; 
 
-    
     try {
         const { rows } = await pool.query(podAccessQuery, dataArray); 
         return rows; 
     } catch (err) {
         console.log(err);
     }
+}
 
+/**
+ * Verifies access to another members' set review provided that the two users are in the same pod. 
+ * @param {} podId 
+ */
+async function verifyAccessToPodSetReview(userId, podId, memberUserSetId) {
+    const query = `SELECT *
+                    FROM pod_users
+                    JOIN pod_user_sets 
+                    ON pod_user_sets.pod_id = pod_users.pod_id
+                    WHERE pod_users.pod_id = $1
+                    AND pod_users.user_id = $2
+                    AND pod_user_sets.user_set_id = $3`;
+
+    try {
+        const { rows } = await pool.query(query, [podId, userId, memberUserSetId]); 
+        return rows; 
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 export default { checkDuplicateUser, registerUser, findUserFromUsername, verifyAccessToUserSet, verifyAccessToReview, 
-    verifyAccessToTag, verifyAccessToPods
+    verifyAccessToTag, verifyAccessToPods, verifyAccessToPodSetReview
  };

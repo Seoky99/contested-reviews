@@ -7,7 +7,7 @@ import axiosPrivate from "./store/useAxiosPrivate";
  * @param {*} userSetId 
  * @returns 
  */
-function useFetchSetReview(userSetId) {
+function useFetchSetReview(userSetId, mode, podId) {
 
     const [setReviewData, setSetReviewData ] = useState(null);
 
@@ -18,46 +18,76 @@ function useFetchSetReview(userSetId) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    //Mode determines the url of the request 
+
     useEffect( () => {
-        async function fetchAllTrophies() {
+   
+        async function fetchPageDetails() {
+            try {
+
+                let url;
+                const ownerUrl = `setreviews/${userSetId}/overview`; 
+                const podUrl = `pods/${podId}/view/${userSetId}/overview`;
+
+                url = mode === 'owner' ? ownerUrl : podUrl; 
+
+                const { trophies, stats, setReviewData } = (await axiosPrivate.get(url)).data;
+
+                const initTrophies = Array(trophies.length).fill(false);
+                setOpenTrophyPresents(initTrophies); 
+                setTrophies(trophies); 
+                setStats(stats); 
+                setSetReviewData(setReviewData);
+
+
+            } catch (err) {
+                console.log(err);
+                setError(err);
+            } finally {
+                setLoading(false);
+            }
+
+                 /*async function fetchAllTrophies() {
             const url = `setreviews/${userSetId}/trophies`;
             const trophiesData = (await axiosPrivate.get(url)).data;
             const trophyPresentsInit = Array(trophiesData.length).fill(false); 
 
             setTrophies(trophiesData);
             setOpenTrophyPresents(trophyPresentsInit);
-        }
-
-        async function fetchStats() {
-        const url = `/setreviews/${userSetId}/stats/colors`;
-            const stats = (await axiosPrivate.get(url)).data;
-            console.log(stats);
-            setStats(stats);
-        }
-
-        async function fetchSetReviewInfo() {
-            const url = `setreviews/${userSetId}`;
-            const setReviewData = (await axiosPrivate.get(url)).data;
-            
-            setSetReviewData(setReviewData);
-        } 
-
-        async function fetchPageDetails() {
-            try {
-                await fetchAllTrophies();                
-                await fetchStats();  
-                await fetchSetReviewInfo(); 
-            } catch (err) {
-                console.log(err); 
-                setError(err);
-            } finally {
-                setLoading(false);
             }
-        }
+
+            async function fetchStats() {
+            const url = `/setreviews/${userSetId}/stats/colors`;
+                const stats = (await axiosPrivate.get(url)).data;
+                console.log(stats);
+                setStats(stats);
+            }
+
+            async function fetchSetReviewInfo() {
+                const url = `setreviews/${userSetId}`;
+                const setReviewData = (await axiosPrivate.get(url)).data;
+                
+                setSetReviewData(setReviewData);
+            } 
+
+            async function fetchPageDetails() {
+                try {
+                    await fetchAllTrophies();                
+                    await fetchStats();  
+                    await fetchSetReviewInfo(); 
+                } catch (err) {
+                    console.log(err); 
+                    setError(err);
+                } finally {
+                    setLoading(false);
+                }
+            } */
+
+        } 
 
         fetchPageDetails(); 
 
-    }, [userSetId]); 
+    }, [userSetId, mode, podId]); 
 
     return { setReviewData, trophies, setTrophies, openTrophyPresents, setOpenTrophyPresents, stats, loading, error };
 }

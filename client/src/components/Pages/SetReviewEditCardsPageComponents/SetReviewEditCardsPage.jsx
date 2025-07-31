@@ -42,7 +42,7 @@ function SetReviewEditCardsPage() {
         return applyMechanisms(cards, filter, partition, sort);    
     }, [cards, filter, partition, sort]) 
 
-    if (error) { return <h1>error!</h1>}
+    if (error) { return <h1>Error!</h1>}
     if (loading) { return <h1>Loading!</h1>}
 
     function toggleSelection(cardId) {

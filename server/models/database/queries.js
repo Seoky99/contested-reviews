@@ -137,7 +137,6 @@ async function getSetReview(userid, userSetId) {
     }
 }
 
-
 /**
  * Creates a set review with the specified name and parameters.
  * Then, creates ratings for all the cards in the set - if default, a specified Rank, otherwise null. 

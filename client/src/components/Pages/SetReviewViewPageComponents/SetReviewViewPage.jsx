@@ -8,12 +8,12 @@ import Present from "./Present/Present";
 import TempColorRankingChart from "./Charts/ColorRankingChart";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-function SetReviewDisplayPage() {
+function SetReviewDisplayPage({mode}) {
 
-    const { userSetId } = useParams();
+    const { userSetId, podId } = useParams();
     const navigate = useNavigate(); 
 
-    const { setReviewData, trophies, setTrophies, openTrophyPresents, setOpenTrophyPresents, stats, loading, error } = useFetchSetReview(userSetId); 
+    const { setReviewData, trophies, setTrophies, openTrophyPresents, setOpenTrophyPresents, stats, loading, error } = useFetchSetReview(userSetId, mode, podId); 
 
     const [ statsOpen, setStatsOpen ] = useState(false);
     const [ trophyOpen, setTrophyOpen ] = useState(false);
@@ -43,12 +43,12 @@ function SetReviewDisplayPage() {
     function navBack() {
         navigate("/setreviews");
     }
-
+    
     return (
         <div className={styles.setReviewWrapper}>
             <button className={styles.navButton} onClick={navBack}><ArrowBackIcon fontSize="large"/></button>
 
-            <h1>{setReviewData.name}</h1>
+            <h1>{mode === 'owner' ? setReviewData.name : 'Somebody Else'}</h1>
             <div className={styles.bannerWrapper}>
                 <img></img>
                 <h1></h1>

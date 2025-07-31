@@ -7,8 +7,6 @@ async function refreshToken(req, res) {
         return res.status(401).json({message: 'Refresh token missing'});
     }
 
-        //TODO: Store refresh token in DB, verify that it also exists in DB
-
     try { 
         const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
   

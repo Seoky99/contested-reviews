@@ -1,9 +1,9 @@
 import db from "../models/database/queries.js";
 import statsdb from "../models/database/statsQueries.js";
 import extractCardFromRows from "./utils/extractCardFromRows.js";
-import ratingsNumericMap from "./utils/ratingsNumericMap.js";
 import extractPodIdsFromRows from "./utils/extractPodIdsFromRows.js";
 import { verifyAccessToUserSet, verifyAccessToPods } from "./utils/verify.js";
+import { calculateAveragesPerColor } from "./utils/calculateAveragesPerColor.js";
 
 /**
  * Returns all set review information belonging to the user
@@ -137,46 +137,7 @@ async function getSetReviewStatsColors(req, res) {
 
     const rows = await statsdb.getRatedReviews(userSetId); 
 
-    const colorMap = new Map(); 
-
-    rows.forEach( row => {
-
-        let colorKey = ""; 
-
-        if (row.colors.length < 1) {
-            if (row.types.includes("Land")) {
-                colorKey = "L"; 
-            } else {
-                colorKey = "C"; 
-            }
-        } else {
-            colorKey = row.colors.join(",");
-        }
-
-        colorKey += ` - ${row.rarity}`; 
-
-        if (!colorMap.has(colorKey)) {
-            colorMap.set(colorKey, []);
-        }
-
-        if (row.rank) {
-            if (row.rank != 'NR') {
-                colorMap.get(colorKey).push(ratingsNumericMap[row.rank]);
-            }
-        }
-    })
-
-    const raw = Array.from(colorMap);
-
-    const averages = {};
-
-    for (const [color, scores] of raw) {
-        let sum = 0;
-        for (let i = 0; i < scores.length; i++) {
-            sum += scores[i];
-        }
-        averages[color] = scores.length > 0 ? sum / scores.length : null;
-    }
+    const averages = calculateAveragesPerColor(rows);
 
     res.json(averages);
 }
@@ -217,6 +178,27 @@ async function assignSetReviewToPods(req, res) {
     await db.assignSetReviewToPods(userSetId, podIds); 
 
     res.json(podIds);
+}
+
+async function getSetReviewOverview(req, res) {
+    const userId = req.userId; 
+
+    const { userSetId } = req.params;
+
+    if (!(await verifyAccessToUserSet(userId, userSetId))) {
+            return res.status(403).json({message: "Forbidden: You don't have access to this overview."})
+    }
+
+    const [trophies, colorStats, setReviewInfo] = await Promise.all([
+        db.getSetReviewTrophies(userSetId),
+        statsdb.getRatedReviews(userSetId),
+        db.getSetReview(userId, userSetId)
+    ]);
+
+    const stats = calculateAveragesPerColor(colorStats);
+    const setReviewData = setReviewInfo[0]
+
+    res.json({trophies, stats, setReviewData});
 }
 
 
@@ -288,4 +270,5 @@ async function getCardPageInformation(req, res) {
 
 
 export { getSetReview, getSetReviewCardsEdit, postSetReviewCardsEdit, getSetReviews, createSetReview, 
-         deleteSetReview, getSetReviewCards, getSetReviewTrophies, getSetReviewStatsColors, assignSetReviewToPods } ; 
+         deleteSetReview, getSetReviewCards, getSetReviewTrophies, getSetReviewStatsColors, 
+         assignSetReviewToPods, getSetReviewOverview } ; 

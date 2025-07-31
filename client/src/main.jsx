@@ -19,8 +19,16 @@ import AuthGuard from './components/Pages/AuthGuard/AuthGuard.jsx';
 import PodHomePage from './components/Pages/PodPage/PodHomePage.jsx';
 import PodPage from './components/Pages/PodPage/PodPage.jsx';
 import FallbackPage from './components/Pages/PodPage/FallbackPage.jsx';
+import ViewPodPage from "./components/Pages/ViewPodPage/ViewPodPage.jsx";
+import useAuthInit from "./customHooks/store/useAuthInit.js";
 
 const queryClient = new QueryClient(); 
+
+function AppWrapper() {
+  useAuthInit();
+
+  return <RouterProvider router={router} />;
+}
 
 const router = createBrowserRouter([
   {
@@ -52,7 +60,7 @@ const router = createBrowserRouter([
           },
           {
             path: "setreviews/:userSetId",
-            Component: SetReviewViewPage,
+            Component: () => <SetReviewViewPage mode={"owner"}/>,
           },
           {
             path: "setreviews/:userSetId/cards",
@@ -86,7 +94,15 @@ const router = createBrowserRouter([
                   Component: PodPage
                 }
               ]
-          }
+          },
+          {
+            path: "pods/:podId/setreviews/:userSetId/cards/view",
+            Component: ViewPodPage,
+          },
+          {
+            path: "pods/:podId/setreviews/:userSetId/stats/view",
+            Component: () => <SetReviewViewPage mode={"other"}/>,
+          },
         ]
       }, 
       {
@@ -100,7 +116,7 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router}/>
+      <AppWrapper/>
     </QueryClientProvider>
   </StrictMode>
 )

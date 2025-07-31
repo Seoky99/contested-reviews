@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import axiosPrivate from "./store/useAxiosPrivate";
 
-function useFetchPodInfo() {
+function useFetchPodViewPage(podId, userSetId) {
 
-    const [pageDetails, setPageDetails] = useState(null);
+    const [cards, setCards] = useState(null);
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -14,10 +14,11 @@ function useFetchPodInfo() {
 
             try { 
 
-                const url = `pods`;
+                const url = `pods/${podId}/view/${userSetId}/cards`;
+                console.log(url);
                 const pageData = (await axiosPrivate.get(url)).data;
       
-                setPageDetails(pageData);
+                setCards(pageData);
             
             } catch (err) {
                 setError(err); 
@@ -28,9 +29,9 @@ function useFetchPodInfo() {
 
         fetchPageDetails(); 
 
-    }, []); 
+    }, [podId, userSetId]); 
 
-    return { pageDetails, setPageDetails, loading, error };
+    return { cards, setCards, loading, error };
 }
 
-export default useFetchPodInfo; 
+export default useFetchPodViewPage; 

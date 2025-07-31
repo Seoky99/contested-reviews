@@ -5,11 +5,8 @@ import Navigation from "./components/Navigation/Navigation";
 import Footer from "./components/Footer/Footer";
 import styles from "./Root.module.css"; 
 import ErrorFallbackPage from "./components/Pages/ErrorHandling/ErrorFallbackPage";
-import useAuthInit from "./customHooks/store/useAuthInit.js";
-
 
 function Root() {
-    useAuthInit();
     const location = useLocation();
 
     return (
