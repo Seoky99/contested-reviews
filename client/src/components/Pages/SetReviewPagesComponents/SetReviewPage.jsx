@@ -3,6 +3,7 @@ import useFetchSetReviewInfo from "../../../customHooks/useFetchSetReviewInfo";
 import SetReviewList from './SetReview/SetReviewList';
 import SetReviewDisplay from "./SetReview/SetReviewDisplay";
 import axiosPrivate from "../../../customHooks/store/useAxiosPrivate";
+import Spinner from "../../Spinner/Spinner";
 
 function SetReviewPage() {
 
@@ -94,7 +95,7 @@ function SetReviewPage() {
 
     //Replace with user-friendly pages 
     if (error) { return <h1>Error!</h1>}; 
-    if (loading) { return <h1>Loading!</h1>};
+    if (loading) { return <Spinner spinnerSize={100}/> };
 
     const [selectedSetReview] = setReviews.filter(sr => sr.user_set_id === selectedSetReviewID);
 

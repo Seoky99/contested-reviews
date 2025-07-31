@@ -63,7 +63,7 @@ function SetReviewForm({selectedSetID, name}) {
                 <input {...register("bonusAdded")} className={styles.checkBox} type="checkbox" id="bonusAdded" name="bonusAdded"></input>
             </div>
             <div className={styles.formSeparator}>
-                <label htmlFor="makeShard">Create a Shard!</label>
+                <label htmlFor="makeShard">Create a Shard! <i>(Start with zero cards)</i></label>
                 <input {...register("makeShard")} className={styles.checkBox} type="checkbox" id="makeShard" name="makeShard"></input>
             </div>
             <button disabled={isSubmitting} className={styles.submitButton} type="submit">

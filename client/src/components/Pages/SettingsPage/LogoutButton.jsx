@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import useAuthStore from "../../customHooks/store/useAuthStore";
+import useAuthStore from "../../../customHooks/store/useAuthStore";
 import styles from "./LogoutButton.module.css";
 
 function LogoutButton() {

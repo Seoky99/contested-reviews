@@ -4,6 +4,7 @@ import useFetchSetInfo from "../../../customHooks/useFetchSetInfo";
 import AddPanel from "./AddPanel/AddPanel";
 import Set from "./Set/Set";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Spinner from "../../Spinner/Spinner";
 
 function SetReviewAddPage() {
 
@@ -18,7 +19,7 @@ function SetReviewAddPage() {
 
     //Replace with user-friendly pages 
     if (error) { return <h1>Error!</h1>}; 
-    if (loading) { return <h1>Loading!</h1>};
+    if (loading) { return <Spinner spinnerSize={100}/>};
 
 
     const displaySets = sets.map(set => {

@@ -9,6 +9,7 @@ import SideBar from "../CardGalleryComponents/SideBar/SideBar";
 import MechanismIcons from "../CardGalleryComponents/Mechanisms/MechanismIcons";
 import Mechanisms from "../CardGalleryComponents/Mechanisms/Mechanisms";
 import IconBar from "../CardGalleryComponents/IconBar/IconBar";
+import Spinner from "../../Spinner/Spinner";
 
 function ViewPodPage() {
 
@@ -40,7 +41,7 @@ function ViewPodPage() {
     }, [cards, filter, partition, sort]) 
 
     if (error) { return <h1>Error!</h1>}
-    if (loading) { return <h1>Loading!</h1>}
+    if (loading) { return <Spinner spinnerSize={100}/> }
 
 
     const renderChild = (review) => {

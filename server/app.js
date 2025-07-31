@@ -14,13 +14,14 @@ import registerRouter from './routes/registerRouter.js';
 import authRouter from './routes/authRouter.js';
 import refreshRouter from './routes/refreshRouter.js';
 import logoutRouter from './routes/logoutRouter.js';
+import deleteUserRouter from './routes/deleteUserRouter.js';
 
 const app = express();
 
 const corsOptions = {
   origin: ['https://contestedreviews.com',
-           'https://www.contestedreviews.com',
-           'http://localhost:5173'
+           'https://www.contestedreviews.com'
+           //'http://localhost:5173'
           ],
   credentials: true
 }
@@ -45,6 +46,7 @@ app.use('/api/tags', tagRouter);
 app.use('/api/reviews', reviewRouter);
 app.use('/api/setreviews', setReviewRouter);
 app.use('/api/sets', setsRouter);
+app.use('/api/user', deleteUserRouter);
 
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);

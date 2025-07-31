@@ -5,8 +5,7 @@ import LockOutlineIcon from '@mui/icons-material/LockOutline';
 function UserSet({userSetData}) {
 
     const { podId } = useParams(); 
-    const {set_name, includes_bonus, user_set_id, user_set_img, username, lock_time} = userSetData;
-    console.log(userSetData);
+    const {set_name, includes_bonus, user_set_id, user_set_img, username, formatted_lock_time} = userSetData;
 
     return (
         <div className={styles.userSet}>
@@ -14,7 +13,7 @@ function UserSet({userSetData}) {
             <div>
                 <h1>{set_name}</h1>
                 <p><i>{username}</i></p>
-                <p className={styles.lockTime}><LockOutlineIcon/>{lock_time}</p>
+                <p className={styles.lockTime}><LockOutlineIcon/>{formatted_lock_time}</p>
             </div>
             <div className={styles.buttons}>
                 <Link to={`/pods/${podId}/setreviews/${user_set_id}/stats/view`} className={styles.link}>View Stats Page</Link>

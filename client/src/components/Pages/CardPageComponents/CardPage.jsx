@@ -18,6 +18,7 @@ import navTools from "../../../utils/cardNavigation.js";
 import ReviewCard from "./ReviewCard/ReviewCard.jsx";
 import ArrowBackIosTwoToneIcon from '@mui/icons-material/ArrowBackIosTwoTone';
 import ErrorPage from "../ErrorHandling/ErrorPage.jsx";
+import Spinner from "../../Spinner/Spinner.jsx";
 
 function CardPage() {
     let { userSetId, /*cardId,*/ reviewId } = useParams(); 
@@ -72,7 +73,7 @@ function CardPage() {
         }
     }, [cachedSorted, sorted, queryClient, filter, partition, sort, userSetId]);
 
-    if (isLoading) { return <h1> Loading </h1>}
+    if (isLoading) { return <Spinner spinnerSize={100}/>}
     if (galleryError) { return <h1> Error! </h1>}
 
     const sortOrder = [];
@@ -84,7 +85,7 @@ function CardPage() {
 
     const { myIndex, nextUrl, prevUrl, cardGalleryUrl } = navTools(sortOrder, reviewId, userSetId, params);
 
-    if (loading) { return <h1>Loading</h1> }
+    if (loading) { return <Spinner spinnerSize={100}/> }
     if (error) { return <ErrorPage error={error}/>} 
 
     function toggleCount(removeTag, tagId) {

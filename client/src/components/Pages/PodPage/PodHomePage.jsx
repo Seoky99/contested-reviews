@@ -4,13 +4,14 @@ import PodWidgets from "./PodWidgets/PodWidgets";
 import DisplayPod from "./DisplayPod/DisplayPod";
 import { useState } from "react";
 import { Outlet } from "react-router";
+import Spinner from "../../Spinner/Spinner";
 
 function PodPage() {
 
     const { pageDetails, setPageDetails, loading, error } = useFetchPodInfo();
     const [selectedPod, setSelectedPod] = useState(-1);
 
-    if (loading) { return <h1>Loading...</h1>}
+    if (loading) { return <Spinner spinnerSize={100}/> }
     if (error) { return <h1>Error!</h1>}
 
     function selectPod(podId) {

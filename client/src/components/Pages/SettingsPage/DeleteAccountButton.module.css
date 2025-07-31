@@ -1,9 +1,10 @@
-.logout {
+.delete {
     border-radius: 5px;
-    background-color: coral;
+    background-color: red;
     text-decoration: none;
     padding: 0.5rem 1.4rem;
     color: black;
     cursor: pointer;
     border: none;
+    width: 10rem;
 }

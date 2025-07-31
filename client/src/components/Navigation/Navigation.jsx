@@ -1,8 +1,8 @@
 import { Link, useLocation } from "react-router"; 
 import styles from "./Navigation.module.css";
-import LogoutButton from "./LogoutButton";
 import SearchIcon from "@mui/icons-material/Search";
 import useAuthStore from "../../customHooks/store/useAuthStore";
+import UserButton from "./UserButton";
 
 function Navigation() {
 
@@ -31,7 +31,7 @@ function Navigation() {
                     <Link to="/login" className={styles.login}>Login</Link>
                     <Link to="/register" className={styles.register}>Register</Link>
                 </> :
-                    <LogoutButton/>}
+                    <UserButton/>}
         </nav>
     )
 }

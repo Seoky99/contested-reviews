@@ -126,6 +126,17 @@ async function verifyAccessToPodSetReview(userId, podId, memberUserSetId) {
     }
 }
 
+async function deleteUser(userId) {
+    const query = `DELETE FROM users WHERE user_id = $1`;
+
+    try {
+        await pool.query(query, [userId]); 
+    } catch (err) {
+        console.log(err);
+        throw err; 
+    }
+}
+
 export default { checkDuplicateUser, registerUser, findUserFromUsername, verifyAccessToUserSet, verifyAccessToReview, 
-    verifyAccessToTag, verifyAccessToPods, verifyAccessToPodSetReview
+    verifyAccessToTag, verifyAccessToPods, verifyAccessToPodSetReview, deleteUser
  };

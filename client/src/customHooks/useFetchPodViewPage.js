@@ -15,7 +15,6 @@ function useFetchPodViewPage(podId, userSetId) {
             try { 
 
                 const url = `pods/${podId}/view/${userSetId}/cards`;
-                console.log(url);
                 const pageData = (await axiosPrivate.get(url)).data;
       
                 setCards(pageData);

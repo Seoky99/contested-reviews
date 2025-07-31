@@ -11,6 +11,7 @@ import MechanismIcons from "../CardGalleryComponents/Mechanisms/MechanismIcons.j
 import SideBar from "../CardGalleryComponents/SideBar/SideBar.jsx";
 import IconBar from "../CardGalleryComponents/IconBar/IconBar.jsx";
 import axiosPrivate from "../../../customHooks/store/useAxiosPrivate.js";
+import Spinner from "../../Spinner/Spinner.jsx";
 
 function SetReviewEditCardsPage() {
     let { userSetId } = useParams();
@@ -43,7 +44,7 @@ function SetReviewEditCardsPage() {
     }, [cards, filter, partition, sort]) 
 
     if (error) { return <h1>Error!</h1>}
-    if (loading) { return <h1>Loading!</h1>}
+    if (loading) { return <Spinner spinnerSize={100}/>}
 
     function toggleSelection(cardId) {
         const selectedCopy = new Set(selected);

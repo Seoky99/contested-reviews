@@ -13,6 +13,7 @@ import MechanismIcons from "./Mechanisms/MechanismIcons.jsx";
 import SideBar from "./SideBar/SideBar.jsx";
 import IconBar from "./IconBar/IconBar.jsx";
 import ErrorPage from "../ErrorHandling/ErrorPage.jsx";
+import Spinner from "../../Spinner/Spinner.jsx";
 
 function CardGalleryPage() {
     let { userSetId } = useParams();
@@ -68,7 +69,7 @@ function CardGalleryPage() {
 
     //create hide ratings button?
     if (error) {return <ErrorPage error={error}/>}
-    if (isLoading) { return <h1>Loading!</h1>}
+    if (isLoading) { return <Spinner spinnerSize={100}/>}
 
     const renderChild = (review, userSetId) => {
         return <GalleryCard key={review.reviewId} reviewId={review.reviewId} 

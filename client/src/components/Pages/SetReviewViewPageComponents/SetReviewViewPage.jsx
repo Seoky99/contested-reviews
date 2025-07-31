@@ -7,6 +7,7 @@ import Dropdown from "./Dropdown/Dropdown";
 import Present from "./Present/Present";
 import TempColorRankingChart from "./Charts/ColorRankingChart";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Spinner from '../../Spinner/Spinner';
 
 function SetReviewDisplayPage({mode}) {
 
@@ -18,7 +19,7 @@ function SetReviewDisplayPage({mode}) {
     const [ statsOpen, setStatsOpen ] = useState(false);
     const [ trophyOpen, setTrophyOpen ] = useState(false);
 
-    if (loading) { return <h1>Loading!</h1>};
+    if (loading) { return <Spinner spinnerSize={100}/>};
     if (error) { return <h1>Error!</h1>};
 
     function openPresent(i) {

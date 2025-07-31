@@ -1,5 +1,6 @@
 import { Outlet, Navigate, useLocation } from "react-router";
 import useAuthStore from "../../../customHooks/store/useAuthStore";
+import CircularProgress from '@mui/material/CircularProgress';
 
 function AuthGuard() {
 
@@ -10,7 +11,7 @@ function AuthGuard() {
     const location = useLocation();
 
     if (!hasTriedRefresh) {
-        return <h1>Loading...</h1>
+        return <CircularProgress className={"spinner"}/>
     }
 
     return (

@@ -21,6 +21,7 @@ import PodPage from './components/Pages/PodPage/PodPage.jsx';
 import FallbackPage from './components/Pages/PodPage/FallbackPage.jsx';
 import ViewPodPage from "./components/Pages/ViewPodPage/ViewPodPage.jsx";
 import useAuthInit from "./customHooks/store/useAuthInit.js";
+import SettingsPage from "./components/Pages/SettingsPage/SettingsPage.jsx";
 
 const queryClient = new QueryClient(); 
 
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
       {
         Component: AuthGuard, 
         children: [
+          {
+            path: "settings",
+            Component: SettingsPage,
+          },
           {
             path: "setreviews",
             Component: SetReviewPage,

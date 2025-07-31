@@ -16,6 +16,4 @@ podRouter.get("/:podId", validateRequest({paramsSchema: podIdSchema}), asyncHand
 
 podRouter.get("/", asyncHandler(getUsersForPods));
 
-//tagRouter.delete("/:tagId", validateRequest({paramsSchema: tagIdSchema}), asyncHandler(deleteTag)); 
-
 export default podRouter; 
