@@ -1,7 +1,7 @@
 import styles from "./SetReviewDisplay.module.css";
 import SetWidgets from "./SetWidgets";
 
-function SetReviewDisplay({selectedSetReviewID, selectedSetReview, deleteSetReview, lockInSetReview}) {
+function SetReviewDisplay({selectedSetReviewID, selectedSetReview, deleteSetReview, lockInSetReview, unlockSetReview}) {
     
     const fallbackImg = 'https://cards.scryfall.io/art_crop/front/5/a/5a5841fa-4f30-495a-b840-3ef5a2af8fad.jpg?1711812497';
 
@@ -26,7 +26,8 @@ function SetReviewDisplay({selectedSetReviewID, selectedSetReview, deleteSetRevi
                     <h1 className={styles.title}>{name}</h1>
                     <p>{set_name} {includes_bonus && `(Includes Bonus Sheet!)`}</p>
                     <SetWidgets podIds={pod_ids} userSetId={selectedSetReviewID} deleteSetReview={() => deleteSetReview(selectedSetReviewID)}
-                                lockInSetReview={() => lockInSetReview(selectedSetReviewID)}></SetWidgets>
+                                lockInSetReview={() => lockInSetReview(selectedSetReviewID)}
+                                unlockSetReview={() => unlockSetReview(selectedSetReviewID)}></SetWidgets>
                 </div>
             </div>
     );

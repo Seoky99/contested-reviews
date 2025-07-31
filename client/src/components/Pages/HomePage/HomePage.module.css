@@ -12,17 +12,6 @@
     text-align: center;
     margin-top: 5%;
 
-    & .link {
-        width: 200px;
-        padding: 0.5rem 1rem;
-        cursor: pointer;
-        background-color: white; 
-        border-radius: 5px; 
-        text-align: center;
-        text-decoration: none;
-        color: black;
-    }
-
     & div {
         display: flex;
         gap: 1rem;
@@ -43,13 +32,54 @@
     display: inline-block;
     position: relative;
     top: -1rem;
-    transform: rotate(-3deg)
+    transform: rotate(-3deg);
+    color: #E53935; 
 }
 
 .down {
     position: relative;
     top: 1rem;
     display: inline-block;
-    transform: rotate(2deg)
+    transform: rotate(2deg);
+    color:#1E88E5;
+}
 
+.red {
+    color: #E53935;
+}
+
+.blue {
+    color: #1E88E5;
+}
+
+.redbg {
+    background-color:  #E53935;
+}
+
+.bluebg {
+    background-color: #1E88E5;
+}
+
+.link {
+    width: 200px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 5px; 
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    text-shadow: 0.5px 0.5px black;
+}
+
+.beta {
+    align-self: flex-end;
+    justify-self: flex-end;
+    background-color: orangered;
+    padding: 0.2rem 0.8rem;
+    border-radius: 10px;
+    font-weight: 800;
+}
+
+.linkWrapper {
+    font-weight: 700;
 }

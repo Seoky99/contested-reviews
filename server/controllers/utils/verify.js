@@ -1,7 +1,7 @@
 import db from "../../models/database/authQueries.js";
 
-async function verifyAccessToUserSet(userId, setId) {
-    const accessExists = await db.verifyAccessToUserSet(userId, setId);
+async function verifyAccessToUserSet(userId, userSetId) {
+    const accessExists = await db.verifyAccessToUserSet(userId, userSetId);
     return accessExists.length === 1;
 }
 

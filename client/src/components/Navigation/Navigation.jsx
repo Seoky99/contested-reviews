@@ -1,4 +1,4 @@
-import { Link } from "react-router"; 
+import { Link, useLocation } from "react-router"; 
 import styles from "./Navigation.module.css";
 import LogoutButton from "./LogoutButton";
 import SearchIcon from "@mui/icons-material/Search";
@@ -9,6 +9,12 @@ function Navigation() {
     const token = useAuthStore(state => state.accessToken);
     const loggedIn = !!token; 
 
+    const location = useLocation();
+    const path = location.pathname;
+
+    let setReviewLink = path.startsWith("/setreviews") ? `${styles.link} ${styles.selected}` : `${styles.link}`; 
+    let podLink = path.startsWith("/pods") ? `${styles.link} ${styles.selected}` : `${styles.link}`; 
+
     return (
         <nav className={styles.navBar}>
             <Link to="/" className={styles.homeButton}>
@@ -18,8 +24,8 @@ function Navigation() {
                 <input className={styles.searchBar} type="search" placeholder="Under Construction!"></input>
                 <SearchIcon className={styles.search}/>
             </div>
-            <Link to="/setreviews" className={styles.link}>My Set Reviews</Link>
-            <Link to="/pods" className={styles.link}>Pods</Link>
+            <Link to="/setreviews" className={setReviewLink}>My Set Reviews</Link>
+            <Link to="/pods" className={podLink}>My Pods</Link>
             { !loggedIn ? 
                 <>
                     <Link to="/login" className={styles.login}>Login</Link>

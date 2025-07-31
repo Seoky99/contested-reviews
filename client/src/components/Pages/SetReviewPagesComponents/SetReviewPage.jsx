@@ -52,7 +52,34 @@ function SetReviewPage() {
             const srCopy = [...setReviews];
             const transformed = srCopy.map(setReview => {
                 if (setReview.user_set_id === userSetId) {
-                    return {...setReview, pod_id: 1}
+                    return {...setReview, pod_ids: [1]}
+                } else {
+                    return setReview;
+                }
+            })
+            setSetReviews(transformed);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async function unlockSetReview(userSetId) {
+         //TODO: Create modal instead
+        const confirmed = window.confirm("Are you sure you want to unlock this set review?");
+
+        if (!confirmed) { return; }
+
+        const url = `setreviews/${userSetId}/pods`;
+
+        try {
+            
+            //HARDCODED FOR GLOBAL POD ONLY, CHANGE TO USER CHOOSING PANEL LATER
+            await axiosPrivate.delete(url);
+
+            const srCopy = [...setReviews];
+            const transformed = srCopy.map(setReview => {
+                if (setReview.user_set_id === userSetId) {
+                    return {...setReview, pod_ids: []}
                 } else {
                     return setReview;
                 }
@@ -74,7 +101,7 @@ function SetReviewPage() {
     return (
         <div className={styles.pageWrapper}>
             <SetReviewDisplay selectedSetReviewID={selectedSetReviewID} selectedSetReview={selectedSetReview} deleteSetReview={deleteSetReview}
-                              lockInSetReview={lockInSetReview}/>
+                              lockInSetReview={lockInSetReview} unlockSetReview={unlockSetReview}/>
             <SetReviewList setReviews={setReviews} setSetReviews={setSetReviews} handleSetReviewClick={handleSetReviewClick}
                            selectedSetReviewID={selectedSetReviewID}/>
         </div>

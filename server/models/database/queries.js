@@ -537,8 +537,19 @@ async function assignSetReviewToPods(userSetId, podIds) {
     }
 }
 
+async function removeSetReviewFromPods(userSetId) {
+    const query = `DELETE FROM pod_user_sets WHERE user_set_id = $1`;
+
+    try {
+        await pool.query(query, [userSetId]);
+    } catch (err) {
+        console.log(err);
+        throw err; 
+    }
+}
+
 export default { getSetReview, getSetReviewCardsEdit, postSetReviewCardsEdit, getAllSetReviews, createSetReview, deleteSetReview, 
                  getSets, getReviewsWithCards, getSetReviewTrophies, putSetReviewTrophies, getTrophiesFromReview, 
                  assignTrophiesToReview, getCardFromSetReview, getSetReviewTags, patchCardFromSetReview, 
                  patchCardFromSetReviewByReviewId, performPageUpdate, getReviewPageInformation,
-                 assignSetReviewToPods };
+                 assignSetReviewToPods, removeSetReviewFromPods };

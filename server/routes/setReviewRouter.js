@@ -1,6 +1,6 @@
 import express from "express"; 
 import { getSetReview, getSetReviewCardsEdit, postSetReviewCardsEdit, createSetReview, getSetReviews, getSetReviewCards, getSetReviewTrophies, 
-         deleteSetReview, getSetReviewStatsColors, assignSetReviewToPods, getSetReviewOverview } from "../controllers/setReviewController.js";
+         deleteSetReview, getSetReviewStatsColors, assignSetReviewToPods, getSetReviewOverview, removeSetReviewFromPods } from "../controllers/setReviewController.js";
 import { setReviewSchema, userSetIdSchema } from "../controllers/schemas/setReviewSchemas.js";
 import verifyJWT from "../middleware/verifyJWT.js";
 import asyncHandler from "express-async-handler";
@@ -14,6 +14,7 @@ setReviewRouter.get("/:userSetId/stats/colors", validateRequest({paramsSchema: u
 
 setReviewRouter.get("/:userSetId/overview", validateRequest({paramsSchema: userSetIdSchema}), asyncHandler(getSetReviewOverview));
 
+setReviewRouter.delete("/:userSetId/pods", validateRequest({paramsSchema: userSetIdSchema}), asyncHandler(removeSetReviewFromPods));
 setReviewRouter.post("/:userSetId/pods", validateRequest({paramsSchema: userSetIdSchema}), asyncHandler(assignSetReviewToPods));
 
 setReviewRouter.post("/:userSetId/cards/edit", validateRequest({paramsSchema: userSetIdSchema}), asyncHandler(postSetReviewCardsEdit));

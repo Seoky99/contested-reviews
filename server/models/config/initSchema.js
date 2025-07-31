@@ -127,6 +127,7 @@ async function initSchema() {
         CREATE TABLE IF NOT EXISTS pod_user_sets(
             pod_id INTEGER, 
             user_set_id INTEGER,
+            lock_time TIMESTAMPTZ NOT NULL DEFAULT NOW(), 
             FOREIGN KEY (pod_id) REFERENCES pods(pod_id) ON DELETE CASCADE, 
             FOREIGN KEY (user_set_id) REFERENCES user_sets(user_set_id) ON DELETE CASCADE, 
             PRIMARY KEY (pod_id, user_set_id)

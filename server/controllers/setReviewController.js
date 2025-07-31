@@ -180,6 +180,20 @@ async function assignSetReviewToPods(req, res) {
     res.json(podIds);
 }
 
+async function removeSetReviewFromPods(req, res) {
+    const userId = req.userId; 
+
+    const { userSetId } = req.params; 
+
+    if (!(await verifyAccessToUserSet(userId, userSetId))) {
+        return res.status(403).json({message: "Forbidden: You don't have access to the set review."})
+    }
+
+    await db.removeSetReviewFromPods(userSetId); 
+
+    res.sendStatus(204);
+}
+
 async function getSetReviewOverview(req, res) {
     const userId = req.userId; 
 
@@ -271,4 +285,4 @@ async function getCardPageInformation(req, res) {
 
 export { getSetReview, getSetReviewCardsEdit, postSetReviewCardsEdit, getSetReviews, createSetReview, 
          deleteSetReview, getSetReviewCards, getSetReviewTrophies, getSetReviewStatsColors, 
-         assignSetReviewToPods, getSetReviewOverview } ; 
+         assignSetReviewToPods, getSetReviewOverview, removeSetReviewFromPods } ; 

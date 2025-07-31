@@ -19,6 +19,7 @@ function PodPage() {
         <div className={styles.pageWrapper}>
             <div className={styles.userSetWrapper}>
                 {displayUserSets}
+                {displayUserSets.length === 0 && <h1>No Set Reviews Locked In... Yet!</h1>}
             </div>
         </div>
     )

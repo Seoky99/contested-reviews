@@ -15,7 +15,33 @@
     gap: 1.4rem;
     height: 80vh;
     overflow-y: scroll;
+    padding: 0rem 1.2rem;
+
+    &::-webkit-scrollbar {
+    width: 8px;            
+    height: 8px;          
+    }
+
+    &::-webkit-scrollbar-track {
+    background: #121212;  
+    }
+
+    &::-webkit-scrollbar-thumb {
+    background-color: #555; 
+    border-radius: 4px;     
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+    background: #777;      
+    }
+
+    /*Firefox*/
+    * {
+    scrollbar-width: thin;            
+    scrollbar-color: #555 #121212;      
+    }
 }
+
 
 .podWrapper {
     border-radius: 10px; 

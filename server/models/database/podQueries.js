@@ -65,11 +65,13 @@ async function getUserSetsForPods(podId) {
                         username,
                         users.user_id, 
                         user_set_img, 
-                        includes_bonus
+                        includes_bonus,
+                        to_char(lock_time, 'FMMM/DD/YYYY, FMHH12:MIAM') AS lock_time
                     FROM pod_user_sets 
                     JOIN user_sets ON user_sets.user_set_id = pod_user_sets.user_set_id
                     JOIN users ON user_sets.user_id = users.user_id
-                    WHERE pod_user_sets.pod_id = $1;` 
+                    WHERE pod_user_sets.pod_id = $1
+                    ORDER BY lock_time DESC;` 
 
     try {
         const { rows } = await pool.query(query, [podId]);
