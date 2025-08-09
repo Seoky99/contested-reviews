@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
-import { useNavigate, useParams, useLocation, Link } from "react-router";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { useNavigate, useParams, useLocation } from "react-router";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { applyMechanisms } from "../../../utils/applyMechanisms.js"
 import styles from "./CardGalleryPage.module.css";
@@ -23,7 +23,9 @@ function CardGalleryPage() {
 
     const [sideBarActive, setSideBarActive] = useState(true);
     const [showRatings, setShowRatings] = useState(true);
+    const scrollRef = useRef(null);
 
+    const scrollCardId = location.state?.scrollCardId;
     userSetId = Number(userSetId);
 
     //TODO: Support multi-filtering by breaking up filter to (tag=tagName, color=colorValue instead)
@@ -67,13 +69,21 @@ function CardGalleryPage() {
         }
     }, [transformedReviews, queryClient, userSetId, sort, filter, partition]);
 
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollIntoView({ behavior: "smooth", block: "start"});
+        }
+    }, []);
+
+
     //create hide ratings button?
     if (error) {return <ErrorPage error={error}/>}
     if (isLoading) { return <Spinner spinnerSize={100}/>}
 
     const renderChild = (review, userSetId) => {
         return <GalleryCard key={review.reviewId} reviewId={review.reviewId} 
-                            cardData={review} userSetId={userSetId} showRatings={showRatings}/>;
+                            cardData={review} userSetId={userSetId} showRatings={showRatings}
+                            scrollCard={scrollRef} scrollCardId={scrollCardId}/>;
     }
 
     const displayReviews = transformedReviews.map(reviewArray => {

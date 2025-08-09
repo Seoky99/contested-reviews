@@ -3,7 +3,7 @@
   padding: 0;
   gap: 0.5rem;
   position: relative;
-
+  scroll-margin-top: 80px;
 
   & .cardButton {
     background-size: contain;

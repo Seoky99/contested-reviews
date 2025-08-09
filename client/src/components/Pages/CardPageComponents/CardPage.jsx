@@ -40,6 +40,10 @@ function CardPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showRatings, setShowRatings] = useState(true);
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     //Save States: 'idle', 'saving', 'success', 'error' 
     const [ saving, setSaving ] = useState('idle');
 
@@ -101,7 +105,6 @@ function CardPage() {
                 }
             }
         );
-
         return updateCount; 
     }
 
@@ -148,9 +151,7 @@ function CardPage() {
     async function handleDeleteTag(tagId) {
         const confirmed = window.confirm("Are you sure you want to delete this tag?");
 
-        if (!confirmed) {
-            return;
-        }
+        if (!confirmed) { return; }
 
         try {
             const url = `tags/${tagId}`;
@@ -173,12 +174,11 @@ function CardPage() {
     const reviewTags = setTags.filter(tag => selectedTags.has(tag.tagId));
     const reviewData = {review_id: cardDetails.reviewId, card_name: cardDetails.faces[0].name, image_normal: cardDetails.faces[0].imageNormal};
     const displayTrophies = trophies.filter(trophy => trophy.review_id === reviewId);
-    const noTags = selectedTags.size === 0;
 
     return (
             <div className={styles.pageWrapper}>
                 <div className={styles.backWrap}>
-                    <Link to={cardGalleryUrl} className={styles.navButton}> <ArrowBackIosTwoToneIcon/> Card Gallery</Link> 
+                    <Link to={cardGalleryUrl} className={styles.navButton} state={{scrollCardId: cardDetails.cardId }}> <ArrowBackIosTwoToneIcon/> Card Gallery</Link> 
                     <h6 className={styles.mechs}>FILTER: {filter} | PARTITION: {partition} | SORT: {sort}</h6>
                 </div>
                 <div className={styles.cardWrapper}>
@@ -200,7 +200,7 @@ function CardPage() {
                         <ReviewTagList reviewTags={reviewTags} handleDelete={handleDeleteTag} selectedTags={selectedTags}
                                        toggleTag={toggleTag} reviewId={reviewId} showPanel={showPanel} viewTaggedCards={viewTaggedCards}/>
                         <div>
-                            <TagPanelButton showPanel={showPanel} setShowPanel={setShowPanel} noTags={noTags}/>
+                            <TagPanelButton showPanel={showPanel} setShowPanel={setShowPanel} noTags={selectedTags.size === 0}/>
                             {showPanel && 
                                 <>
                                     <TagPanel selectedTags={selectedTags} setSelectedTags={setSelectedTags}

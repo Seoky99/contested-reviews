@@ -140,7 +140,7 @@ async function initSchema() {
             FOREIGN KEY (pod_id) REFERENCES pods(pod_id) ON DELETE CASCADE, 
             FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
             PRIMARY KEY (pod_id, user_id)
-        )
+        );
         
         INSERT INTO pods(pod_name, is_private) VALUES ('Global Pod', FALSE);
         
