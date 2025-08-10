@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
-import { useParams, useLocation, Link, useNavigate } from "react-router";
+import { useParams, useLocation, useNavigate, Link } from "react-router";
 import { applyMechanisms } from "../../../utils/applyMechanisms.js";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 
@@ -122,6 +122,18 @@ function CardPage() {
             } else if (direction === 'RIGHT') {
                 navigate(nextUrl);
             }
+        }
+    }
+
+    async function handleGalleryNav(e) {
+        e.preventDefault(); 
+
+        if (isDirty) {
+            await handleSaveClick(); 
+        }
+
+        if (saving !== 'error') {
+            navigate(cardGalleryUrl, { state : {scrollCardId: cardDetails.cardId }});
         }
     }
 
@@ -249,7 +261,7 @@ function CardPage() {
     return (
             <div className={styles.pageWrapper} onKeyDown={handleKeyPress} tabIndex={0} ref={pageRef}>
                 <div className={styles.backWrap}>
-                    <Link to={cardGalleryUrl} className={styles.navButton} state={{scrollCardId: cardDetails.cardId }}> <ArrowBackIosTwoToneIcon/> Card Gallery</Link> 
+                    <Link onClick={handleGalleryNav} className={styles.galleryNavButton}> <ArrowBackIosTwoToneIcon/> Card Gallery</Link> 
                     <h6 className={styles.mechs}>FILTER: {filter} | PARTITION: {partition} | SORT: {sort}</h6>
                 </div>
                 <div className={styles.cardWrapper}>

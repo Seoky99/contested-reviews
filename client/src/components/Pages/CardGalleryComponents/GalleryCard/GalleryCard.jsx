@@ -7,6 +7,7 @@ function GalleryCard({cardData, userSetId, reviewId, showRatings, scrollCard, sc
     const params = new URLSearchParams(location.search); 
     const addQuestionMark = params.toString() === '' ? `` : `?`; 
 
+
     let url = `/setreviews/${userSetId}/reviews/${reviewId}/cards/${cardData.cardId}` + addQuestionMark + params.toString(); 
 
     return (

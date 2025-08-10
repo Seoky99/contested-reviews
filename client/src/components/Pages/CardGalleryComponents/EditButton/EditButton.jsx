@@ -8,8 +8,8 @@ function EditButton({userSetId, params}) {
 
     return (
         <Link className={styles.editLink} to={url}>
-            <EditIcon/>
-            Add/Remove Cards!
+            <p className={styles.label}>Add/Remove Cards!</p>
+            {/*<EditIcon fontSize="small"/>*/}
         </Link>
     );
 }

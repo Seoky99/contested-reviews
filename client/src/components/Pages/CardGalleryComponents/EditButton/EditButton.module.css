@@ -1,11 +1,24 @@
 .editLink {
   display: flex;
-  background-color: white;
+  justify-content: space-around;
   text-decoration: none;
   color: black;
-  padding: 0.4rem;
-  border-radius: 5px; 
-  border: 3px solid black;
+  padding: 0.2rem 0.4rem;
   max-height: 100px;
+  margin-top: 20%;
+  background-color: #FFF;
+  font-weight: 40;
+  border: 2px outset buttonborder;
+}
+
+.label {
   font-size: 0.8rem;
+}
+
+.editLink:hover {
+  border-color: #646cff;
+}
+.editLink:focus,
+.editLink:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
 }

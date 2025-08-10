@@ -1,7 +1,6 @@
 import styles from "./SideBar.module.css";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
-
 function SideBar({children, shrinkBar, editMode=false}) {
 
     return (
