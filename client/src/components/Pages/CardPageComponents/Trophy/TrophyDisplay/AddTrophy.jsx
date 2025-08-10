@@ -19,7 +19,7 @@ function AddTrophy({modalOnClick}) {
     }
 
     return (
-        <div className={styles.trophyWrapper}>
+        <div className={styles.addTrophyWrapper}>
             <button className={styles.addTrophy} onClick={modalOnClick} onMouseEnter={handleMouseOver} onMouseLeave={handleMouseOut}>
                 <AddBoxIcon fontSize='large'/>
             </button>

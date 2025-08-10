@@ -1,4 +1,3 @@
-import { useState } from "react"; 
 import LetterButton from "./LetterButton";
 import styles from "./RankWidget.module.css";
 import ModifierButton from "./ModifierButton";
@@ -15,26 +14,13 @@ function RankWidget({rank, handleRankChange}) {
 
     const { base, modifier } = parseRank(rank);
 
-    function handleLetterButton(newBase) {
-        handleRankChange(newBase + (modifier === null ? `` : `${modifier}`));
-    }
-
-    function handleModifierButton(newModifier) {
-
-        if (base === 'NR') {
-            return; 
-        }
-
-        if (newModifier === modifier) {
-            newModifier = null; 
-        }     
-
-        handleRankChange(base + (newModifier === null ? `` : newModifier));
+    function handleButtonPress(newRank) {
+        handleRankChange(newRank);
     }
 
     const AVAILABLE_RANKS = [ 'A', 'B', 'C', 'D', 'F']; 
     const displayButtons = AVAILABLE_RANKS.map(availableRank => {
-        return <LetterButton key={availableRank} displayRank={availableRank} base={base} handleClick={() => handleLetterButton(availableRank)}/>
+        return <LetterButton key={availableRank} displayRank={availableRank} base={base} handleClick={() => handleButtonPress(availableRank)}/>
     })
 
     return (
@@ -43,8 +29,8 @@ function RankWidget({rank, handleRankChange}) {
                     displayButtons
                 }
                 <div className={styles.modifierButtons}>
-                    <ModifierButton handleClick={() => handleModifierButton("+")} displayModifier={"+"} modifier={modifier}/>
-                    <ModifierButton handleClick={() => handleModifierButton("-")} displayModifier={"-"} modifier={modifier}/>
+                    <ModifierButton handleClick={() => handleButtonPress("+")} displayModifier={"+"} modifier={modifier}/>
+                    <ModifierButton handleClick={() => handleButtonPress("-")} displayModifier={"-"} modifier={modifier}/>
                 </div>
             </div>
             

@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { useParams, useLocation, Link, useNavigate } from "react-router";
 import { applyMechanisms } from "../../../utils/applyMechanisms.js";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
@@ -21,7 +21,7 @@ import ErrorPage from "../ErrorHandling/ErrorPage.jsx";
 import Spinner from "../../Spinner/Spinner.jsx";
 
 function CardPage() {
-    let { userSetId, /*cardId,*/ reviewId } = useParams(); 
+    let { userSetId, reviewId } = useParams(); 
 
     const location = useLocation();
     const params = new URLSearchParams(location.search);
@@ -39,13 +39,47 @@ function CardPage() {
     const [ deleteTagError, setDeleteTagError ] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showRatings, setShowRatings] = useState(true);
+    const [isDirty, setIsDirty] = useState(false);
+    //Save States: 'idle', 'saving', 'success', 'error' 
+    const [ saving, setSaving ] = useState('idle');
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
-    //Save States: 'idle', 'saving', 'success', 'error' 
-    const [ saving, setSaving ] = useState('idle');
+    const pageRef = useRef(null);
+
+    const handleRankChange = useCallback((val) => { 
+        let rank; 
+
+        if (val === '_') {
+            rank = '-';
+        } else if (val === '=') {
+            rank = '+';
+        } else {
+            rank = val;
+        }
+
+        setCardDetails(prev => {
+            const prevRank = prev.rank; 
+            const validRanks = ['A', 'B', 'C', 'D', 'F'];
+            const modifiers = ['+', '-'];
+
+            if (modifiers.includes(rank) && validRanks.includes(prevRank.charAt(0))) {
+                if (prevRank.length >= 1 && prevRank.charAt(1) === rank) {
+                    rank = '';
+                }
+                return ({...prev, rank: prevRank.charAt(0) + rank}); 
+            } else if (validRanks.includes(rank)) {
+                return ({...prev, rank}); 
+            } else {
+                return prev;
+            }
+        });
+
+        setIsDirty(true);
+
+    }, [setCardDetails]); 
 
     const queryClient = useQueryClient(); 
     const navigate = useNavigate();
@@ -77,8 +111,41 @@ function CardPage() {
         }
     }, [cachedSorted, sorted, queryClient, filter, partition, sort, userSetId]);
 
+    async function handleNavDirection(direction) {
+        if (isDirty) {
+            await handleSaveClick();
+        }
+
+        if (saving !== 'error') {
+            if (direction === 'LEFT') {
+                navigate(prevUrl);
+            } else if (direction === 'RIGHT') {
+                navigate(nextUrl);
+            }
+        }
+    }
+
+    function handleKeyPress(e) {
+        const editableContent = e.target.tagName; 
+        if (editableContent === 'INPUT' || editableContent === 'TEXTAREA') {
+            return; 
+        }
+
+        if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+            handleNavDirection(e.key === "ArrowRight" ? "RIGHT" : "LEFT");
+        } else {
+            handleRankChange(e.key.toUpperCase());   
+        }
+    }
+
+    useEffect(() => {
+        if (!isLoading && !galleryError && !loading && !error) {
+            requestAnimationFrame(() => pageRef.current?.focus());
+        }
+    }, [isLoading, galleryError, loading, error]);
+
     if (isLoading) { return <Spinner spinnerSize={100}/>}
-    if (galleryError) { return <h1> Error! </h1>}
+    if (galleryError) { return <ErrorPage error={galleryError}/>}
 
     const sortOrder = [];
     sorted.forEach(partition => {
@@ -120,6 +187,7 @@ function CardPage() {
         }
 
         setSetTags(toggleCount(removeTag, tagId));
+        setIsDirty(true);
     }
     
     async function handleSaveClick() {
@@ -135,6 +203,8 @@ function CardPage() {
             const cacheKey = ['sortOrder', userSetId, filter, partition, sort];
             await queryClient.invalidateQueries(cacheKey);
 
+            console.log("saving!");
+
             setSaving('success');
             setTimeout(() => setSaving('idle'), 1000);
         } catch (err) {
@@ -142,6 +212,7 @@ function CardPage() {
             setTimeout(() => setSaving('idle'), 1000);
             console.log(err); 
         } 
+        setIsDirty(false);
     }
 
     function viewTaggedCards(tagId) {
@@ -150,7 +221,6 @@ function CardPage() {
 
     async function handleDeleteTag(tagId) {
         const confirmed = window.confirm("Are you sure you want to delete this tag?");
-
         if (!confirmed) { return; }
 
         try {
@@ -167,31 +237,32 @@ function CardPage() {
             console.log(err); 
         }
     }
-    
-    function handleRankChange(rank) { setCardDetails({...cardDetails, rank: rank}); }
-    function handleNotesChange(e) { setCardDetails({...cardDetails, notes: e.target.value}); }
+
+    function handleNotesChange(e) { 
+        setCardDetails({...cardDetails, notes: e.target.value}); setIsDirty(true) 
+    }
   
     const reviewTags = setTags.filter(tag => selectedTags.has(tag.tagId));
     const reviewData = {review_id: cardDetails.reviewId, card_name: cardDetails.faces[0].name, image_normal: cardDetails.faces[0].imageNormal};
     const displayTrophies = trophies.filter(trophy => trophy.review_id === reviewId);
 
     return (
-            <div className={styles.pageWrapper}>
+            <div className={styles.pageWrapper} onKeyDown={handleKeyPress} tabIndex={0} ref={pageRef}>
                 <div className={styles.backWrap}>
                     <Link to={cardGalleryUrl} className={styles.navButton} state={{scrollCardId: cardDetails.cardId }}> <ArrowBackIosTwoToneIcon/> Card Gallery</Link> 
                     <h6 className={styles.mechs}>FILTER: {filter} | PARTITION: {partition} | SORT: {sort}</h6>
                 </div>
                 <div className={styles.cardWrapper}>
                     <ReviewCard imageUrl={cardDetails.faces[0].borderCrop} rank={cardDetails.rank}
-                                prevUrl={prevUrl} nextUrl={nextUrl} myIndex={myIndex} total={sortOrder.length}
+                                handleNavDirection={handleNavDirection} myIndex={myIndex} total={sortOrder.length}
                                 showRatings={showRatings}/>
 
                     <div className={styles.cardInformation}>
                         <div className={styles.header}>
                             <h1>{cardDetails.faces[0].name}</h1>
                             <TrophyDisplay displayTrophies={displayTrophies} modalOnClick={() => setIsModalOpen(true)}></TrophyDisplay>
-                            <SaveButton handleSaveClick={handleSaveClick} saving={saving}/>
-                            <TrophyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} 
+                            {/*<SaveButton handleSaveClick={handleSaveClick} saving={saving}/> */}
+                            <TrophyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} setIsDirty={setIsDirty}
                                          trophies={trophies} setTrophies={setTrophies} reviewData={reviewData}/>
                         </div>
                         <RankWidget rank={cardDetails.rank} handleRankChange={handleRankChange}/> 

@@ -7,7 +7,7 @@ import ModalSelect from "./ModalSelect";
   -assignedOther 
   -unassigned 
 */
-export default function TrophyModal({ isOpen, onClose, trophies, setTrophies, reviewData }) {
+export default function TrophyModal({ isOpen, onClose, trophies, setTrophies, reviewData, setIsDirty }) {
   if (!isOpen) return null;
 
   const { review_id, card_name, image_normal } = reviewData;
@@ -28,6 +28,7 @@ export default function TrophyModal({ isOpen, onClose, trophies, setTrophies, re
       }
     })
     setTrophies(trophyCopy);
+    setIsDirty(true);
   }
 
 

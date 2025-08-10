@@ -27,12 +27,17 @@ function LoginPage() {
             navigate(from, {replace: true});
 
         } catch (err) {
+            console.log(err);
             const response = err.response; 
 
             if (response) {
                 const data = response.data; 
                 if (data) {
-                    setError("root", { type: "server", message: data.message});
+                    if (data.message) {
+                        setError("root", { type: "server", message: data.message});
+                    } else {
+                        setError("root",  { type: "server", message: data})
+                    }
                 }
             } else {
                 if (err.message === "Network Error") {
@@ -43,6 +48,8 @@ function LoginPage() {
             }
         }
     } 
+
+    console.log(errors);
 
     return (
         <div className={styles.pageWrapper}>

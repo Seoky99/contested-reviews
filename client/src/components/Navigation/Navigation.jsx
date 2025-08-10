@@ -21,8 +21,8 @@ function Navigation() {
                 <img src="/logo5.png" height="50" width="135"></img>
             </Link>
             <div className={styles.searchWrapper}>
-                <input className={styles.searchBar} type="search" placeholder="Under Construction!"></input>
-                <SearchIcon className={styles.search}/>
+                {/*<input className={styles.searchBar} type="search" placeholder="Under Construction!"></input> 
+                <SearchIcon className={styles.search}/> */}
             </div>
             <Link to="/setreviews" className={setReviewLink}>My Set Reviews</Link>
             <Link to="/pods" className={podLink}>My Pods</Link>

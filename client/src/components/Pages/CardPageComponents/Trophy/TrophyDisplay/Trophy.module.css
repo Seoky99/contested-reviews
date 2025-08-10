@@ -17,7 +17,7 @@
     border-style: dashed;
 }
 
-.trophyWrapper {
+.trophyWrapper, .addTrophyWrapper {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -30,12 +30,18 @@
     }
 }
 
+.addTrophyWrapper {
+    margin-left: auto;
+}
+
 .absolute {
     position: absolute;
     bottom: -20px;
+    left: -40px;
     background-color: white;
     color: black;
-    width: 5rem;
+    width: 8rem;
+    font-weight: 600;
     padding: 0.2rem;
     z-index: -100;
     border-radius: 5px;
