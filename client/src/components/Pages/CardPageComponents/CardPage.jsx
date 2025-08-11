@@ -40,6 +40,7 @@ function CardPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showRatings, setShowRatings] = useState(true);
     const [isDirty, setIsDirty] = useState(false);
+    
     //Save States: 'idle', 'saving', 'success', 'error' 
     const [ saving, setSaving ] = useState('idle');
 
@@ -141,6 +142,11 @@ function CardPage() {
         const editableContent = e.target.tagName; 
         if (editableContent === 'INPUT' || editableContent === 'TEXTAREA') {
             return; 
+        }
+
+        if (e.repeat) {
+            e.preventDefault();
+            return;
         }
 
         if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
