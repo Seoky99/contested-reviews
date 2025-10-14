@@ -3,7 +3,7 @@
     display: flex; 
     justify-content: flex-end;
     align-items: center;
-    padding: 0.2rem 0.8rem;
+    padding: 0.2rem 1rem;
     position: sticky;
     top: 0px;
     gap: 2rem;
@@ -20,10 +20,20 @@ img {
     margin-right: auto;
 }
 
-.link {
+.link,.accLink {
     text-decoration: none;
     color: black;
     font-size: 1rem;
+}
+
+.btnContainer {
+    border: 3px solid black;    
+    border-radius: 50%;
+    width: 2.5rem; 
+    height: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .link:hover {
@@ -48,18 +58,18 @@ img {
 
 .login {
     border-radius: 5px;
-    background-color: aqua;
+    background-color: #E53935;
     text-decoration: none;
     padding: 0.5rem 1.4rem;
-    color: black;
+    color: white;
 }
 
 .register {
     border-radius: 5px;
-    background-color: aquamarine;
+    background-color: #1E88E5;
     text-decoration: none;
     padding: 0.5rem 1.4rem;
-    color: black;
+    color: white;
 }
 
 .searchBar {

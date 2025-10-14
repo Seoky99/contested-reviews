@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router";
 import styles from "./Navigation.module.css";
 import SearchIcon from "@mui/icons-material/Search";
 import useAuthStore from "../../customHooks/store/useAuthStore";
-import UserButton from "./UserButton";
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 
 function Navigation() {
 
@@ -31,7 +31,10 @@ function Navigation() {
                     <Link to="/login" className={styles.login}>Login</Link>
                     <Link to="/register" className={styles.register}>Register</Link>
                 </> :
-                    <UserButton/>}
+                    <div className={styles.btnContainer}>
+                        <Link to="/settings" className={styles.accLink}><ManageAccountsIcon/></Link>
+                    </div>
+            }
         </nav>
     )
 }
