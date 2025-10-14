@@ -21,7 +21,7 @@ const app = express();
 const corsOptions = {
   origin: ['https://contestedreviews.com',
            'https://www.contestedreviews.com',
-            //'http://localhost:5173'
+            'http://localhost:5173'
           ],
   credentials: true
 }
