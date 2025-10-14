@@ -1,9 +1,39 @@
 import pool from "../pool.js"; 
 
+async function podCodeExists(podCode) {
+    const query = `SELECT * FROM pods WHERE pod_code = $1`;
+
+    try {
+        const { rowCount } = await pool.query(query, [podCode]); 
+        return rowCount >= 1; 
+    } catch (err) {
+        console.log(err); 
+        throw err; 
+    }
+}
+
+async function createPod(podName, podCode, isPrivate, userId) {
+    const client = await pool.connect(); 
+    const query = `INSERT INTO pods(pod_name, pod_code, is_private) VALUES ($1, $2, $3) RETURNING pod_id`; 
+    const insertUserQuery = `INSERT INTO pod_users(pod_id, user_id, role) VALUES ($1, $2, $3)`;
+
+    try {
+        await client.query('BEGIN');
+        const {rows}= await client.query(query, [podName, podCode, isPrivate]); 
+        const podId = rows[0].pod_id;    
+        await client.query(insertUserQuery, [podId, userId, 'Admin']);
+        await client.query('COMMIT'); 
+    } catch (err) {
+        console.log(err); 
+        await client.query('ROLLBACK');
+        throw err; 
+    } finally {
+        client.release();
+    }
+}
+
 async function getPodPageInformation(userId) {
-
     //Left join by user sets to get the user set information of pods the user is in, but aren't reviews for
-
     const query = `SELECT 
     pods.pod_id, 
     pods.pod_name, 
@@ -72,4 +102,4 @@ async function getUserSetsForPods(podId) {
 
 }
 
-export default { getPodPageInformation, getUserInfoForPods, getUserSetsForPods }
+export default { podCodeExists, createPod, getPodPageInformation, getUserInfoForPods, getUserSetsForPods }

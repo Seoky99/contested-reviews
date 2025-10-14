@@ -121,6 +121,7 @@ async function initSchema() {
         CREATE TABLE IF NOT EXISTS pods(
             pod_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
             pod_name TEXT NOT NULL,
+            pod_code TEXT UNIQUE, 
             is_private BOOLEAN DEFAULT FALSE
         );
 

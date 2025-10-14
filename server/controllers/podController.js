@@ -1,11 +1,40 @@
 import db from "../models/database/podQueries.js";
 import qdb from "../models/database/queries.js";
 import cardsdb from "../models/database/queries.js";
-import statsdb from "../models/database/statsQueries.js"
+import statsdb from "../models/database/statsQueries.js";
+import { nanoid } from 'nanoid';
+import { customAlphabet } from "nanoid"; 
 import { calculateAveragesPerColor } from "./utils/calculateAveragesPerColor.js";
 import groupMembersByPod from "./utils/groupMembersByPod.js";
 import extractCardFromRows from "./utils/extractCardFromRows.js";
 import { verifyAccessToPods, verifyAccessToPodSetReview  } from "./utils/verify.js";
+
+async function createPod(req, res) {
+    const userId = req.userId; 
+
+    const {podName, isPrivate} = req.body; 
+
+    const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', 8);
+    let podCode = nanoid(); 
+    let alreadyExists = await db.podCodeExists(podCode); 
+
+    //Attempt to generate at least five unique room codes before returning an error 
+    for (let i = 0; i < 5; i++) {
+        if (!alreadyExists) {
+            break; 
+        }
+        podCode = nanoid(); 
+        alreadyExists = await db.podCodeExists(podCode);  
+    }
+
+    if (alreadyExists) {
+        return res.status(500).json({message: 'Could not generate unique pod code'}); 
+    }
+
+    await db.createPod(podName, podCode, isPrivate, userId);
+
+    res.json(podCode);
+}
 
 async function getUsersForPods(req, res) {
     const userId = req.userId; 
@@ -66,4 +95,4 @@ async function viewPodMemberOverview(req, res) {
 
 
 
-export { getUsersForPods, getUserSetsForPods, viewPodMemberCards, viewPodMemberOverview };
+export { createPod, getUsersForPods, getUserSetsForPods, viewPodMemberCards, viewPodMemberOverview };
