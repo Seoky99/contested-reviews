@@ -16,7 +16,7 @@ function UserSet({userSetData}) {
                 <p className={styles.lockTime}><LockOutlineIcon/>{formatted_lock_time}</p>
             </div>
             <div className={styles.buttons}>
-                <Link to={`/pods/${podId}/setreviews/${user_set_id}/stats/view`} className={styles.link}>View Stats Page</Link>
+                <Link to={`/pods/${podId}/setreviews/${user_set_id}/stats/view`} className={styles.link}>View Stats</Link>
                 <Link to={`/pods/${podId}/setreviews/${user_set_id}/cards/view`} className={styles.link}>View Reviews</Link>
             </div>
         </div>

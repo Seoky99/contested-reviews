@@ -27,7 +27,6 @@ function CardFlow() {
                 <img className={styles.image} src={imgSrc}></img>
                 <h1 src={styles.rank}>{rank}</h1>
             </div>
-            <p>{description}</p>
         </div>
     )
 

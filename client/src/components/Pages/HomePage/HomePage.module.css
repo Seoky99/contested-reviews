@@ -25,7 +25,7 @@
 }
 
 .title {
-    font-size: 4.3rem;
+    font-size: 4.9rem;
 }
 
 .up {
@@ -52,23 +52,19 @@
     color: #1E88E5;
 }
 
-.redbg {
-    background-color:  #E53935;
-}
-
-.bluebg {
-    background-color: #1E88E5;
+.homeButton {
+    background-color: aliceblue;
 }
 
 .link {
     width: 200px;
+    font-weight: 300;
     padding: 0.5rem 1rem;
     cursor: pointer;
     border-radius: 5px; 
     text-align: center;
     text-decoration: none;
-    color: white;
-    text-shadow: 0.5px 0.5px black;
+    color: black;
 }
 
 .beta {
