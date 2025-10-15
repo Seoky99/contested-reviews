@@ -1,10 +1,11 @@
 import styles from "./PodWidgets.module.css";
+import { Link } from "react-router"; 
 
 function PodWidgets() {
 
     return (
         <div className={styles.buttonWrapper}>
-            <button disabled className={styles.podWidget}>Create Pod!</button>
+            <Link className={styles.podWidget} to="/pods/create">Create Pod!</Link>
             <button disabled className={styles.podWidget}>Join Pod!</button>
         </div>
     );

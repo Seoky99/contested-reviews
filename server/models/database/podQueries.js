@@ -60,7 +60,7 @@ async function getPodPageInformation(userId) {
 
 async function getUserInfoForPods(userId) {
     
-    const query = `SELECT username, pod_users.pod_id, pod_name
+    const query = `SELECT username, pod_users.pod_id, pod_name, pod_code
                    FROM pod_users
                    JOIN pods ON pod_users.pod_id = pods.pod_id
                    JOIN users ON pod_users.user_id = users.user_id

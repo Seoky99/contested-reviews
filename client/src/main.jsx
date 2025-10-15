@@ -20,6 +20,7 @@ import PodHomePage from './components/Pages/PodPage/PodHomePage.jsx';
 import PodPage from './components/Pages/PodPage/PodPage.jsx';
 import FallbackPage from './components/Pages/PodPage/FallbackPage.jsx';
 import ViewPodPage from "./components/Pages/ViewPodPage/ViewPodPage.jsx";
+import CreatePod from "./components/Pages/PodPage/CreatePod/CreatePod.jsx";
 import useAuthInit from "./customHooks/store/useAuthInit.js";
 import SettingsPage from "./components/Pages/SettingsPage/SettingsPage.jsx";
 
@@ -95,8 +96,12 @@ const router = createBrowserRouter([
                   Component: FallbackPage,
                 },
                 {
-                  path: ":podId",
+                  path: ":podId/:podCode",
                   Component: PodPage
+                }, 
+                {
+                  path: "create",
+                  Component: CreatePod 
                 }
               ]
           },

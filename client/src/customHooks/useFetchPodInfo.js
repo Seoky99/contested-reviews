@@ -17,6 +17,8 @@ function useFetchPodInfo() {
                 const url = `pods`;
                 const pageData = (await axiosPrivate.get(url)).data;
       
+                console.log(pageData);
+
                 setPageDetails(pageData);
             
             } catch (err) {

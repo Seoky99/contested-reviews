@@ -6,7 +6,7 @@ import Spinner from '../../Spinner/Spinner';
 
 function PodPage() {
 
-    const { podId } = useParams();
+    const { podId, podCode } = useParams();
     const { userSets, setUserSets, loading, error } = useFetchPodUserSetInfo(podId);
 
     if (loading) { return <Spinner spinnerSize={100}/>}
@@ -18,6 +18,13 @@ function PodPage() {
 
     return (
         <div className={styles.pageWrapper}>
+            <div className={styles.bannerWrapper}>
+                <div>
+                    <p className={styles.podCode}>Pod Code:</p>
+                    <h1>{podCode}</h1>
+                </div>
+                {podId != 1 && <button className={styles.leaveButton}>Leave</button>}
+            </div>
             <div className={styles.userSetWrapper}>
                 {displayUserSets}
                 {displayUserSets.length === 0 && <h1>No Set Reviews Locked In... Yet!</h1>}

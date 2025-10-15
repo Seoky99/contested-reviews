@@ -3,6 +3,9 @@
     cursor: pointer;
     border-radius: 10px; 
     font-size: 1.2rem;   
+    text-decoration: none;
+    background-color: white;
+    color: black;
 }
 
 .buttonWrapper {

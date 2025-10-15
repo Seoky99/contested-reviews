@@ -16,7 +16,7 @@ function DisplayPod({podData, selectPod, selectedPod}) {
                 <h1>{podData.podName}</h1>
                 <p><PeopleIcon fontSize="large" className={styles.icon}/> {podData.members.length}</p>
             </div>
-            <Link onClick={() => selectPod(podData.podId)} className={styles.link} to={`/pods/${podData.podId}`}>View</Link>
+            <Link onClick={() => selectPod(podData.podId)} className={styles.link} to={`/pods/${podData.podId}/${podData.podCode}`}>View</Link>
         </div>
     )
 
