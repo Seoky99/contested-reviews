@@ -46,7 +46,7 @@ function CreatePodForm({}) {
                 <input {...register("isPrivate")} className={styles.checkBox} type="checkbox" id="isPrivate" name="isPrivate"></input>
             </div>
             <button disabled={isSubmitting} className={styles.submitButton} type="submit">
-                {isSubmitting ?  `Creating...` : `Create Set Review!`} 
+                {isSubmitting ?  `Creating...` : `Create Pod!`} 
             </button>
         </form>
     );

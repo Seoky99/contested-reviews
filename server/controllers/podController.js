@@ -2,7 +2,6 @@ import db from "../models/database/podQueries.js";
 import qdb from "../models/database/queries.js";
 import cardsdb from "../models/database/queries.js";
 import statsdb from "../models/database/statsQueries.js";
-import { nanoid } from 'nanoid';
 import { customAlphabet } from "nanoid"; 
 import { calculateAveragesPerColor } from "./utils/calculateAveragesPerColor.js";
 import groupMembersByPod from "./utils/groupMembersByPod.js";
@@ -93,6 +92,17 @@ async function viewPodMemberOverview(req, res) {
     res.json({trophies, stats, setReviewData});
 }
 
+async function deleteUserFromPod(req, res) {
+    const userId = req.userId; 
+    const { podId } = req.params;
+    
+    //verify access of user to pod 
+    await db.deleteUserFromPod(userId, podId);
+
+    return res.sendStatus(204); 
+}
 
 
-export { createPod, getUsersForPods, getUserSetsForPods, viewPodMemberCards, viewPodMemberOverview };
+export { createPod, getUsersForPods, getUserSetsForPods, viewPodMemberCards, viewPodMemberOverview, 
+         deleteUserFromPod
+ };

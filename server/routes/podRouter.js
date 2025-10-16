@@ -1,5 +1,7 @@
 import express from "express";
-import { createPod, getUsersForPods, getUserSetsForPods, viewPodMemberCards, viewPodMemberOverview } from "../controllers/podController.js";
+import { createPod, getUsersForPods, getUserSetsForPods, viewPodMemberCards, viewPodMemberOverview,
+         deleteUserFromPod
+ } from "../controllers/podController.js";
 import { podIdSchema, podUserSetIdSchema } from "../controllers/schemas/podSchema.js";
 import verifyJWT from "../middleware/verifyJWT.js";
 import asyncHandler from "express-async-handler";
@@ -12,6 +14,7 @@ podRouter.use(verifyJWT);
 podRouter.get("/:podId/view/:userSetId/overview", validateRequest({paramsSchema: podUserSetIdSchema}), asyncHandler(viewPodMemberOverview));
 podRouter.get("/:podId/view/:userSetId/cards", validateRequest({paramsSchema: podUserSetIdSchema}), asyncHandler(viewPodMemberCards));
 
+podRouter.delete("/:podId", asyncHandler(deleteUserFromPod));
 podRouter.get("/:podId", validateRequest({paramsSchema: podIdSchema}), asyncHandler(getUserSetsForPods));
 
 podRouter.post("/", asyncHandler(createPod));

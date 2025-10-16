@@ -3,6 +3,7 @@ import useFetchPodUserSetInfo from "../../../customHooks/useFetchPodUserSetInfo"
 import { useParams } from 'react-router';
 import UserSet from './UserSet/UserSet';
 import Spinner from '../../Spinner/Spinner';
+import axiosPrivate from '../../../customHooks/store/useAxiosPrivate';
 
 function PodPage() {
 
@@ -16,6 +17,14 @@ function PodPage() {
         return <UserSet userSetData={userSet} key={userSet.user_set_id}/>
     })
 
+    async function handleLeave() {
+        try {
+            await axiosPrivate.delete(`/pods/${podId}`);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     return (
         <div className={styles.pageWrapper}>
             <div className={styles.bannerWrapper}>
@@ -23,7 +32,7 @@ function PodPage() {
                     <p className={styles.podCode}>Pod Code:</p>
                     <h1>{podCode}</h1>
                 </div>
-                {podId != 1 && <button className={styles.leaveButton}>Leave</button>}
+                {podId != 1 && <button className={styles.leaveButton} onClick={handleLeave}>Leave</button>}
             </div>
             <div className={styles.userSetWrapper}>
                 {displayUserSets}

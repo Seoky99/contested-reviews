@@ -99,7 +99,34 @@ async function getUserSetsForPods(podId) {
         console.log(err);
         throw err;
     }
-
 }
 
-export default { podCodeExists, createPod, getPodPageInformation, getUserInfoForPods, getUserSetsForPods }
+async function deleteUserFromPod(userId, podId) {
+    const client = await pool.connect(); 
+
+    const countQuery = `SELECT COUNT(*) FROM pod_users WHERE pod_id = $1`; 
+    const query = `DELETE FROM pod_users WHERE pod_id = $2 AND user_id = $1`; 
+    const deletePodQuery = `DELETE FROM pods WHERE pod_id = $1`; 
+
+    try {
+        await client.query('BEGIN'); 
+        await client.query(query, [userId, podId]);
+
+        const { rows } = await client.query(countQuery, [podId]);
+        const numUsers = rows[0].count;
+
+        if (numUsers <= 0) {
+            await client.query(deletePodQuery, [podId]);
+        }
+
+        await client.query('COMMIT');  
+    } catch (err) {
+        console.log(err); 
+        await client.query('ROLLBACK');  
+        throw err; 
+    } finally {
+        client.release(); 
+    }
+}
+
+export default { podCodeExists, createPod, getPodPageInformation, getUserInfoForPods, getUserSetsForPods, deleteUserFromPod }
