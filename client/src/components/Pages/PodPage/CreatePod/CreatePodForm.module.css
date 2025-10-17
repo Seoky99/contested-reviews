@@ -5,3 +5,14 @@
     flex: 3; 
     align-items: center;
 }
+
+.formSeparator {
+    display: flex; 
+    justify-content: center;
+    gap: 1.2rem;
+}
+
+.submitButton {
+    padding: 0.2rem 0.4rem;
+    cursor: pointer;
+}

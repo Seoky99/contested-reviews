@@ -12,15 +12,13 @@ function DisplayPod({podData, selectPod, selectedPod}) {
 
     return (
         <div className={styles.podWrapper}>
-            <div className={`${styles.podTitle} ${selectedStyle}`}>
+            <Link onClick={() => selectPod(podData.podId)} className={`${styles.podTitle} ${selectedStyle}`} to={`/pods/${podData.podId}/${podData.podCode}`}>
                 <h1>{podData.podName}</h1>
                 <p><PeopleIcon fontSize="large" className={styles.icon}/> {podData.members.length}</p>
-            </div>
-            <Link onClick={() => selectPod(podData.podId)} className={styles.link} to={`/pods/${podData.podId}/${podData.podCode}`}>View</Link>
+            </Link>
+
         </div>
     )
-
-
 }
 
 export default DisplayPod; 

@@ -95,6 +95,10 @@ async function viewPodMemberOverview(req, res) {
 async function deleteUserFromPod(req, res) {
     const userId = req.userId; 
     const { podId } = req.params;
+
+    if (!(await verifyAccessToPods(userId, [podId]))) {
+        return res.status(403).json({message: "Forbidden: You don't have access to this pod."})
+    }
     
     //verify access of user to pod 
     await db.deleteUserFromPod(userId, podId);
