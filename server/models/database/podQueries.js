@@ -129,4 +129,38 @@ async function deleteUserFromPod(userId, podId) {
     }
 }
 
-export default { podCodeExists, createPod, getPodPageInformation, getUserInfoForPods, getUserSetsForPods, deleteUserFromPod }
+async function addUserToPod(userId, podCode) {
+    const client = await pool.connect(); 
+
+    const extractPodID = `SELECT pod_id FROM pods WHERE pod_code = $1`;
+    const query = 'INSERT INTO pod_users(user_id, pod_id) VALUES ($1, $2)';
+    
+    try {
+        await client.query('BEGIN'); 
+
+        console.log("?");
+
+        const { rows } = await client.query(extractPodID, [podCode]); 
+        const podId = rows[0].pod_id; 
+
+        console.log("??");
+
+
+        if (!podId) {
+            throw new Error('Pod with podcode does not exist');
+        }
+
+        await client.query(query, [userId, podId]); 
+
+        await client.query('COMMIT'); 
+    } catch(err) {
+        await client.query('ROLLBACK');
+        throw err; 
+    } finally {
+        client.release(); 
+    }
+}
+
+export default { podCodeExists, createPod, getPodPageInformation, getUserInfoForPods, getUserSetsForPods, deleteUserFromPod,
+                 addUserToPod,
+ }

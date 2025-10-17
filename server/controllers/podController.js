@@ -100,13 +100,27 @@ async function deleteUserFromPod(req, res) {
         return res.status(403).json({message: "Forbidden: You don't have access to this pod."})
     }
     
-    //verify access of user to pod 
     await db.deleteUserFromPod(userId, podId);
 
     return res.sendStatus(204); 
 }
 
+async function addUserToPod(req, res) {
+    const userId = req.userId; 
+
+    const { podCode } = req.body; 
+
+    //verify that this podcode is a real pod 
+    if (!(await db.podCodeExists(podCode))) {
+        return res.status(500).json({message: "Pod code does not exist"});
+    }; 
+
+    await db.addUserToPod(userId, podCode); 
+
+    return res.json({podCode});
+}
+
 
 export { createPod, getUsersForPods, getUserSetsForPods, viewPodMemberCards, viewPodMemberOverview, 
-         deleteUserFromPod
+         deleteUserFromPod, addUserToPod
  };
