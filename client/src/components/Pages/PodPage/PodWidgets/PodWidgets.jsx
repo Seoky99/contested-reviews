@@ -6,7 +6,7 @@ function PodWidgets() {
     return (
         <div className={styles.buttonWrapper}>
             <Link className={styles.podWidget} to="/pods/create">Create Pod!</Link>
-            <button disabled className={styles.podWidget}>Join Pod!</button>
+            <Link className={styles.podWidget} to="/pods/join">Join Pod!</Link>
         </div>
     );
 

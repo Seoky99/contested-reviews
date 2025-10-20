@@ -19,7 +19,7 @@ function CreatePodForm({}) {
 
     const navigate = useNavigate(); 
 
-    async function createSetReview(data) {
+    async function createPod(data) {
             const formData = data;
 
             try {
@@ -35,7 +35,7 @@ function CreatePodForm({}) {
     } 
 
     return (
-        <form className={styles.podForm} onSubmit={handleSubmit(createSetReview)}>
+        <form className={styles.podForm} onSubmit={handleSubmit(createPod)}>
             <div className={styles.formSeparator}>
                 <label htmlFor="podName">Pod Name:</label>
                 <input {...register("podName")} type="text" id="podName" name="podName"></input>

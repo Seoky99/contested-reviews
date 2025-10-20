@@ -138,13 +138,8 @@ async function addUserToPod(userId, podCode) {
     try {
         await client.query('BEGIN'); 
 
-        console.log("?");
-
         const { rows } = await client.query(extractPodID, [podCode]); 
         const podId = rows[0].pod_id; 
-
-        console.log("??");
-
 
         if (!podId) {
             throw new Error('Pod with podcode does not exist');

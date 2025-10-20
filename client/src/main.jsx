@@ -23,6 +23,7 @@ import ViewPodPage from "./components/Pages/ViewPodPage/ViewPodPage.jsx";
 import CreatePod from "./components/Pages/PodPage/CreatePod/CreatePod.jsx";
 import useAuthInit from "./customHooks/store/useAuthInit.js";
 import SettingsPage from "./components/Pages/SettingsPage/SettingsPage.jsx";
+import JoinPod from './components/Pages/PodPage/JoinPod/JoinPod.jsx';
 
 const queryClient = new QueryClient(); 
 
@@ -102,6 +103,9 @@ const router = createBrowserRouter([
                 {
                   path: "create",
                   Component: CreatePod 
+                }, {
+                  path: "join",
+                  Component: JoinPod
                 }
               ]
           },

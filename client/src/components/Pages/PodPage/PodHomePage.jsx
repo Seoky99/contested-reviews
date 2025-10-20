@@ -23,7 +23,7 @@ function PodPage() {
     return (
         <div className={styles.pageWrapper}>
             <div className={styles.displayWrapper}>
-                <h1 className={styles.title}>My Pods:</h1>
+                <h1 className={styles.title}>My Pods</h1>
                 {displayPods}
                 {<PodWidgets/>}
             </div>
