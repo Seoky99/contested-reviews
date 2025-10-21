@@ -27,7 +27,7 @@ function PodPage() {
                 {displayPods}
                 {<PodWidgets/>}
             </div>
-            <Outlet/>
+            <Outlet context={[pageDetails, setPageDetails]}/>
         </div>
     )
 }

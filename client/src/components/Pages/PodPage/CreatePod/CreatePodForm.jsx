@@ -1,11 +1,11 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router";
+import { useNavigate, useOutlet, useOutletContext } from "react-router";
 import axiosPrivate from "../../../../customHooks/store/useAxiosPrivate.js";
 import styles from "./CreatePodForm.module.css";
 import z from "zod"; 
 
-function CreatePodForm({}) {
+function CreatePodForm() {
 
     const podSchema = z.object({
         podName: z.string().trim().min(1, "Pod name cannot be empty").max(50)
@@ -17,7 +17,17 @@ function CreatePodForm({}) {
         resolver: zodResolver(podSchema)
     });
 
+    const [pageDetails, setPageDetails] = useOutletContext(); 
     const navigate = useNavigate(); 
+
+    function addPodToPageDetails(podData) {
+
+        const pageCopy = [...pageDetails]; 
+        const { podCode, podId, podName, username} = podData;
+
+        pageCopy.push({members: [username], podCode, podId, podName});
+        setPageDetails(pageCopy); 
+    }
 
     async function createPod(data) {
             const formData = data;
@@ -26,7 +36,9 @@ function CreatePodForm({}) {
                 const url = '/pods'; 
                 const options = { headers: {"Content-Type": "application/json" }};
     
-                await axiosPrivate.post(url, formData, options);
+                const podData = await axiosPrivate.post(url, formData, options);
+                console.log(podData);
+                addPodToPageDetails(podData.data);
                 navigate("/pods");          
             } catch (err) {
                 console.log(err);

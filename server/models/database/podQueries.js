@@ -16,13 +16,18 @@ async function createPod(podName, podCode, isPrivate, userId) {
     const client = await pool.connect(); 
     const query = `INSERT INTO pods(pod_name, pod_code, is_private) VALUES ($1, $2, $3) RETURNING pod_id`; 
     const insertUserQuery = `INSERT INTO pod_users(pod_id, user_id, role) VALUES ($1, $2, $3)`;
+    const returnUserName = `SELECT username FROM users WHERE user_id = $1`;
 
     try {
         await client.query('BEGIN');
         const {rows}= await client.query(query, [podName, podCode, isPrivate]); 
         const podId = rows[0].pod_id;    
         await client.query(insertUserQuery, [podId, userId, 'Admin']);
+        const data = await client.query(returnUserName, [userId]);
+        const username = data.rows[0].username; 
+
         await client.query('COMMIT'); 
+        return {podId, username}; 
     } catch (err) {
         console.log(err); 
         await client.query('ROLLBACK');

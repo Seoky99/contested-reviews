@@ -2,6 +2,7 @@ import styles from "./JoinPod.module.css";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router";
+import { useOutletContext } from "react-router"; 
 import axiosPrivate from "../../../../customHooks/store/useAxiosPrivate.js";
 import z from "zod"; 
 

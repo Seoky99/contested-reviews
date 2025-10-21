@@ -30,9 +30,9 @@ async function createPod(req, res) {
         return res.status(500).json({message: 'Could not generate unique pod code'}); 
     }
 
-    await db.createPod(podName, podCode, isPrivate, userId);
+    const {podId, username} = await db.createPod(podName, podCode, isPrivate, userId);
 
-    res.json(podCode);
+    res.json({podName, podCode, podId, username});
 }
 
 async function getUsersForPods(req, res) {

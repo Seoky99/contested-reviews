@@ -1,9 +1,10 @@
 .podForm {
     display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
     gap: 2rem;
     flex: 3; 
-    align-items: center;
 }
 
 .formSeparator {
@@ -15,4 +16,5 @@
 .submitButton {
     padding: 0.2rem 0.4rem;
     cursor: pointer;
+    width: 8rem;
 }

@@ -2,10 +2,27 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 2rem;
     flex: 3;
+}
+
+.formSeparator {
+    display: flex;
+    gap: 0.2rem;
+}
+
+.podForm {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 2rem;
 }
 
 .errorStyle {
     color: red;
+}
+
+.submitButton {
+    padding: 0.2rem 0.4rem;
+    cursor: pointer;
+    width: 8rem;
 }
