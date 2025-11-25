@@ -126,9 +126,14 @@ async function addSet(setCode, isBonus, associatedCode) {
  * Adds the cards to the cards table in the database
  * @param {string} url - Scryfall API URL  
  */
-async function addCards(setCode) {
+async function addCards(setCode, customURL=null) {
   setCode = setCode.toLowerCase(); 
-  const url = `https://api.scryfall.com/cards/search?q=set%3A${setCode}%2Bin%3Abooster`;
+
+  let url = `https://api.scryfall.com/cards/search?q=set%3A${setCode}%2Bin%3Abooster`;
+
+  if (typeof customURL === 'string' && customURL.trim() !== "") {
+    url = customURL; 
+  }
 
   let data = await fetchScryfall(url, 'cards');
 
@@ -385,6 +390,21 @@ async function populateSet(setCode, addBonus=false) {
     }
 }
 
-populateSet("EOE", true); 
+
+//AVATAR is special case of TLE 
+//Use code https://api.scryfall.com/cards/search?q=set%3ATLE%2Bin%3Abooster+cn%3E%3D1+cn%3C%3D61
+
+//populateSet("TLA", true); 
 //updateSetReviews("EOE");
-//addCards("EOE");
+//addCards("TLA");
+
+
+ try {
+      await client.connect();
+      await addCards("tle", "https://api.scryfall.com/cards/search?q=set%3ATLE%2Bin%3Abooster+cn%3E%3D1+cn%3C%3D61");
+
+    } catch (err) {
+      console.log(err);
+    } finally {
+      await client.end(); 
+}
