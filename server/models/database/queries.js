@@ -167,6 +167,7 @@ async function createSetReview(userid, setid, sr_name, defaultApplied, bonusAdde
         const setImg = setImgRow[0].set_img; 
 
         const { rows: userSetInfo } = await transaction.query(insertIntoReviewsQuery, [userid, setid, sr_name, defaultApplied, bonusAdded, setImg]);
+        
         const { user_set_id, name, user_set_img } = userSetInfo[0];
 
         if (!makeShard) {

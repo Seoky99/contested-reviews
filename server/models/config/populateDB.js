@@ -390,7 +390,6 @@ async function populateSet(setCode, addBonus=false) {
     }
 }
 
-
 //AVATAR is special case of TLE 
 //Use code https://api.scryfall.com/cards/search?q=set%3ATLE%2Bin%3Abooster+cn%3E%3D1+cn%3C%3D61
 
@@ -398,13 +397,13 @@ async function populateSet(setCode, addBonus=false) {
 //updateSetReviews("EOE");
 //addCards("TLA");
 
-
- try {
+try {
       await client.connect();
-      await addCards("tle", "https://api.scryfall.com/cards/search?q=set%3ATLE%2Bin%3Abooster+cn%3E%3D1+cn%3C%3D61");
+      await addSet("ECL", false);
+      await addCards("ECL", "https://api.scryfall.com/cards/search?q=set%3AECL+in%3Abooster");
 
     } catch (err) {
       console.log(err);
     } finally {
       await client.end(); 
-}
+} 
