@@ -18,6 +18,7 @@
     flex-direction: column;
     gap: 0.5rem;
     outline: none;
+    padding: 1.5rem;
 }
 
 textarea {
