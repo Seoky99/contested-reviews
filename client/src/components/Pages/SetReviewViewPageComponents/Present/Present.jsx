@@ -20,7 +20,6 @@ function Present({children, isOpen, setIsOpen}) {
             }
         </div>
     );
-
 }
 
 export default Present; 

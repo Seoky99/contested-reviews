@@ -25,7 +25,7 @@ function HomePage() {
                     </div>
                 </div>
                 <div className={styles.linkDiv}>
-                    <Link className={styles.moreLink}>See More</Link>
+                    <a href="#about" className={styles.moreLink}>See More</a>
                 </div>
             </div>
             <About/>
