@@ -2,8 +2,9 @@
     color: black;
     background-color: antiquewhite;
     width: 250px;
-    padding: 0.5rem;
+    padding: 1rem;
     box-shadow: 5px 5px;
+    border-radius: 10px;
 }
 
 .iconTitle {
@@ -11,4 +12,18 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 10%;
+    border-bottom: 2px solid black;
+}
+
+.caption {
+    height: 40%;
+}
+
+.iconBorder {
+    background-color: white;
+    padding: 0.4rem 0.6rem;
+    border-radius: 5px;
+    width: 20%;
+    margin-top: 20%;
+    margin-left: auto;
 }
