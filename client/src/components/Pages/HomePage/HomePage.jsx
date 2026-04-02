@@ -1,7 +1,8 @@
 import styles from "./HomePage.module.css"
 import CardFlow from "./CardFlow/CardFlow";
 import { Link } from "react-router";
-import About from "./About"
+import AboutSection from "./AboutSection/AboutSection"
+import ImageSection from "./ImageSection/ImageSection"
 
 function HomePage() { 
 
@@ -28,7 +29,8 @@ function HomePage() {
                     <a href="#about" className={styles.moreLink}>See More</a>
                 </div>
             </div>
-            <About/>
+            <AboutSection/>
+            <ImageSection/>
         </div>
     )
 }

@@ -72,6 +72,11 @@ img {
     color: white;
 }
 
+.login, .register {
+   width: 6.5rem;
+   text-align: center;
+}
+
 .searchBar {
     padding: 0.3rem;
     margin-left: 1rem;   

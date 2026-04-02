@@ -1,7 +1,26 @@
 .previewWrapper {
     display: flex;
+    gap: 3rem;
 }
 
 .image {
     border-radius: 10px;
+    max-width: 100%;
+    height: auto;
+}
+
+.title {
+    color: black;
+    border-radius: 10px;
+    background-color: white;
+    padding: 1rem;
+    border-top: 5px solid antiquewhite;
+}
+
+.titleWrapper {
+    width: 50%;
+}
+
+.caption {
+    color: black;
 }

@@ -1,15 +1,15 @@
 .title {
-    color: red;
     font-size: 6rem;
 }
 
 .aboutWrapper {
-    background-color: white;
+    background-color: burlywood;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     scroll-margin-top: 64px;
+    gap: 2rem;
 }
 
 .aboutCaption {
@@ -18,14 +18,10 @@
 }
 
 .squareWrapper {
+    margin-top: 1.5rem;
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    padding: 1.5rem;
-}
-
-.aboutContentWrapper {
-    display: flex;
-    flex-direction: column;
     gap: 2rem;
+    padding: 2rem;
+    margin-bottom: 3rem;
 }
