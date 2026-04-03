@@ -10,7 +10,9 @@ function HomePage() {
         <div>
             <div className={styles.pageWrapper}>
                 <div className={styles.front}>
-                    <CardFlow/>
+                    <div className={styles.remove}>
+                        <CardFlow/>
+                    </div>
                     <div className={styles.center}>
                         <div className={styles.text}>
                             <h1 className={styles.title}>Contested</h1>

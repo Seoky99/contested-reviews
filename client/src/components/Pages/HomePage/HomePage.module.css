@@ -24,7 +24,7 @@
     & div {
         display: flex;
         gap: 1rem;
-        margin-top: 0.2rem;
+        margin-top: 0.4rem;
     }
 }
 
@@ -37,6 +37,7 @@
 .caption {
     font-size: 2rem;
     margin-top: -2.5rem;
+    text-align: left;
 }
 
 .title {
@@ -96,3 +97,9 @@
 .linkWrapper {
     font-weight: 700;
 }
+
+@media (max-width: 1000px) {
+    .remove {
+        display: none;
+    }
+} 

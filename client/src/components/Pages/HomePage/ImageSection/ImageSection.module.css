@@ -1,7 +1,15 @@
 .aboutContentWrapper {
-    background-color: antiquewhite;
+    display: flex;
+    justify-content: center;
+    background-color: burlywood;
+    padding: 2rem; 
+}
+
+.content {
     display: flex;
     flex-direction: column;
-    padding: 2rem;
-    gap: 2rem;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    gap: 3rem;
 }
