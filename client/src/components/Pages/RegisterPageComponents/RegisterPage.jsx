@@ -66,13 +66,18 @@ function RegisterPage() {
     
     return (
             <div className={styles.pageWrapper}>
-                <div className={styles.cardOne}>
+                {/*<div className={styles.cardOne}>
                     <img className={styles.cgb} src={"/cgb.png"}/>
                     <h1>A+?</h1>
                 </div>
+                <div className={styles.cardTwo}>
+                    <img className={styles.doc} src={"/doc.png"}/>
+                    <h1>B+?</h1>
+                </div>*/}
                 <form className={styles.form} onSubmit={handleSubmit(registerUser)}>
 
-                    <h1>Create an Account</h1>
+                    <h1>Sign Up</h1>
+                    <p>Register your account</p>
                     {errors.root && <p className={styles.error}>{errors.root.message}</p>}
 
                     <input {...register("username")} type="text" placeholder="Username"/>
@@ -87,12 +92,8 @@ function RegisterPage() {
                     <input {...register("confirmPassword")} type="password" placeholder="Confirm Password"/>
                     {errors.confirmPassword && <p className={styles.error}>{errors.confirmPassword.message}</p>}
 
-                    <button disabled={isSubmitting} className={styles.submit} type="submit">{isSubmitting ? 'Submitting...':'Submit'}</button>
+                    <button disabled={isSubmitting} className={styles.submit} type="submit">{isSubmitting ? 'Signing Up...':'Sign Up'}</button>
                 </form>
-                <div className={styles.cardTwo}>
-                    <img className={styles.doc} src={"/doc.png"}/>
-                    <h1>B+?</h1>
-                </div>
             </div>
         );
 

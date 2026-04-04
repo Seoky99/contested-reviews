@@ -51,16 +51,17 @@ function LoginPage() {
 
     return (
         <div className={styles.pageWrapper}>
-            <div className={styles.cardOne}>
+            {/*<div className={styles.cardOne}>
                 <img className={styles.cgb} src={"/cgb.png"}/>
                 <h1>S?</h1>
             </div>
             <div className={styles.cardTwo}>
                 <img className={styles.doc} src={"/doc.png"}/>
                 <h1>B+?</h1>
-            </div>
+            </div> */}
             <form className={styles.form} onSubmit={handleSubmit(loginUser)}>
                 <h1>Login</h1>
+                <p>Please enter your details</p>
                 {errors.root && <p className={styles.error}>{errors.root.message}</p>}
 
                 <input {...register("username")} type="text" placeholder="Username"/>
@@ -70,6 +71,8 @@ function LoginPage() {
                 {errors.password && <p className={styles.error}>{errors.password.message}</p>}
 
                 <button disabled={isSubmitting} className={styles.submit} type="submit">{isSubmitting ? 'Logging In...':'Login'}</button>
+                <p className={styles.reminder}>Don't have an account? <a href="./register" className={styles.registerLink}> Create one </a></p>
+
             </form>
         </div>
     )
