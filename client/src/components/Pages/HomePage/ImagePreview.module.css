@@ -45,10 +45,15 @@
     border-radius: 10px;
     padding: 1rem;
     height: 100%;
+    box-shadow: 5px 5px black;
+
+    h1 {
+        border-bottom: 2px solid black;
+    }
 
     p {
         margin-top: 2rem;
-        font-size: 1.5rem;
+        font-size: 1.3rem;
     }
 }
 

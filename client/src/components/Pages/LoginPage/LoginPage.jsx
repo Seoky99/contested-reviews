@@ -49,30 +49,28 @@ function LoginPage() {
         }
     } 
 
-    console.log(errors);
-
     return (
         <div className={styles.pageWrapper}>
             <div className={styles.cardOne}>
                 <img className={styles.cgb} src={"/cgb.png"}/>
                 <h1>S?</h1>
             </div>
-        <form className={styles.form} onSubmit={handleSubmit(loginUser)}>
-            <h1>Login</h1>
-            {errors.root && <p className={styles.error}>{errors.root.message}</p>}
-
-            <input {...register("username")} type="text" placeholder="Username"/>
-            {errors.username && <p className={styles.error}>{errors.username.message}</p>}
-
-            <input {...register("password")} type="password" placeholder="Password"/>
-            {errors.password && <p className={styles.error}>{errors.password.message}</p>}
-
-            <button disabled={isSubmitting} className={styles.submit} type="submit">{isSubmitting ? 'Submitting...':'Submit'}</button>
-        </form>
             <div className={styles.cardTwo}>
                 <img className={styles.doc} src={"/doc.png"}/>
                 <h1>B+?</h1>
             </div>
+            <form className={styles.form} onSubmit={handleSubmit(loginUser)}>
+                <h1>Login</h1>
+                {errors.root && <p className={styles.error}>{errors.root.message}</p>}
+
+                <input {...register("username")} type="text" placeholder="Username"/>
+                {errors.username && <p className={styles.error}>{errors.username.message}</p>}
+
+                <input {...register("password")} type="password" placeholder="Password"/>
+                {errors.password && <p className={styles.error}>{errors.password.message}</p>}
+
+                <button disabled={isSubmitting} className={styles.submit} type="submit">{isSubmitting ? 'Logging In...':'Login'}</button>
+            </form>
         </div>
     )
 

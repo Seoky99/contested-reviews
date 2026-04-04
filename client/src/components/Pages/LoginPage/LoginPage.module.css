@@ -1,7 +1,17 @@
+.pageWrapper {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: calc(100vh - 64px);
+}
+
 .form {
     display: flex;
+    flex: 1;
+    background-color: bisque;
     flex-direction: column;
-    width: 30%;
+    height: 100%;
+    justify-self: flex-end; 
     padding: 2.5rem 1.5rem 4rem 1.5rem;
     border: 5px solid white;
     border-radius: 10px;
@@ -10,23 +20,27 @@
         padding: 0.2rem;
         margin-top: 2rem;
     }
+
+    h1 {
+        color: black;
+        align-self: center;
+    }
 }
 
-.pageWrapper {
+.test {
     display: flex;
-    justify-content: space-around;
-    align-items: center;
+    margin-top: 2rem;
 }
 
 .submit {
-    width: 30%;
-    align-self: flex-end;
-    padding: 0.5rem 1rem;
+    align-self: center;
+    width: 60%;
+    padding: 0.65rem 3rem;
     cursor: pointer; 
     border-radius: 5px;
     border: 3px solid black;
-    background-color: white;
-    margin-top: 2rem;
+    background-color: turquoise;
+    margin-top: 4rem;
 }
 
 .cardOne, .cardTwo {
@@ -40,6 +54,7 @@
     }
 
     & h1 {
+        color: white;
         position: absolute;
         top: 1.2rem;
         left: 1rem;
