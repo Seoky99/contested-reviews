@@ -7,9 +7,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
 
 export default new Client({
-  //connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL,
   
-  connectionString: process.env.CONNECTION_STRING,
+  //connectionString: process.env.CONNECTION_STRING,
   ssl: {
     rejectUnauthorized: false
   }
